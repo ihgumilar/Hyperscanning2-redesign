@@ -208,14 +208,6 @@ def extract_experiment_eye_data(path_2_csv_files: str,
         There are 6 files in total for each participant.
     """
 
-    ## Temporary
-    # path_2_csv_files = "/hpc/igum002/codes/Hyperscanning2-redesign/EyeTracker/data/"
-    # path_2_save_experimental_file = "/hpc/igum002/codes/Hyperscanning2-redesign/EyeTracker/data/experimental_eye_data/"
-    # labelsequence = 1
-    # bad_files = []
-
-    ###
-
     list_file_names = []
     full_path_2_each_file = []
 
