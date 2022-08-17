@@ -1,3 +1,20 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: title,-all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
+
+# %%
 """
 Delete parts of eye tracker data based on deleted epochs of EEG data.
 Since we have extracted indices of deleted EEG epochs, then we use such indices
@@ -14,12 +31,15 @@ import os
 import numpy as np
 
 # %%
-# os.chdir("/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_combined/")
-
-def delete_epoch_eye_tracker(file_tag, indices):
-    path = '/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_combined/'
+def delete_epoch_eye_tracker(eyetracker_data_path, path2save_cleaned_data, file_tag, indices):
+    # eyetracker_data_path = '/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_combined/'
     # file_tag = "averted_pre"
-    files = [file for file in os.listdir(path) if file_tag in file]
+    
+    # Go to a folder where combined eye tracker data has been stored
+    # os.chdir(eyetracker_data_path)
+    
+    # List specified files based on file_tag parameter that has been defined
+    files = [file for file in os.listdir(eyetracker_data_path) if file_tag in file]
     files = sorted(files, key=lambda x: int(
         x.partition('S')[2].partition('-')[0]))
     begin = 0
@@ -30,9 +50,9 @@ def delete_epoch_eye_tracker(file_tag, indices):
 
     for idx in tqdm(range(begin, end, step), desc="Have some coffee bro, while we are processing your files :) "):
 
-        df1 = pd.read_csv(path + files[idx])
-        df1 = pd.read_csv(path + files[0])
-        df2 = pd.read_csv(path + files[idx + 1])
+        # df1 = pd.read_csv(eyetracker_data_path + files[0])
+        df1 = pd.read_csv(eyetracker_data_path + files[idx])
+        df2 = pd.read_csv(eyetracker_data_path + files[idx + 1])
 
         # Drop missing values
         df1 = df1.dropna()
@@ -62,6 +82,10 @@ def delete_epoch_eye_tracker(file_tag, indices):
         if idx >= 1:
             counter += 1
 
+        # TODO Understand what this code does. Error when processing subject 11 
+        # NOTE Indices of deleted epochs of EEG, there are only 8 lists for now. Since there are 8 pairs.
+        # Those indices are used for each pair of eye tracker data
+
         for individual_indices in indices[counter]:
             labels_indices_2_delete.append(labels_indices[individual_indices])
 
@@ -82,45 +106,69 @@ def delete_epoch_eye_tracker(file_tag, indices):
             dfNew2.drop("Mark2Delete", axis=1, inplace=True)
 
         # Save cleaned data
-        path_save = '/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_clean_new/'
+        # path2save_cleaned_data = '/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_clean_new/'
         df1_name = files[idx]
         df2_name = files[idx + 1]
         dfNew1.to_csv(
-            path_save + df1_name[:df1_name.rfind('.')] + '_clean.csv')
+            path2save_cleaned_data + df1_name[:df1_name.rfind('.')] + '_clean.csv')
         dfNew2.to_csv(
-            path_save + df2_name[:df2_name.rfind('.')] + '_clean.csv')
+            path2save_cleaned_data + df2_name[:df2_name.rfind('.')] + '_clean.csv')
         print("Processed : " + df1_name)
         print("Processed : " + df2_name)
 
-    print("The eye tracker files have been cleaned and are ready to pick up, man !")
+    print("The eye tracker files have been cleaned and you are good to go, Bro !")
 
+
+# %% [markdown]
+# ## Load deleted epochs indices (all eye conditions)
 
 # %% Load the deleted indices of epochs of eeg data
-os.chdir('/hpc/igum002/codes/frontiers_hyperscanning2/eeg_data_deleted_indices')
+# Change to a directory where combined eye tracker data are located
+os.chdir('/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/deleted_epochs_indices/')
 
 # averted pre
-with open('deleted_epochs_indices_averted_pre.pkl', 'rb') as handle:
+with open('list_deleted_epoch_indices_averted_pre.pkl', 'rb') as handle:
     deleted_epochs_indices_averted_pre = pickle.load(handle)
 # deleted_epochs_indices_averted_pre[0]
 # averted post
-with open('deleted_epochs_indices_averted_post.pkl', 'rb') as handle:
+with open('list_deleted_epoch_indices_averted_post.pkl', 'rb') as handle:
     deleted_epochs_indices_averted_post = pickle.load(handle)
 
 # direct pre
-with open('deleted_epochs_indices_direct_pre.pkl', 'rb') as handle:
+with open('list_deleted_epoch_indices_direct_pre.pkl', 'rb') as handle:
     deleted_epochs_indices_direct_pre = pickle.load(handle)
 
 # direct post
-with open('deleted_epochs_indices_direct_post.pkl', 'rb') as handle:
+with open('list_deleted_epoch_indices_direct_post.pkl', 'rb') as handle:
     deleted_epochs_indices_direct_post = pickle.load(handle)
 
 # natural pre
-with open('deleted_epochs_indices_natural_pre.pkl', 'rb') as handle:
+with open('list_deleted_epoch_indices_natural_pre.pkl', 'rb') as handle:
     deleted_epochs_indices_natural_pre = pickle.load(handle)
 
 # natural post
-with open('deleted_epochs_indices_natural_post.pkl', 'rb') as handle:
+with open('list_deleted_epoch_indices_natural_post.pkl', 'rb') as handle:
     deleted_epochs_indices_natural_post = pickle.load(handle)
+
+# %% [markdown]
+# ### Clean eye tracker data : 
+# #### Delete part of eye tracker data where the same part of EEG data (epochs) has been removed
+
+# %%
+# def delete_epoch_eye_tracker(eyetracker_data_path, path2save_cleaned_data, file_tag, indices):
+
+eyetracker_data_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/"
+path2save_cleaned_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/raw_cleaned_combined_experimental_eye_data/"
+averted_pre_tag = "averted_pre"
+# averted_post_tag = "averted_post"
+# direct_pre_tag = "direct_pre"
+# direct_post_tag = "direct_post"
+# natural_pre_tag = "natural_pre"
+# natural_post_tag = "natural_post"
+
+# Clean eye tracker data
+delete_epoch_eye_tracker(eyetracker_data_path, path2save_cleaned_data, averted_pre_tag, deleted_epochs_indices_averted_pre)
+
 
 # %% Delete the same epochs (data) that has been deleted in EEG in eye tracker data files
 
