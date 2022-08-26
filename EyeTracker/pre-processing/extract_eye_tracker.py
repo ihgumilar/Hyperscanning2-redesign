@@ -1,173 +1,632 @@
-import os
+# %% Import packages
+import chunk
 import mne
 import pandas as pd
-# from progressbar import progressbar
 from tqdm import tqdm
+import warnings
+import os
+import re
+import numbers
 
-def extract_eye_data(filename: str , labelsequence: int) :
-    try:
-        f = open(filename)
-        labelsequence = int(labelsequence)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-    except IOError as err_filename:
-        print("The format of file name is not correct or file doesn't exist \nThe format must be 'EyeTracker-Sx.csv' , x=subject number ")
-        raise
-    except ValueError as err_integer:
-        print("The labelsequence input must be integer : ", err_integer)
-        raise
-
-    else:
-        if labelsequence < 1 or labelsequence > 12:
-            print(
-                "The value for labelsequence parameter is out of range. It must be be between 1 and 12")
-            raise IndexError
-    # else:
+# %% Extract baseline data
 
 
-        # %% Load the data
-        original_data_path = "/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_original/" # TODO: Adjust this in case using for other experimental data
-        # filename = "EyeTracker-S1.csv"
-        path_filename = os.path.join(original_data_path, filename)
-        # print(filename)
-        # %%
-        # filename = "EyeTracker-S1.csv"
-        fileName = filename  # The format of file name of Eye Tracker file must be like this
-        print("Processing file : " + fileName)
-        df = pd.read_csv(path_filename, delimiter=',')
-        # df.head()
+def extract_baseline_eye_data(
+    path_2_csv_files: str,
+    path_2_save_baseline_file: str,
+    bad_files: list = [],
+    labelsequence: int = 1,
+):
+    """
+    Extract baseline data from raw Eye Tracker file (*.csv) that was obtained from hyperscanning2-redesign experiment \n
 
-        # %% replace all markers of "BEGIN*" and "END*" with 9999999
-        df['UnixTimeStamp'] = df.UnixTimeStamp.apply(
-            lambda x: '9999999' if 'BEGIN' in x else x)
-        df['UnixTimeStamp'] = df.UnixTimeStamp.apply(
-            lambda x: '9999999' if 'END' in x else x)
+    Arguments :
+        - path_2_csv_files (str) : path to raw Eye tracker file \n
+        - path_2_save_baseline_file (str) : path to save extracted baseline file for each condition \n
+        - bad_files (list) (optional) : file name of raw EyeTracker file, e.g., EyeTracker-S8.csv, that wants to be skipped to process
+        - labelsequence (int) : order of pre-defined label sequence, 1 (averted) is default \n
 
-        # Turn the UnixTimeStamp column into a list (we need the marker later on)
-        markers = df['UnixTimeStamp'].tolist()
-        # %%  Find all experimental markers and print them out.
+    Return :
+        Extracted *.csv file for each condition of hand (finger pointing and tracking).
+        There are 6 files in total for each participant.
 
-        indicesOfMarkers = []  # Empty list to contain indices of markers
-        for i, c in enumerate(markers):
-            if "9999999" in str(c):
-                indicesOfMarkers.append(i)  # check if the number of markers = 36
+        REMEMBER : All resulted files will be in "AVERTED" condition since the baseline condition is in AVERTED condition.
+    """
+
+    list_file_names = []
+    full_path_2_each_file = []
+
+    for file in os.listdir(path_2_csv_files):
+
+        if file.endswith(".csv"):
+
+            if file in bad_files:
+                # Skip the bad file to be processed
+                print(f"Skipped bad file : {file}")
+                continue
+
+            # Populate all file names only
+            list_file_names.append(file)
+            list_file_names.sort()
+
+        # Iterate all file names
+
+        for i in tqdm(range(len(list_file_names)), desc="In progress"):
+
+            try:
+                labelsequence = int(labelsequence)
+
+            except IOError as err_filename:
+                print(
+                    "The format of file name is not correct or file doesn't exist \nThe format must be 'EyeTracker-Sx.csv' , x=subject number "
+                )
+                raise
+            except ValueError as err_integer:
+                print("The labelsequence input must be integer : ", err_integer)
+                raise
+
+            else:
+                if labelsequence < 1 or labelsequence > 12:
+                    print(
+                        "The value for labelsequence parameter is out of range. It must be be between 1 and 12"
+                    )
+                    raise IndexError
+                else:
+
+                    # Load the data
+                    fileName = list_file_names[i]
+
+                    # Change to a folder where original CSV files are stored
+                    os.chdir(path_2_csv_files)
+
+                    print("Processing file : " + list_file_names[i])
+
+                    # Read each file by using pandas
+                    df = pd.read_csv(fileName, delimiter=",")
+
+                    df["UnixTimeStamp"] = df.UnixTimeStamp.apply(
+                        lambda x: "9999999" if "BEGIN" in x else x
+                    )
+                    df["UnixTimeStamp"] = df.UnixTimeStamp.apply(
+                        lambda x: "9999999" if "END" in x else x
+                    )
+
+                    # Turn the UnixTimeStamp column into a list (we need the marker later on)
+                    markers = df["UnixTimeStamp"].tolist()
+
+                    # Convert string value to integer number
+                    markers = list(map(int, markers))
+
+                    #   Find all experimental markers and print them out.
+                    indicesOfMarkers = []  # Empty list to contain indices of markers
+                    for i, c in enumerate(markers):
+                        if "9999999" in str(c):
+                            indicesOfMarkers.append(i)
+                    try:
+                        number_markers = len(indicesOfMarkers)
+                        if number_markers != 48:  # check if the number of markers = 48
+                            raise ValueError(
+                                "The {} file has incorrect number of markers : {} ! It MUST be 48".format(
+                                    fileName, number_markers
+                                )
+                            )
+                    except ValueError as err_unmatch_markers:
+                        print(err_unmatch_markers)
+                        raise
+
+                    # Create a list of labels for baseline data. We used only averted eye condition in UNITY.
+                    # It actually does not matter for different eye condition because participant only sees a white screen during the baseline condition)
+
+                    # Order = 1 (Averted) Odd subject no. For example, 1, 3, 5, etc.
+                    oddOrder1 = [
+                        "averted_pre_right_point",
+                        "averted_pre_left_point",
+                        "averted_left_tracking",
+                        "averted_right_tracking",
+                        "averted_post_right_point",
+                        "averted_post_left_point",
+                    ]
+
+                    # Order = 1 (Averted) Even subject no. For example, 2, 4, 6, etc.
+                    evenOrder1 = [
+                        "averted_pre_left_point",
+                        "averted_pre_right_point",
+                        "averted_right_tracking",
+                        "averted_left_tracking",
+                        "averted_post_left_point",
+                        "averted_post_right_point",
+                    ]
+
+                    # Put all labels into a list for baseline data
+                    listOfOrders = []
+                    listOfOrders.append(oddOrder1)
+                    listOfOrders.append(evenOrder1)
+
+                    # Number that is used to take the label (oddOrder1 atau evenOrder1)
+                    i_label_taker = 0
+
+                    if i % 2 == 0:
+
+                        # Even number
+                        i_label_taker = 0
+
+                    else:
+
+                        # Odd number
+                        i_label_taker = 1
+
+                    chosenOrder = listOfOrders[i_label_taker]
+
+                    # Get the first 12 markers' indices and extract the data
+                    indicesofBaselineMarkers = indicesOfMarkers[:12]
+
+                    # Chunk the data based on opening and closing markers
+                    chunkedData = []
+                    for i in range(0, len(indicesofBaselineMarkers), 2):
+
+                        chunkedData.append(
+                            df.iloc[
+                                indicesofBaselineMarkers[i] : indicesofBaselineMarkers[
+                                    i + 1
+                                ],
+                                :,
+                            ]
+                        )
+
+                    # Match pattern EyeTracker-Sx (x = any number)
+                    regex = r"\D{10}-S\d+"
+
+                    # Create filename that will be used for each condition. There are 6 conditions. See oddOrder1 or evenOrder1
+                    extracted_file_name_4_baseline = []
+                    for i in chosenOrder:
+                        extracted_file_name = re.search(regex, fileName)
+                        extracted_file_name_4_baseline.append(
+                            fileName[
+                                extracted_file_name.start() : extracted_file_name.end()
+                            ]
+                            + "-"
+                            + i
+                            + "_raw.csv"
+                        )
+
+                    # Save the chunkedData into a separate csv file
+                    for i, val in tqdm(
+                        enumerate(chunkedData), desc="Saving process..."
+                    ):
+
+                        # Convert array into dataframe
+                        df_chunkedData = pd.DataFrame(val)
+
+                        # Save dataframe into csv
+                        os.chdir(path_2_save_baseline_file)
+                        df_chunkedData.to_csv(
+                            extracted_file_name_4_baseline[i], sep=(",")
+                        )
+
+    print(
+        f"All baseline files of eye data have been saved in csv format in this path {path_2_save_baseline_file}"
+    )
+
+
+# %%Extract experimental data
+
+
+def extract_experiment_eye_data(
+    path_2_csv_files: str,
+    path_2_save_experimental_file: str,
+    labelsequence_experiment: list,
+    bad_files: list = [],
+):
+    """
+    Extract experimental data from raw Eye Tracker file (*.csv) that was obtained from hyperscanning2-redesign experiment \n
+    Arguments :
+        - path_2_csv_files (str) : path to raw Eye tracker file \n
+        - path_2_save_experimental_file (str) : path to save extracted experimental file for each condition \n
+        - labelsequence (int) : order of pre-defined label sequence, 1 (averted) is default \n
+        - bad_files (list) (optional) : file name of raw EyeTracker file, e.g., EyeTracker-S8.csv, that wants to be skipped to process
+    Return :
+        Extracted *.csv file for each condition of hand (finger pointing and tracking).
+        There are 6 files in total for each participant.
+
+
+    """
+
+    list_file_names = []
+    full_path_2_each_file = []
+
+    for file in os.listdir(path_2_csv_files):
+
+        if file.endswith(".csv"):
+
+            if file in bad_files:
+                # Skip the bad file to be processed
+                print(f"Skipped bad file : {file}")
+                continue
+
+            # Populate all file names only
+            list_file_names.append(file)
+            list_file_names.sort()
+
+    # Iterate all file names
+
+    for i in tqdm(range(len(list_file_names)), desc="In progress"):
+
         try:
-            number_markers = len(indicesOfMarkers)
-            if number_markers != 36:  # The number of markers have to be 36
-                raise ValueError("The {} file has incorrect number of markers : {} ! It MUST be 36".format(
-                    fileName, number_markers))
-        except ValueError as err_unmatch_markers:
-            print(err_unmatch_markers)
+            labelsequence = int(labelsequence_experiment[i])
+
+        except IOError as err_filename:
+            print(
+                "The format of file name is not correct or file doesn't exist \nThe format must be 'EEG-Sx.csv' , x=subject number "
+            )
+            raise
+        except ValueError as err_integer:
+            print("The labelsequence input must be integer : ", err_integer)
             raise
 
-        # %% Loop the list of labels in sequence
-        # todo Create a list of labels with different sequences and put them into a list (list of list)
+        else:
+            if labelsequence < 1 or labelsequence > 12:
+                print(
+                    "The value for labelsequence parameter is out of range. It must be be between 1 and 12"
+                )
+                raise IndexError
+            else:
 
-        # Order = 1 (Averted/Direct/Natural)
-        oddOrder1 = ["averted_pre_right_point", "averted_pre_left_point", "averted_left_tracking", "averted_right_tracking",
-                     "averted_post_right_point", "averted_post_left_point", "direct_pre_right_point", "direct_pre_left_point",
-                     "direct_left_tracking", "direct_right_tracking", "direct_post_right_point", "direct_post_left_point",
-                     "natural_pre_right_point", "natural_pre_left_point", "natural_left_tracking", "natural_right_tracking",
-                     "natural_post_right_point", "natural_post_left_point"]
+                # Load the data
+                fileName = list_file_names[i]
 
-        evenOrder1 = ["averted_pre_left_point", "averted_pre_right_point", "averted_right_tracking", "averted_left_tracking",
-                      "averted_post_left_point", "averted_post_right_point", "direct_pre_left_point", "direct_pre_right_point",
-                      "direct_right_tracking", "direct_left_tracking", "direct_post_left_point", "direct_post_right_point",
-                      "natural_pre_left_point", "natural_pre_right_point", "natural_right_tracking", "natural_left_tracking",
-                      "natural_post_left_point", "natural_post_right_point"]
+                # Change to a folder where original CSV files are stored
+                os.chdir(path_2_csv_files)
 
-        # Order = 2 (Averted/Natural/Direct)
-        oddOrder2 = ["averted_pre_right_point", "averted_pre_left_point", "averted_left_tracking", "averted_right_tracking",
-                     "averted_post_right_point", "averted_post_left_point", "natural_pre_right_point", "natural_pre_left_point",
-                     "natural_left_tracking", "natural_right_tracking", "natural_post_right_point", "natural_post_left_point",
-                     "direct_pre_right_point", "direct_pre_left_point", "direct_left_tracking", "direct_right_tracking",
-                     "direct_post_right_point", "direct_post_left_point"]
+                print("Processing file : " + list_file_names[i])
 
-        evenOrder2 = ["averted_pre_left_point", "averted_pre_right_point", "averted_right_tracking", "averted_left_tracking",
-                      "averted_post_left_point", "averted_post_right_point", "natural_pre_left_point", "natural_pre_right_point",
-                      "natural_right_tracking", "natural_left_tracking", "natural_post_left_point", "natural_post_right_point",
-                      "direct_pre_left_point", "direct_pre_right_point", "direct_right_tracking", "direct_left_tracking",
-                      "direct_post_left_point", "direct_post_right_point"]
+                # Read each file by using pandas
+                df = pd.read_csv(fileName, delimiter=",")
 
-        # Order = 3 (Direct / Natural / Averted)
-        oddOrder3 = ["direct_pre_right_point", "direct_pre_left_point", "direct_left_tracking", "direct_right_tracking",
-                     "direct_post_right_point", "direct_post_left_point", "natural_pre_right_point", "natural_pre_left_point",
-                     "natural_left_tracking", "natural_right_tracking", "natural_post_right_point", "natural_post_left_point",
-                     "averted_pre_right_point", "averted_pre_left_point", "averted_left_tracking", "averted_right_tracking",
-                     "averted_post_right_point", "averted_post_left_point"]
+                df["UnixTimeStamp"] = df.UnixTimeStamp.apply(
+                    lambda x: "9999999" if "BEGIN" in x else x
+                )
+                df["UnixTimeStamp"] = df.UnixTimeStamp.apply(
+                    lambda x: "9999999" if "END" in x else x
+                )
 
-        evenOrder3 = ["direct_pre_left_point", "direct_pre_right_point", "direct_right_tracking", "direct_left_tracking",
-                      "direct_post_left_point", "direct_post_right_point", "natural_pre_left_point", "natural_pre_right_point",
-                      "natural_right_tracking", "natural_left_tracking", "natural_post_left_point", "natural_post_right_point",
-                      "averted_pre_left_point", "averted_pre_right_point", "averted_right_tracking", "averted_left_tracking",
-                      "averted_post_left_point", "averted_post_right_point"]
+                # Turn the UnixTimeStamp column into a list (we need the marker later on)
+                markers = df["UnixTimeStamp"].tolist()
 
-        # Order = 4 (Direct/Averted/Natural)
-        oddOrder4 = ["direct_pre_right_point", "direct_pre_left_point", "direct_left_tracking", "direct_right_tracking",
-                     "direct_post_right_point", "direct_post_left_point", "averted_pre_right_point", "averted_pre_left_point",
-                     "averted_left_tracking", "averted_right_tracking", "averted_post_right_point", "averted_post_left_point",
-                     "natural_pre_right_point", "natural_pre_left_point", "natural_left_tracking", "natural_right_tracking",
-                     "natural_post_right_point", "natural_post_left_point"]
+                # Convert string value to integer number
+                markers = list(map(int, markers))
 
-        evenOrder4 = ["direct_pre_left_point", "direct_pre_right_point", "direct_right_tracking", "direct_left_tracking",
-                      "direct_post_left_point", "direct_post_right_point", "averted_pre_left_point", "averted_pre_right_point",
-                      "averted_right_tracking", "averted_left_tracking", "averted_post_left_point", "averted_post_right_point",
-                      "natural_pre_left_point", "natural_pre_right_point", "natural_right_tracking", "natural_left_tracking",
-                      "natural_post_left_point", "natural_post_right_point"]
+                #   Find all experimental markers and print them out.
+                indicesOfMarkers = []  # Empty list to contain indices of markers
+                for i, c in enumerate(markers):
+                    if "9999999" in str(c):
+                        indicesOfMarkers.append(i)
+                try:
+                    number_markers = len(indicesOfMarkers)
+                    if number_markers != 48:  # check if the number of markers = 48
+                        raise ValueError(
+                            "The {} file has incorrect number of markers : {} ! It MUST be 48".format(
+                                fileName, number_markers
+                            )
+                        )
+                except ValueError as err_unmatch_markers:
+                    print(err_unmatch_markers)
+                    raise
 
-        # Order = 5 (Natural/Direct/Averted)
-        oddOrder5 = ["natural_pre_right_point", "natural_pre_left_point", "natural_left_tracking", "natural_right_tracking",
-                     "natural_post_right_point", "natural_post_left_point", "direct_pre_right_point", "direct_pre_left_point",
-                     "direct_left_tracking", "direct_right_tracking", "direct_post_right_point", "direct_post_left_point",
-                     "averted_pre_right_point", "averted_pre_left_point", "averted_left_tracking", "averted_right_tracking",
-                     "averted_post_right_point", "averted_post_left_point"]
+                # Create a list of labels for experimental data.
 
-        evenOrder5 = ["natural_pre_left_point", "natural_pre_right_point", "natural_right_tracking", "natural_left_tracking",
-                      "natural_post_left_point", "natural_post_right_point", "direct_pre_left_point", "direct_pre_right_point",
-                      "direct_right_tracking", "direct_left_tracking", "direct_post_left_point", "direct_post_right_point",
-                      "averted_pre_left_point", "averted_pre_right_point", "averted_right_tracking", "averted_left_tracking",
-                      "averted_post_left_point", "averted_post_right_point"]
+                # Order = 1 (Averted/Direct/Natural)
+                oddOrder1 = [
+                    "averted_pre_right_point",
+                    "averted_pre_left_point",
+                    "averted_left_tracking",
+                    "averted_right_tracking",
+                    "averted_post_right_point",
+                    "averted_post_left_point",
+                    "direct_pre_right_point",
+                    "direct_pre_left_point",
+                    "direct_left_tracking",
+                    "direct_right_tracking",
+                    "direct_post_right_point",
+                    "direct_post_left_point",
+                    "natural_pre_right_point",
+                    "natural_pre_left_point",
+                    "natural_left_tracking",
+                    "natural_right_tracking",
+                    "natural_post_right_point",
+                    "natural_post_left_point",
+                ]
 
-        # Order = 6 (Natural/Averted/Direct)
-        oddOrder6 = ["natural_pre_right_point", "natural_pre_left_point", "natural_left_tracking", "natural_right_tracking",
-                     "natural_post_right_point", "natural_post_left_point", "averted_pre_right_point", "averted_pre_left_point",
-                     "averted_left_tracking", "averted_right_tracking", "averted_post_right_point", "averted_post_left_point",
-                     "direct_pre_right_point", "direct_pre_left_point", "direct_left_tracking", "direct_right_tracking",
-                     "direct_post_right_point", "direct_post_left_point"]
+                evenOrder1 = [
+                    "averted_pre_left_point",
+                    "averted_pre_right_point",
+                    "averted_right_tracking",
+                    "averted_left_tracking",
+                    "averted_post_left_point",
+                    "averted_post_right_point",
+                    "direct_pre_left_point",
+                    "direct_pre_right_point",
+                    "direct_right_tracking",
+                    "direct_left_tracking",
+                    "direct_post_left_point",
+                    "direct_post_right_point",
+                    "natural_pre_left_point",
+                    "natural_pre_right_point",
+                    "natural_right_tracking",
+                    "natural_left_tracking",
+                    "natural_post_left_point",
+                    "natural_post_right_point",
+                ]
 
-        evenOrder6 = ["natural_pre_left_point", "natural_pre_right_point", "natural_right_tracking", "natural_left_tracking",
-                      "natural_post_left_point", "natural_post_right_point", "averted_pre_left_point", "averted_pre_right_point",
-                      "averted_right_tracking", "averted_left_tracking", "averted_post_left_point", "averted_post_right_point",
-                      "direct_pre_left_point", "direct_pre_right_point", "direct_right_tracking", "direct_left_tracking",
-                      "direct_post_left_point", "direct_post_right_point"]
-        # %% Add all labels into a list
+                # Order = 2 (Averted/Natural/Direct)
+                oddOrder2 = [
+                    "averted_pre_right_point",
+                    "averted_pre_left_point",
+                    "averted_left_tracking",
+                    "averted_right_tracking",
+                    "averted_post_right_point",
+                    "averted_post_left_point",
+                    "natural_pre_right_point",
+                    "natural_pre_left_point",
+                    "natural_left_tracking",
+                    "natural_right_tracking",
+                    "natural_post_right_point",
+                    "natural_post_left_point",
+                    "direct_pre_right_point",
+                    "direct_pre_left_point",
+                    "direct_left_tracking",
+                    "direct_right_tracking",
+                    "direct_post_right_point",
+                    "direct_post_left_point",
+                ]
 
-        listOfOrders = []
+                evenOrder2 = [
+                    "averted_pre_left_point",
+                    "averted_pre_right_point",
+                    "averted_right_tracking",
+                    "averted_left_tracking",
+                    "averted_post_left_point",
+                    "averted_post_right_point",
+                    "natural_pre_left_point",
+                    "natural_pre_right_point",
+                    "natural_right_tracking",
+                    "natural_left_tracking",
+                    "natural_post_left_point",
+                    "natural_post_right_point",
+                    "direct_pre_left_point",
+                    "direct_pre_right_point",
+                    "direct_right_tracking",
+                    "direct_left_tracking",
+                    "direct_post_left_point",
+                    "direct_post_right_point",
+                ]
 
-        for i in tqdm(range(6)):
-            # Append odd order labels
-            listOfOrders.append(eval('oddOrder' + str(i + 1)))
-            # Append even order labels
-            listOfOrders.append(eval('evenOrder' + str(i + 1)))
+                # Order = 3 (Direct / Natural / Averted)
+                oddOrder3 = [
+                    "direct_pre_right_point",
+                    "direct_pre_left_point",
+                    "direct_left_tracking",
+                    "direct_right_tracking",
+                    "direct_post_right_point",
+                    "direct_post_left_point",
+                    "natural_pre_right_point",
+                    "natural_pre_left_point",
+                    "natural_left_tracking",
+                    "natural_right_tracking",
+                    "natural_post_right_point",
+                    "natural_post_left_point",
+                    "averted_pre_right_point",
+                    "averted_pre_left_point",
+                    "averted_left_tracking",
+                    "averted_right_tracking",
+                    "averted_post_right_point",
+                    "averted_post_left_point",
+                ]
 
-        # TODO:  !  VERY IMPORTANT !!!
-        # chosenOrder = listOfOrders[labelsequence-1] # Uncomment this later when the function works
+                evenOrder3 = [
+                    "direct_pre_left_point",
+                    "direct_pre_right_point",
+                    "direct_right_tracking",
+                    "direct_left_tracking",
+                    "direct_post_left_point",
+                    "direct_post_right_point",
+                    "natural_pre_left_point",
+                    "natural_pre_right_point",
+                    "natural_right_tracking",
+                    "natural_left_tracking",
+                    "natural_post_left_point",
+                    "natural_post_right_point",
+                    "averted_pre_left_point",
+                    "averted_pre_right_point",
+                    "averted_right_tracking",
+                    "averted_left_tracking",
+                    "averted_post_left_point",
+                    "averted_post_right_point",
+                ]
 
-        # TODO: !  VERY IMPORTANT !!!
-        # Comment this  when the above line is uncommented
-        chosenOrder = listOfOrders[0]
+                # Order = 4 (Direct/Averted/Natural)
+                oddOrder4 = [
+                    "direct_pre_right_point",
+                    "direct_pre_left_point",
+                    "direct_left_tracking",
+                    "direct_right_tracking",
+                    "direct_post_right_point",
+                    "direct_post_left_point",
+                    "averted_pre_right_point",
+                    "averted_pre_left_point",
+                    "averted_left_tracking",
+                    "averted_right_tracking",
+                    "averted_post_right_point",
+                    "averted_post_left_point",
+                    "natural_pre_right_point",
+                    "natural_pre_left_point",
+                    "natural_left_tracking",
+                    "natural_right_tracking",
+                    "natural_post_right_point",
+                    "natural_post_left_point",
+                ]
 
-        # %% Chunk the data based on opening and closing markers
-        chunkedData = []
-        for i in range(0, 36, 2):
-            chunkedData.append(
-                df.iloc[indicesOfMarkers[i]: indicesOfMarkers[i + 1] + 1, 1:22])
+                evenOrder4 = [
+                    "direct_pre_left_point",
+                    "direct_pre_right_point",
+                    "direct_right_tracking",
+                    "direct_left_tracking",
+                    "direct_post_left_point",
+                    "direct_post_right_point",
+                    "averted_pre_left_point",
+                    "averted_pre_right_point",
+                    "averted_right_tracking",
+                    "averted_left_tracking",
+                    "averted_post_left_point",
+                    "averted_post_right_point",
+                    "natural_pre_left_point",
+                    "natural_pre_right_point",
+                    "natural_right_tracking",
+                    "natural_left_tracking",
+                    "natural_post_left_point",
+                    "natural_post_right_point",
+                ]
 
-        # %% Save the chunkedData into a separate csv file
-        path = "/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_separated/"
-        for idx, label in enumerate(chosenOrder):
-            char_idx = filename.find("-")
-            sub_no = filename[char_idx+1:filename.index(".")]
-            label_fname = sub_no + "-" + chosenOrder[idx] + ".csv"
-            chunkedData[idx].to_csv(os.path.join(path, label_fname))
+                # Order = 5 (Natural/Direct/Averted)
+                oddOrder5 = [
+                    "natural_pre_right_point",
+                    "natural_pre_left_point",
+                    "natural_left_tracking",
+                    "natural_right_tracking",
+                    "natural_post_right_point",
+                    "natural_post_left_point",
+                    "direct_pre_right_point",
+                    "direct_pre_left_point",
+                    "direct_left_tracking",
+                    "direct_right_tracking",
+                    "direct_post_right_point",
+                    "direct_post_left_point",
+                    "averted_pre_right_point",
+                    "averted_pre_left_point",
+                    "averted_left_tracking",
+                    "averted_right_tracking",
+                    "averted_post_right_point",
+                    "averted_post_left_point",
+                ]
 
-    print("Data have been extracted from : " + fileName)
+                evenOrder5 = [
+                    "natural_pre_left_point",
+                    "natural_pre_right_point",
+                    "natural_right_tracking",
+                    "natural_left_tracking",
+                    "natural_post_left_point",
+                    "natural_post_right_point",
+                    "direct_pre_left_point",
+                    "direct_pre_right_point",
+                    "direct_right_tracking",
+                    "direct_left_tracking",
+                    "direct_post_left_point",
+                    "direct_post_right_point",
+                    "averted_pre_left_point",
+                    "averted_pre_right_point",
+                    "averted_right_tracking",
+                    "averted_left_tracking",
+                    "averted_post_left_point",
+                    "averted_post_right_point",
+                ]
+
+                # Order = 6 (Natural/Averted/Direct)
+                oddOrder6 = [
+                    "natural_pre_right_point",
+                    "natural_pre_left_point",
+                    "natural_left_tracking",
+                    "natural_right_tracking",
+                    "natural_post_right_point",
+                    "natural_post_left_point",
+                    "averted_pre_right_point",
+                    "averted_pre_left_point",
+                    "averted_left_tracking",
+                    "averted_right_tracking",
+                    "averted_post_right_point",
+                    "averted_post_left_point",
+                    "direct_pre_right_point",
+                    "direct_pre_left_point",
+                    "direct_left_tracking",
+                    "direct_right_tracking",
+                    "direct_post_right_point",
+                    "direct_post_left_point",
+                ]
+
+                evenOrder6 = [
+                    "natural_pre_left_point",
+                    "natural_pre_right_point",
+                    "natural_right_tracking",
+                    "natural_left_tracking",
+                    "natural_post_left_point",
+                    "natural_post_right_point",
+                    "averted_pre_left_point",
+                    "averted_pre_right_point",
+                    "averted_right_tracking",
+                    "averted_left_tracking",
+                    "averted_post_left_point",
+                    "averted_post_right_point",
+                    "direct_pre_left_point",
+                    "direct_pre_right_point",
+                    "direct_right_tracking",
+                    "direct_left_tracking",
+                    "direct_post_left_point",
+                    "direct_post_right_point",
+                ]
+
+                # Populate all orders
+                listOfOrders = []
+                for i in tqdm(range(6)):
+                    listOfOrders.append(eval("oddOrder" + str(i + 1)))
+                    listOfOrders.append(eval("evenOrder" + str(i + 1)))
+
+                labelsequence = labelsequence - 1
+                chosenOrder = listOfOrders[labelsequence - 1]
+
+                # Get the experimental markers' indices and extract the data
+                indicesofExperimentalMarkers = indicesOfMarkers[12:]
+
+                # Chunk the data based on opening and closing markers
+                chunkedData = []
+                for i in range(0, len(indicesofExperimentalMarkers), 2):
+
+                    chunkedData.append(
+                        df.iloc[
+                            indicesofExperimentalMarkers[
+                                i
+                            ] : indicesofExperimentalMarkers[i + 1],
+                            :,
+                        ]
+                    )
+
+                # Match pattern EyeTracker-Sx (x = any number)
+                regex = r"\D{10}-S\d+"
+
+                # Create filename that will be used for each condition. There are 6 conditions. See oddOrder1 or evenOrder1
+                extracted_file_name_4_experimental = []
+                for i in chosenOrder:
+                    extracted_file_name = re.search(regex, fileName)
+                    extracted_file_name_4_experimental.append(
+                        fileName[
+                            extracted_file_name.start() : extracted_file_name.end()
+                        ]
+                        + "-"
+                        + i
+                        + "_raw.csv"
+                    )
+
+                # Save the chunkedData into a separate csv file
+                for i, val in tqdm(enumerate(chunkedData), desc="Saving process..."):
+
+                    # Convert array into dataframe
+                    df_chunkedData = pd.DataFrame(val)
+
+                    # Save dataframe into csv
+                    os.chdir(path_2_save_experimental_file)
+                    df_chunkedData.to_csv(
+                        extracted_file_name_4_experimental[i], sep=(",")
+                    )
+
+    print(
+        f"All experimental files of eye data have been saved in csv format in this path {path_2_save_experimental_file}"
+    )
