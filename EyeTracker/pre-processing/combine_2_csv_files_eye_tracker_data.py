@@ -26,284 +26,198 @@ import pandas as pd
 # ### Baseline data
 
 # %% [markdown]
-# #### Define a directory where we store raw eeg files (*.fif), which are not combined yet (Baseline data)
+# #### Define some directories :
+# *  Where we store raw eeg files (*.fif), which are not combined yet (Baseline data)
+# *  Where we would like to store combined eye tracker data (Baseline data)
+# *  Where we would like to store combined eye tracker data (Experiment data)
+#
 
 # %%
-# Go to a directory that stores raw fif file (not combined files)
+# Raw baseline data (not combined yet)
 raw_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/"
-raw_combined_baseline_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/raw_combined_baseline_eye_data/"
-raw_combined_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/"
+# Folder to store combined eye tracker data (baseline data)
+raw_combined_baseline_data_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/raw_combined_baseline_eye_data/"
+# Folder to store combined eye tracker data (experimental data)
+raw_combined_experimental_data_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/"
 
-os.chdir(raw_dir)
-
-# %%
-#TODO : Delete this temporary
-data1 = {'Name':['Tom', 'Brad', 'Kyle', 'Jerry'],
-        'Age':[20, 21, 19, 18],
-        'Height' : [6.1, 5.9, 6.0, 6.1]
-        }
-
-data2 = {'Name':['Tom', 'Brad', 'Kyle', 'Jerry'],
-        'Age':[30, 40, 50, 60],
-        'Height' : [7, 8, 9, 10]
-        }
-
-df1 = pd.DataFrame(data1)
-df2 = pd.DataFrame(data2)
-print(df1.head())
-print()
-print(df2.head())
-
-# %%
-df = pd.concat([df1, df2])
-df
 
 # %% [markdown]
 # #### Combine pre averted baseline
 
 # %%
-for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
-    # Pre-averted
+for i in tqdm(range(15), desc="Combining pre averted..."):  # type: ignore
+    # Pre-averted (for processing subject 1 - 9)
     if i < 9:
 
-        # FIXME : Load using pandas 
-        # averted_pre_right_odd_subject = mne.io.read_raw_fif(
-        #     "EyeTracker-S0" + str(i + 1) + "-averted_pre_right_point_raw.csv", verbose=False
-        # )
-        # TODO : In progress. Keep continuing and testing
-        averted_pre_right_odd_subject_file_name = f"EyeTracker-S0 + str(i + 1) + -averted_pre_right_point_raw.csv"
+        # Load averted pre right
+        averted_pre_right_odd_subject_file_name = "EyeTracker-S0" + str(i + 1) + "-averted_pre_right_point_raw.csv"
         averted_pre_right_odd_subject = pd.read_csv(averted_pre_right_odd_subject_file_name)
 
-        # FIXME : Load using pandas
-        # averted_pre_left_odd_subject = mne.io.read_raw_fif(
-        #     "EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv", verbose=False
-        # )
-
-         # TODO : In progress. Keep continuing and testing
-        averted_pre_left_odd_subject_file_name = f"EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv"
+        # Load Load averted pre left
+        averted_pre_left_odd_subject_file_name = "EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv"
         averted_pre_left_odd_subject = pd.read_csv(averted_pre_left_odd_subject_file_name)
 
         # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
         # For example, i = 0 actually takes S01 and keeps going...
         if (i % 2) == 0:
 
-            averted_pre_files_to_combine = [
-                averted_pre_right_odd_subject,
-                averted_pre_left_odd_subject,
-            ]
-            combined_pre_averted_files = mne.concatenate_raws(
-                averted_pre_files_to_combine
+            # Combine RIGHT => LEFT hand data
+            combined_pre_averted_files = pd.concat([averted_pre_right_odd_subject, averted_pre_left_odd_subject])
+        
+        # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_baseline_data_directory + "S0" + str(i + 1) + "-averted_pre_right_left_point_combined_raw.csv"
             )
 
-            combined_pre_averted_files_label = (
-                raw_combined_baseline_data_dir
-                + "S0"
-                + str(i + 1)
-                + "-averted_pre_right_left_point_combined_raw.csv"
-            )
+        # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
 
         # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
         # For example, i = 1 actually takes S02 and keeps going...
-
         else:
 
-            averted_pre_files_to_combine = [
-                averted_pre_left_odd_subject,
-                averted_pre_right_odd_subject,
-            ]
-
-            combined_pre_averted_files = mne.concatenate_raws(
-                averted_pre_files_to_combine
-            )
-
+            # Combine LEFT => RIGHT hand data
+            combined_pre_averted_files = pd.concat([averted_pre_left_odd_subject, averted_pre_right_odd_subject])
+        
+        # Create  file name for combine files of pre-averted baseline
             combined_pre_averted_files_label = (
-                raw_combined_baseline_data_dir
-                + "S0"
-                + str(i + 1)
-                + "-averted_pre_left_right_point_combined_raw.csv"
+                raw_combined_baseline_data_directory + "S0" + str(i + 1) + "-averted_pre_left_right_point_combined_raw.csv"
             )
 
-        combined_pre_averted_files.save(  # type: ignore
-            combined_pre_averted_files_label, overwrite=True
-        )
+        # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
 
+    # Pre-averted (for processing subject 10 onwards)
     else:
+        # Load averted pre right
+        averted_pre_right_odd_subject_file_name = "EyeTracker-S" + str(i + 1) + "-averted_pre_right_point_raw.csv"
+        averted_pre_right_odd_subject = pd.read_csv(averted_pre_right_odd_subject_file_name)
 
-        averted_pre_right_odd_subject = mne.io.read_raw_fif(
-            "EyeTracker-S" + str(i + 1) + "-averted_pre_right_point_raw.csv", verbose=False
-        )
-        averted_pre_left_odd_subject = mne.io.read_raw_fif(
-            "EyeTracker-S" + str(i + 1) + "-averted_pre_left_point_raw.csv", verbose=False
-        )
-        averted_pre_files_to_combine = [
-            averted_pre_right_odd_subject,
-            averted_pre_left_odd_subject,
-        ]
-        combined_pre_averted_files = mne.concatenate_raws(averted_pre_files_to_combine)
+        # Load Load averted pre left
+        averted_pre_left_odd_subject_file_name = "EyeTracker-S" + str(i + 1) + "-averted_pre_left_point_raw.csv"
+        averted_pre_left_odd_subject = pd.read_csv(averted_pre_left_odd_subject_file_name)
 
         # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
         # For example, i = 0 actually takes S01 and keeps going...
         if (i % 2) == 0:
 
-            averted_pre_files_to_combine = [
-                averted_pre_right_odd_subject,
-                averted_pre_left_odd_subject,
-            ]
-            combined_pre_averted_files = mne.concatenate_raws(
-                averted_pre_files_to_combine
+            # Combine RIGHT => LEFT hand data
+            combined_pre_averted_files = pd.concat([averted_pre_right_odd_subject, averted_pre_left_odd_subject])
+        
+        # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_baseline_data_directory + "S" + str(i + 1) + "-averted_pre_right_left_point_combined_raw.csv"
             )
 
-            combined_pre_averted_files_label = (
-                raw_combined_baseline_data_dir
-                + "S"
-                + str(i + 1)
-                + "-averted_pre_right_left_point_combined_raw.csv"
-            )
+        # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
 
         # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
         # For example, i = 1 actually takes S02 and keeps going...
-
         else:
 
-            averted_pre_files_to_combine = [
-                averted_pre_left_odd_subject,
-                averted_pre_right_odd_subject,
-            ]
-
-            combined_pre_averted_files = mne.concatenate_raws(
-                averted_pre_files_to_combine
-            )
-
+            # Combine LEFT => RIGHT hand data
+            combined_pre_averted_files = pd.concat([averted_pre_left_odd_subject, averted_pre_right_odd_subject])
+        
+        # Create  file name for combine files of pre-averted baseline
             combined_pre_averted_files_label = (
-                raw_combined_baseline_data_dir
-                + "S"
-                + str(i + 1)
-                + "-averted_pre_left_right_point_combined_raw.csv"
+                raw_combined_baseline_data_directory + "S" + str(i + 1) + "-averted_pre_left_right_point_combined_raw.csv"
             )
 
-        combined_pre_averted_files.save(  # type: ignore
-            combined_pre_averted_files_label, overwrite=True
-        )
+        # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
 
 # %% [markdown]
 # #### Combine post averted baseline
 
 # %%
-
-for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
-    # post-averted
+for i in tqdm(range(15), desc="Combining post averted..."):  # type: ignore
+    # Pre-averted (for processing subject 1 - 9)
     if i < 9:
 
-        averted_post_right_odd_subject = mne.io.read_raw_fif(
-            "EEG-S0" + str(i + 1) + "-averted_post_right_point_raw.fif", verbose=False
-        )
-        averted_post_left_odd_subject = mne.io.read_raw_fif(
-            "EEG-S0" + str(i + 1) + "-averted_post_left_point_raw.fif", verbose=False
-        )
+        # Load averted post right
+        averted_post_right_odd_subject_file_name = "EyeTracker-S0" + str(i + 1) + "-averted_post_right_point_raw.csv"
+        averted_post_right_odd_subject = pd.read_csv(averted_post_right_odd_subject_file_name)
+
+        # Load Load averted post left
+        averted_post_left_odd_subject_file_name = "EyeTracker-S0" + str(i + 1) + "-averted_post_left_point_raw.csv"
+        averted_post_left_odd_subject = pd.read_csv(averted_post_left_odd_subject_file_name)
 
         # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
         # For example, i = 0 actually takes S01 and keeps going...
         if (i % 2) == 0:
 
-            averted_post_files_to_combine = [
-                averted_post_right_odd_subject,
-                averted_post_left_odd_subject,
-            ]
-            combined_post_averted_files = mne.concatenate_raws(
-                averted_post_files_to_combine
+            # Combine RIGHT => LEFT hand data
+            combined_post_averted_files = pd.concat([averted_post_right_odd_subject, averted_post_left_odd_subject])
+        
+        # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_baseline_data_directory + "S0" + str(i + 1) + "-averted_post_right_left_point_combined_raw.csv"
             )
 
-            combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
-                + "S0"
-                + str(i + 1)
-                + "-averted_post_right_left_point_combined_raw.fif"
-            )
+        # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
 
         # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
         # For example, i = 1 actually takes S02 and keeps going...
-
         else:
 
-            averted_post_files_to_combine = [
-                averted_post_left_odd_subject,
-                averted_post_right_odd_subject,
-            ]
-
-            combined_post_averted_files = mne.concatenate_raws(
-                averted_post_files_to_combine
-            )
-
+            # Combine LEFT => RIGHT hand data
+            combined_post_averted_files = pd.concat([averted_post_left_odd_subject, averted_post_right_odd_subject])
+        
+        # Create  file name for combine files of post-averted baseline
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
-                + "S0"
-                + str(i + 1)
-                + "-averted_post_left_right_point_combined_raw.fif"
+                raw_combined_baseline_data_directory + "S0" + str(i + 1) + "-averted_post_left_right_point_combined_raw.csv"
             )
 
-        combined_post_averted_files.save(  # type: ignore
-            combined_post_averted_files_label, overwrite=True
-        )
+        # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
 
+    # Pre-averted (for processing subject 10 onwards)
     else:
+        # Load averted post right
+        averted_post_right_odd_subject_file_name = "EyeTracker-S" + str(i + 1) + "-averted_post_right_point_raw.csv"
+        averted_post_right_odd_subject = pd.read_csv(averted_post_right_odd_subject_file_name)
 
-        averted_post_right_odd_subject = mne.io.read_raw_fif(
-            "EEG-S" + str(i + 1) + "-averted_post_right_point_raw.fif", verbose=False
-        )
-        averted_post_left_odd_subject = mne.io.read_raw_fif(
-            "EEG-S" + str(i + 1) + "-averted_post_left_point_raw.fif", verbose=False
-        )
-        averted_post_files_to_combine = [
-            averted_post_right_odd_subject,
-            averted_post_left_odd_subject,
-        ]
-        combined_post_averted_files = mne.concatenate_raws(
-            averted_post_files_to_combine
-        )
+        # Load Load averted post left
+        averted_post_left_odd_subject_file_name = "EyeTracker-S" + str(i + 1) + "-averted_post_left_point_raw.csv"
+        averted_post_left_odd_subject = pd.read_csv(averted_post_left_odd_subject_file_name)
 
         # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
         # For example, i = 0 actually takes S01 and keeps going...
         if (i % 2) == 0:
 
-            averted_post_files_to_combine = [
-                averted_post_right_odd_subject,
-                averted_post_left_odd_subject,
-            ]
-            combined_post_averted_files = mne.concatenate_raws(
-                averted_post_files_to_combine
+            # Combine RIGHT => LEFT hand data
+            combined_post_averted_files = pd.concat([averted_post_right_odd_subject, averted_post_left_odd_subject])
+        
+        # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_baseline_data_directory + "S" + str(i + 1) + "-averted_post_right_left_point_combined_raw.csv"
             )
 
-            combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
-                + "S"
-                + str(i + 1)
-                + "-averted_post_right_left_point_combined_raw.fif"
-            )
+        # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
 
         # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
         # For example, i = 1 actually takes S02 and keeps going...
-
         else:
 
-            averted_post_files_to_combine = [
-                averted_post_left_odd_subject,
-                averted_post_right_odd_subject,
-            ]
-
-            combined_post_averted_files = mne.concatenate_raws(
-                averted_post_files_to_combine
-            )
-
+            # Combine LEFT => RIGHT hand data
+            combined_post_averted_files = pd.concat([averted_post_left_odd_subject, averted_post_right_odd_subject])
+        
+        # Create  file name for combine files of post-averted baseline
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
-                + "S"
-                + str(i + 1)
-                + "-averted_post_left_right_point_combined_raw.fif"
+                raw_combined_baseline_data_directory + "S" + str(i + 1) + "-averted_post_left_right_point_combined_raw.csv"
             )
 
-        combined_post_averted_files.save(  # type: ignore
-            combined_post_averted_files_label, overwrite=True
-        )
+        # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
 
 # %% [markdown]
 # ### Experimental
