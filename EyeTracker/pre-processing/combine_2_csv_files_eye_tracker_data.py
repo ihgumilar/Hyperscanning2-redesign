@@ -20,6 +20,7 @@ import mne
 import tqdm
 from tqdm import tqdm
 import os
+import pandas as pd
 
 # %% [markdown]
 # ### Baseline data
@@ -29,11 +30,33 @@ import os
 
 # %%
 # Go to a directory that stores raw fif file (not combined files)
-raw_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/raw_combined_baseline_eye_data/"
+raw_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/"
 raw_combined_baseline_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/raw_combined_baseline_eye_data/"
 raw_combined_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/"
 
 os.chdir(raw_dir)
+
+# %%
+#TODO : Delete this temporary
+data1 = {'Name':['Tom', 'Brad', 'Kyle', 'Jerry'],
+        'Age':[20, 21, 19, 18],
+        'Height' : [6.1, 5.9, 6.0, 6.1]
+        }
+
+data2 = {'Name':['Tom', 'Brad', 'Kyle', 'Jerry'],
+        'Age':[30, 40, 50, 60],
+        'Height' : [7, 8, 9, 10]
+        }
+
+df1 = pd.DataFrame(data1)
+df2 = pd.DataFrame(data2)
+print(df1.head())
+print()
+print(df2.head())
+
+# %%
+df = pd.concat([df1, df2])
+df
 
 # %% [markdown]
 # #### Combine pre averted baseline
@@ -43,12 +66,22 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
     # Pre-averted
     if i < 9:
 
-        averted_pre_right_odd_subject = mne.io.read_raw_fif(
-            "EyeTracker-S0" + str(i + 1) + "-averted_pre_right_point_raw.csv", verbose=False
-        )
-        averted_pre_left_odd_subject = mne.io.read_raw_fif(
-            "EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv", verbose=False
-        )
+        # FIXME : Load using pandas 
+        # averted_pre_right_odd_subject = mne.io.read_raw_fif(
+        #     "EyeTracker-S0" + str(i + 1) + "-averted_pre_right_point_raw.csv", verbose=False
+        # )
+        # TODO : In progress. Keep continuing and testing
+        averted_pre_right_odd_subject_file_name = f"EyeTracker-S0 + str(i + 1) + -averted_pre_right_point_raw.csv"
+        averted_pre_right_odd_subject = pd.read_csv(averted_pre_right_odd_subject_file_name)
+
+        # FIXME : Load using pandas
+        # averted_pre_left_odd_subject = mne.io.read_raw_fif(
+        #     "EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv", verbose=False
+        # )
+
+         # TODO : In progress. Keep continuing and testing
+        averted_pre_left_odd_subject_file_name = f"EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv"
+        averted_pre_left_odd_subject = pd.read_csv(averted_pre_left_odd_subject_file_name)
 
         # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
         # For example, i = 0 actually takes S01 and keeps going...
