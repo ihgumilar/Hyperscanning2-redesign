@@ -1,401 +1,1054 @@
-# %% Import modules
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
+
+# %%
+# Import relevant packages
+import mne
+import tqdm
 from tqdm import tqdm
 import os
-from os import listdir
-from os.path import isfile, join
 import pandas as pd
 
-# %% markdown
-# IMPORTANT !!
-# Before you begin, please look for # TODO (there are 2 places).
-# Please change accordingly
-# %%  Define where separated data available
-# NOTE: Adjust this accordingly
-path_eye_data_separated = '/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_separated'
+# %% [markdown]
+# ### Baseline data
 
-# NOTE: Adjust this accordingly
-# Define where to save combined data
-path_eye_data_combined = '/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_combined'
-# Get all available file names of eye tracker data that are still separated
-onlyfiles = [f for f in listdir(path_eye_data_separated) if isfile(
-    join(path_eye_data_separated, f))]
+# %% [markdown]
+# #### Define some directories :
+# *  Where we store raw eeg files (*.csv), which are not combined yet (Baseline data)
+# *  Where we would like to store combined eye tracker data (Baseline data)
+#
+#
 
-# %%Populate all files which have the same subject no into one list.
-list_subj_files = []
-file = onlyfiles[0]
+# %%
+# Raw baseline data (csv file) (not combined yet)
+raw_dir_baseline = (
+    "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/"
+)
 
-for i in range(1, 33):  # TODO: : Adjust this later on according to how many subjects, eg.32
-    start_idx_subj = file.find("S")
-    end_idx_subj = file.index("-")
-    subj_no = "S" + str(i)
+# Folder to store combined eye tracker data (baseline data)
+raw_combined_baseline_data_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data/raw_combined_baseline_eye_data/"
 
-    # Populate all files which have the same subject no into one list.
-    subj_files = [
-        idx for idx in onlyfiles if idx[start_idx_subj:end_idx_subj] == subj_no]
-    list_subj_files.append(subj_files)
+# Change to directory which stores raw baseline data (not combined)
+os.chdir(raw_dir_baseline)
 
-# %% Put all files that have the same subject no. (Pre & Post ONLY) into the same list
-# Even - Pre
-averted_pre_right_even = []
-averted_pre_left_even = []
-direct_pre_right_even = []
-direct_pre_left_even = []
-natural_pre_right_even = []
-natural_pre_left_even = []
+# %% [markdown]
+# #### Combine pre averted baseline
 
-# Even - Post
-averted_post_right_even = []
-averted_post_left_even = []
-direct_post_right_even = []
-direct_post_left_even = []
-natural_post_right_even = []
-natural_post_left_even = []
+# %%
+for i in tqdm(range(15), desc="Combining pre averted..."):  # type: ignore
+    # Pre-averted (for processing subject 1 - 9)
+    if i < 9:
 
-# Odd - Pre
-averted_pre_right_odd = []
-averted_pre_left_odd = []
-direct_pre_right_odd = []
-direct_pre_left_odd = []
-natural_pre_right_odd = []
-natural_pre_left_odd = []
+        # Load averted pre right
+        averted_pre_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_pre_right_point_raw.csv"
+        )
+        averted_pre_right_odd_subject = pd.read_csv(
+            averted_pre_right_odd_subject_file_name
+        )
 
-# Odd - Post
-averted_post_right_odd = []
-averted_post_left_odd = []
-direct_post_right_odd = []
-direct_post_left_odd = []
-natural_post_right_odd = []
-natural_post_left_odd = []
+        # Load Load averted pre left
+        averted_pre_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv"
+        )
+        averted_pre_left_odd_subject = pd.read_csv(
+            averted_pre_left_odd_subject_file_name
+        )
 
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
 
-for idx, file in enumerate(list_subj_files):
-    for idx_inside, file_inside in enumerate(file):
-        start_idx_subj = file_inside.find("S")
-        end_idx_subj = file_inside.index("-")
-        subj_no = file_inside[start_idx_subj + 1:end_idx_subj]
+            # Combine RIGHT => LEFT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+            )
 
-        # Even subject
-        if int(subj_no) % 2 == 0:
-            subj = file[start_idx_subj:end_idx_subj]
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_pre_right_left_point_combined_raw.csv"
+            )
 
-            # Pre
-            key_averted_pre_right_even = file_inside[0] + \
-                subj_no + '-averted_pre_right'
-            key_averted_pre_left_even = file_inside[0] + \
-                subj_no + '-averted_pre_left'
-            key_direct_pre_right_even = file_inside[0] + \
-                subj_no + '-direct_pre_right'
-            key_direct_pre_left_even = file_inside[0] + \
-                subj_no + '-direct_pre_left'
-            key_natural_pre_right_even = file_inside[0] + \
-                subj_no + '-natural_pre_right'
-            key_natural_pre_left_even = file_inside[0] + \
-                subj_no + '-natural_pre_left'
-            # Post
-            key_averted_post_right_even = file_inside[0] + \
-                subj_no + '-averted_post_right'
-            key_averted_post_left_even = file_inside[0] + \
-                subj_no + '-averted_post_left'
-            key_direct_post_right_even = file_inside[0] + \
-                subj_no + '-direct_post_right'
-            key_direct_post_left_even = file_inside[0] + \
-                subj_no + '-direct_post_left'
-            key_natural_post_right_even = file_inside[0] + \
-                subj_no + '-natural_post_right'
-            key_natural_post_left_even = file_inside[0] + \
-                subj_no + '-natural_post_left'
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
 
-            # Pre-training
-            if key_averted_pre_right_even in file_inside:
-                averted_pre_right_even.append(
-                    key_averted_pre_right_even + "_point.csv")
-            elif key_averted_pre_left_even in file_inside:
-                averted_pre_left_even.append(
-                    key_averted_pre_left_even + "_point.csv")
-            elif key_direct_pre_right_even in file_inside:
-                direct_pre_right_even.append(
-                    key_direct_pre_right_even + "_point.csv")
-            elif key_direct_pre_left_even in file_inside:
-                direct_pre_left_even.append(
-                    key_direct_pre_left_even + "_point.csv")
-            elif key_natural_pre_right_even in file_inside:
-                natural_pre_right_even.append(
-                    key_natural_pre_right_even + "_point.csv")
-            elif key_natural_pre_left_even in file_inside:
-                natural_pre_left_even.append(
-                    key_natural_pre_left_even + "_point.csv")
-
-            # Post-training
-            elif key_averted_post_right_even in file_inside:
-                averted_post_right_even.append(
-                    key_averted_post_right_even + "_point.csv")
-            elif key_averted_post_left_even in file_inside:
-                averted_post_left_even.append(
-                    key_averted_post_left_even + "_point.csv")
-            elif key_direct_post_right_even in file_inside:
-                direct_post_right_even.append(
-                    key_direct_post_right_even + "_point.csv")
-            elif key_direct_post_left_even in file_inside:
-                direct_post_left_even.append(
-                    key_direct_post_left_even + "_point.csv")
-            elif key_natural_post_right_even in file_inside:
-                natural_post_right_even.append(
-                    key_natural_post_right_even + "_point.csv")
-            elif key_natural_post_left_even in file_inside:
-                natural_post_left_even.append(
-                    key_natural_post_left_even + "_point.csv")
-
-        # Odd subject
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
         else:
-            subj = file[start_idx_subj:end_idx_subj]
-            # Pre
-            key_averted_pre_right_odd = file_inside[0] + \
-                subj_no + '-averted_pre_right'
-            key_averted_pre_left_odd = file_inside[0] + \
-                subj_no + '-averted_pre_left'
-            key_direct_pre_right_odd = file_inside[0] + \
-                subj_no + '-direct_pre_right'
-            key_direct_pre_left_odd = file_inside[0] + \
-                subj_no + '-direct_pre_left'
-            key_natural_pre_right_odd = file_inside[0] + \
-                subj_no + '-natural_pre_right'
-            key_natural_pre_left_odd = file_inside[0] + \
-                subj_no + '-natural_pre_left'
 
-            # Post
-            key_averted_post_right_odd = file_inside[0] + \
-                subj_no + '-averted_post_right'
-            key_averted_post_left_odd = file_inside[0] + \
-                subj_no + '-averted_post_left'
-            key_direct_post_right_odd = file_inside[0] + \
-                subj_no + '-direct_post_right'
-            key_direct_post_left_odd = file_inside[0] + \
-                subj_no + '-direct_post_left'
-            key_natural_post_right_odd = file_inside[0] + \
-                subj_no + '-natural_post_right'
-            key_natural_post_left_odd = file_inside[0] + \
-                subj_no + '-natural_post_left'
+            # Combine LEFT => RIGHT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_left_odd_subject, averted_pre_right_odd_subject]
+            )
 
-            # Pre-training
-            if key_averted_pre_right_odd in file_inside:
-                averted_pre_right_odd.append(
-                    key_averted_pre_right_odd + "_point.csv")
-            elif key_averted_pre_left_odd in file_inside:
-                averted_pre_left_odd.append(
-                    key_averted_pre_left_odd + "_point.csv")
-            elif key_direct_pre_right_odd in file_inside:
-                direct_pre_right_odd.append(
-                    key_direct_pre_right_odd + "_point.csv")
-            elif key_direct_pre_left_odd in file_inside:
-                direct_pre_left_odd.append(
-                    key_direct_pre_left_odd + "_point.csv")
-            elif key_natural_pre_right_odd in file_inside:
-                natural_pre_right_odd.append(
-                    key_natural_pre_right_odd + "_point.csv")
-            elif key_natural_pre_left_odd in file_inside:
-                natural_pre_left_odd.append(
-                    key_natural_pre_left_odd + "_point.csv")
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_pre_left_right_point_combined_raw.csv"
+            )
 
-            # Post-training
-            elif key_averted_post_right_odd in file_inside:
-                averted_post_right_odd.append(
-                    key_averted_post_right_odd + "_point.csv")
-            elif key_averted_post_left_odd in file_inside:
-                averted_post_left_odd.append(
-                    key_averted_post_left_odd + "_point.csv")
-            elif key_direct_post_right_odd in file_inside:
-                direct_post_right_odd.append(
-                    key_direct_post_right_odd + "_point.csv")
-            elif key_direct_post_left_odd in file_inside:
-                direct_post_left_odd.append(
-                    key_direct_post_left_odd + "_point.csv")
-            elif key_natural_post_right_odd in file_inside:
-                natural_post_right_odd.append(
-                    key_natural_post_right_odd + "_point.csv")
-            elif key_natural_post_left_odd in file_inside:
-                natural_post_left_odd.append(
-                    key_natural_post_left_odd + "_point.csv")
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
+    # Pre-averted (for processing subject 10 onwards)
+    else:
+        # Load averted pre right
+        averted_pre_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_pre_right_point_raw.csv"
+        )
+        averted_pre_right_odd_subject = pd.read_csv(
+            averted_pre_right_odd_subject_file_name
+        )
+
+        # Load Load averted pre left
+        averted_pre_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_pre_left_point_raw.csv"
+        )
+        averted_pre_left_odd_subject = pd.read_csv(
+            averted_pre_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_pre_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_left_odd_subject, averted_pre_right_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_pre_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
 
 
-# %% Combine list for left-right (even) and right-left(odd)
-# TODO: Adjust the value of range according to how many files to combine in a list,
-# eg. find len(averted_pre_left_even) = 16  or len(averted_pre_right_even) = 16
+# %% [markdown]
+# #### Combine post averted baseline
 
-for idx in tqdm(range(16), desc="In progress Bro...:)"): 
+# %%
+for i in tqdm(range(15), desc="Combining post averted..."):  # type: ignore
+    # Pre-averted (for processing subject 1 - 9)
+    if i < 9:
 
-    # ####################### Even subject and Pre-training ##################
+        # Load averted post right
+        averted_post_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_post_right_point_raw.csv"
+        )
+        averted_post_right_odd_subject = pd.read_csv(
+            averted_post_right_odd_subject_file_name
+        )
 
-    # Averted pre combined even
-    df1_averted_pre_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_pre_left_even[idx]))  # Left
-    df2_averted_pre_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_pre_right_even[idx]))  # Right
-    df_combined_averted_pre_even = pd.concat(
-        [df1_averted_pre_even, df2_averted_pre_even], ignore_index=True)
-    # save to csv file
-    # NOTE: this is even subject from 2, 4, etc ...
-    fname_combined_averted_pre_even = "S" + \
-        str(idx * 2 + 2) + "-averted_pre_" + "left_right_combined" + ".csv"
-    df_combined_averted_pre_even.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_averted_pre_even))
+        # Load Load averted post left
+        averted_post_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_post_left_point_raw.csv"
+        )
+        averted_post_left_odd_subject = pd.read_csv(
+            averted_post_left_odd_subject_file_name
+        )
 
-    # Direct pre combined even
-    df1_direct_pre_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_pre_left_even[idx]))  # Left
-    df2_direct_pre_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_pre_right_even[idx]))  # Right
-    df_combined_direct_pre_even = pd.concat(
-        [df1_direct_pre_even, df2_direct_pre_even], ignore_index=True)
-    # save to csv file
-    # NOTE: this is even subject from 2, 4, etc ...
-    fname_combined_direct_pre_even = "S" + \
-        str(idx * 2 + 2) + "-direct_pre_" + "left_right_combined" + ".csv"
-    df_combined_direct_pre_even.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_direct_pre_even))
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
 
-    # Natural pre combined even
-    df1_natural_pre_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_pre_left_even[idx]))  # Left
-    df2_natural_pre_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_pre_right_even[idx]))  # Right
-    df_combined_natural_pre_even = pd.concat(
-        [df1_natural_pre_even, df2_natural_pre_even], ignore_index=True)
-    # save to csv file
-    # NOTE: this is even subject from 2, 4, etc ...
-    fname_combined_natural_pre_even = "S" + \
-        str(idx * 2 + 2) + "-natural_pre_" + "left_right_combined" + ".csv"
-    df_combined_natural_pre_even.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_natural_pre_even))
+            # Combine RIGHT => LEFT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_right_odd_subject, averted_post_left_odd_subject]
+            )
 
-    # ####################### Even subject and Post-training ##################
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_post_right_left_point_combined_raw.csv"
+            )
 
-    # Averted post combined even
-    df1_averted_post_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_post_left_even[idx]))  # Left
-    df2_averted_post_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_post_right_even[idx]))  # Right
-    df_combined_averted_post_even = pd.concat(
-        [df1_averted_post_even, df2_averted_post_even], ignore_index=True)
-    # save to csv file
-    # NOTE: this is even subject from 2, 4, etc ...
-    fname_combined_averted_post_even = "S" + \
-        str(idx * 2 + 2) + "-averted_post_" + "left_right_combined" + ".csv"
-    df_combined_averted_post_even.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_averted_post_even))
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
 
-    # Direct post combined even
-    df1_direct_post_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_post_left_even[idx]))  # Left
-    df2_direct_post_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_post_right_even[idx]))  # Right
-    df_combined_direct_post_even = pd.concat(
-        [df1_direct_post_even, df2_direct_post_even], ignore_index=True)
-    # save to csv file
-    # NOTE: this is even subject from 2, 4, etc ...
-    fname_combined_direct_post_even = "S" + \
-        str(idx * 2 + 2) + "-direct_post_" + "left_right_combined" + ".csv"
-    df_combined_direct_post_even.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_direct_post_even))
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
 
-    # Natural post combined even
-    df1_natural_post_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_post_left_even[idx]))  # Left
-    df2_natural_post_even = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_post_right_even[idx]))  # Right
-    df_combined_natural_post_even = pd.concat(
-        [df1_natural_post_even, df2_natural_post_even], ignore_index=True)
-    # save to csv file
-    # NOTE: this is even subject from 2, 4, etc ...
-    fname_combined_natural_post_even = "S" + \
-        str(idx * 2 + 2) + "-natural_post_" + "left_right_combined" + ".csv"
-    df_combined_natural_post_even.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_natural_post_even))
+            # Combine LEFT => RIGHT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_left_odd_subject, averted_post_right_odd_subject]
+            )
 
-    # ####################### Odd subject and Pre-training ##################
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_post_left_right_point_combined_raw.csv"
+            )
 
-    # Averted pre combined odd
-    df1_averted_pre_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_pre_right_odd[idx]))  # Right
-    df2_averted_pre_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_pre_left_odd[idx]))  # Left
-    df_combined_averted_pre_odd = pd.concat(
-        [df1_averted_pre_odd, df2_averted_pre_odd], ignore_index=True)
-    # save to csv file
-    # NOTE: this is odd subject from 1, 3, etc ...
-    fname_combined_averted_pre_odd = "S" + \
-        str(idx * 2 + 1) + "-averted_pre_" + "right_left_combined" + ".csv"
-    df_combined_averted_pre_odd.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_averted_pre_odd))
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
 
-    # Direct pre combined odd
-    df1_direct_pre_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_pre_right_odd[idx]))  # Right
-    df2_direct_pre_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_pre_left_odd[idx]))  # Left
-    df_combined_direct_pre_odd = pd.concat(
-        [df1_direct_pre_odd, df2_direct_pre_odd], ignore_index=True)
-    # save to csv file
-    # NOTE: this is odd subject from 1, 3, etc ...
-    fname_combined_direct_pre_odd = "S" + \
-        str(idx * 2 + 1) + "-direct_pre_" + "right_left_combined" + ".csv"
-    df_combined_direct_pre_odd.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_direct_pre_odd))
+    # Pre-averted (for processing subject 10 onwards)
+    else:
+        # Load averted post right
+        averted_post_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_post_right_point_raw.csv"
+        )
+        averted_post_right_odd_subject = pd.read_csv(
+            averted_post_right_odd_subject_file_name
+        )
 
-    # Natural pre combined odd
-    df1_natural_pre_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_pre_right_odd[idx]))  # Right
-    df2_natural_pre_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_pre_left_odd[idx]))  # Left
-    df_combined_natural_pre_odd = pd.concat(
-        [df1_natural_pre_odd, df2_natural_pre_odd], ignore_index=True)
-    # save to csv file
-    # NOTE: this is odd subject from 1, 3, etc ...
-    fname_combined_natural_pre_odd = "S" + \
-        str(idx * 2 + 1) + "-natural_pre_" + "right_left_combined" + ".csv"
-    df_combined_natural_pre_odd.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_natural_pre_odd))
+        # Load Load averted post left
+        averted_post_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_post_left_point_raw.csv"
+        )
+        averted_post_left_odd_subject = pd.read_csv(
+            averted_post_left_odd_subject_file_name
+        )
 
-    # ####################### Odd subject and Post-training ##################
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
 
-    # Averted post combined odd
-    df1_averted_post_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_post_right_odd[idx]))  # Right
-    df2_averted_post_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, averted_post_left_odd[idx]))  # Left
-    df_combined_averted_post_odd = pd.concat(
-        [df1_averted_post_odd, df2_averted_post_odd], ignore_index=True)
-    # save to csv file
-    # NOTE: this is odd subject from 1, 3, etc ...
-    fname_combined_averted_post_odd = "S" + \
-        str(idx * 2 + 1) + "-averted_post_" + "right_left_combined" + ".csv"
-    df_combined_averted_post_odd.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_averted_post_odd))
+            # Combine RIGHT => LEFT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_right_odd_subject, averted_post_left_odd_subject]
+            )
 
-    # Direct post combined odd
-    df1_direct_post_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_post_right_odd[idx]))  # Right
-    df2_direct_post_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, direct_post_left_odd[idx]))  # Left
-    df_combined_direct_post_odd = pd.concat(
-        [df1_direct_post_odd, df2_direct_post_odd], ignore_index=True)
-    # save to csv file
-    # NOTE: this is odd subject from 1, 3, etc ...
-    fname_combined_direct_post_odd = "S" + \
-        str(idx * 2 + 1) + "-direct_post_" + "right_left_combined" + ".csv"
-    df_combined_direct_post_odd.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_direct_post_odd))
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_post_right_left_point_combined_raw.csv"
+            )
 
-    # Natural post combined odd
-    df1_natural_post_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_post_right_odd[idx]))  # Right
-    df2_natural_post_odd = pd.read_csv(os.path.join(
-        path_eye_data_separated, natural_post_left_odd[idx]))  # Left
-    df_combined_natural_post_odd = pd.concat(
-        [df1_natural_post_odd, df2_natural_post_odd], ignore_index=True)
-    # save to csv file
-    # NOTE: this is odd subject from 1, 3, etc ...
-    fname_combined_natural_post_odd = "S" + \
-        str(idx * 2 + 1) + "-natural_post_" + "right_left_combined" + ".csv"
-    df_combined_natural_post_odd.to_csv(os.path.join(
-        path_eye_data_combined, fname_combined_natural_post_odd))
-print("All eye tracker files have been combined. Done ! ")
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_left_odd_subject, averted_post_right_odd_subject]
+            )
+
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_baseline_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_post_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
+
+# %% [markdown]
+# ### Experimental
+
+# %% [markdown]
+# #### Define some directories :
+# *  Where we store raw eeg files (*.csv), which are not combined yet (Experimental data)
+# *  Where we would like to store combined eye tracker data (Experimental data)
+#
+#
+
+# %% [markdown]
+# #### Combine pre averted experimental
+
+# %%
+# Raw experimental data (csv file) (not combined)
+raw_dir_experimental = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/"
+
+# Folder to store combined eye tracker data (experimental data)
+raw_combined_experimental_data_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/"
+
+# Change to directory which stores raw experimental data (not combined)
+os.chdir(raw_dir_experimental)
+
+# %%
+os.getcwd()
+os.listdir("./raw_combined_experimental_data_directory")
+
+# %% [markdown]
+# #### Combine pre averted experimental
+
+# %%
+for i in tqdm(range(15), desc="Combining pre averted..."):  # type: ignore
+    # Pre-averted (for processing subject 1 - 9)
+    if i < 9:
+
+        # Load averted pre right
+        averted_pre_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_pre_right_point_raw.csv"
+        )
+        averted_pre_right_odd_subject = pd.read_csv(
+            averted_pre_right_odd_subject_file_name
+        )
+
+        # Load Load averted pre left
+        averted_pre_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_pre_left_point_raw.csv"
+        )
+        averted_pre_left_odd_subject = pd.read_csv(
+            averted_pre_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_pre_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_left_odd_subject, averted_pre_right_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_pre_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
+    # Pre-averted (for processing subject 10 onwards)
+    else:
+        # Load averted pre right
+        averted_pre_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_pre_right_point_raw.csv"
+        )
+        averted_pre_right_odd_subject = pd.read_csv(
+            averted_pre_right_odd_subject_file_name
+        )
+
+        # Load Load averted pre left
+        averted_pre_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_pre_left_point_raw.csv"
+        )
+        averted_pre_left_odd_subject = pd.read_csv(
+            averted_pre_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_pre_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_pre_averted_files = pd.concat(
+                [averted_pre_left_odd_subject, averted_pre_right_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-averted baseline
+            combined_pre_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_pre_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine pre-averted baseline file to csv
+            combined_pre_averted_files.to_csv(combined_pre_averted_files_label)
+
+
+# %%
+os.getcwd()
+
+# %% [markdown]
+# #### Combine post averted experimental
+
+# %%
+for i in tqdm(range(15), desc="Combining post averted..."):  # type: ignore
+    # post-averted (for processing subject 1 - 9)
+    if i < 9:
+
+        # Load averted post right
+        averted_post_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_post_right_point_raw.csv"
+        )
+        averted_post_right_odd_subject = pd.read_csv(
+            averted_post_right_odd_subject_file_name
+        )
+
+        # Load Load averted post left
+        averted_post_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-averted_post_left_point_raw.csv"
+        )
+        averted_post_left_odd_subject = pd.read_csv(
+            averted_post_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_right_odd_subject, averted_post_left_odd_subject]
+            )
+
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_post_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_left_odd_subject, averted_post_right_odd_subject]
+            )
+
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-averted_post_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
+    # post-averted (for processing subject 10 onwards)
+    else:
+        # Load averted post right
+        averted_post_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_post_right_point_raw.csv"
+        )
+        averted_post_right_odd_subject = pd.read_csv(
+            averted_post_right_odd_subject_file_name
+        )
+
+        # Load Load averted post left
+        averted_post_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-averted_post_left_point_raw.csv"
+        )
+        averted_post_left_odd_subject = pd.read_csv(
+            averted_post_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_right_odd_subject, averted_post_left_odd_subject]
+            )
+
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_post_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_post_averted_files = pd.concat(
+                [averted_post_left_odd_subject, averted_post_right_odd_subject]
+            )
+
+            # Create  file name for combine files of post-averted baseline
+            combined_post_averted_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-averted_post_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine post-averted baseline file to csv
+            combined_post_averted_files.to_csv(combined_post_averted_files_label)
+
+
+# %% [markdown]
+# #### Combine pre direct experimental
+
+# %%
+for i in tqdm(range(15), desc="Combining pre direct..."):  # type: ignore
+    # Pre-direct (for processing subject 1 - 9)
+    if i < 9:
+
+        # Load direct pre right
+        direct_pre_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-direct_pre_right_point_raw.csv"
+        )
+        direct_pre_right_odd_subject = pd.read_csv(
+            direct_pre_right_odd_subject_file_name
+        )
+
+        # Load Load direct pre left
+        direct_pre_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-direct_pre_left_point_raw.csv"
+        )
+        direct_pre_left_odd_subject = pd.read_csv(direct_pre_left_odd_subject_file_name)
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_pre_direct_files = pd.concat(
+                [direct_pre_right_odd_subject, direct_pre_left_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-direct baseline
+            combined_pre_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-direct_pre_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine pre-direct baseline file to csv
+            combined_pre_direct_files.to_csv(combined_pre_direct_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_pre_direct_files = pd.concat(
+                [direct_pre_left_odd_subject, direct_pre_right_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-direct baseline
+            combined_pre_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-direct_pre_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine pre-direct baseline file to csv
+            combined_pre_direct_files.to_csv(combined_pre_direct_files_label)
+
+    # Pre-direct (for processing subject 10 onwards)
+    else:
+        # Load direct pre right
+        direct_pre_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-direct_pre_right_point_raw.csv"
+        )
+        direct_pre_right_odd_subject = pd.read_csv(
+            direct_pre_right_odd_subject_file_name
+        )
+
+        # Load Load direct pre left
+        direct_pre_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-direct_pre_left_point_raw.csv"
+        )
+        direct_pre_left_odd_subject = pd.read_csv(direct_pre_left_odd_subject_file_name)
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_pre_direct_files = pd.concat(
+                [direct_pre_right_odd_subject, direct_pre_left_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-direct baseline
+            combined_pre_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-direct_pre_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine pre-direct baseline file to csv
+            combined_pre_direct_files.to_csv(combined_pre_direct_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_pre_direct_files = pd.concat(
+                [direct_pre_left_odd_subject, direct_pre_right_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-direct baseline
+            combined_pre_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-direct_pre_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine pre-direct baseline file to csv
+            combined_pre_direct_files.to_csv(combined_pre_direct_files_label)
+
+
+# %% [markdown]
+# #### Combine post direct experimental
+
+# %%
+for i in tqdm(range(15), desc="Combining post direct..."):  # type: ignore
+    # post-direct (for processing subject 1 - 9)
+    if i < 9:
+
+        # Load direct post right
+        direct_post_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-direct_post_right_point_raw.csv"
+        )
+        direct_post_right_odd_subject = pd.read_csv(
+            direct_post_right_odd_subject_file_name
+        )
+
+        # Load Load direct post left
+        direct_post_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-direct_post_left_point_raw.csv"
+        )
+        direct_post_left_odd_subject = pd.read_csv(
+            direct_post_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_post_direct_files = pd.concat(
+                [direct_post_right_odd_subject, direct_post_left_odd_subject]
+            )
+
+            # Create  file name for combine files of post-direct baseline
+            combined_post_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-direct_post_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine post-direct baseline file to csv
+            combined_post_direct_files.to_csv(combined_post_direct_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_post_direct_files = pd.concat(
+                [direct_post_left_odd_subject, direct_post_right_odd_subject]
+            )
+
+            # Create  file name for combine files of post-direct baseline
+            combined_post_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-direct_post_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine post-direct baseline file to csv
+            combined_post_direct_files.to_csv(combined_post_direct_files_label)
+
+    # post-direct (for processing subject 10 onwards)
+    else:
+        # Load direct post right
+        direct_post_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-direct_post_right_point_raw.csv"
+        )
+        direct_post_right_odd_subject = pd.read_csv(
+            direct_post_right_odd_subject_file_name
+        )
+
+        # Load Load direct post left
+        direct_post_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-direct_post_left_point_raw.csv"
+        )
+        direct_post_left_odd_subject = pd.read_csv(
+            direct_post_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_post_direct_files = pd.concat(
+                [direct_post_right_odd_subject, direct_post_left_odd_subject]
+            )
+
+            # Create  file name for combine files of post-direct baseline
+            combined_post_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-direct_post_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine post-direct baseline file to csv
+            combined_post_direct_files.to_csv(combined_post_direct_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_post_direct_files = pd.concat(
+                [direct_post_left_odd_subject, direct_post_right_odd_subject]
+            )
+
+            # Create  file name for combine files of post-direct baseline
+            combined_post_direct_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-direct_post_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine post-direct baseline file to csv
+            combined_post_direct_files.to_csv(combined_post_direct_files_label)
+
+
+# %% [markdown]
+# #### Combine pre natural experimental
+
+# %%
+for i in tqdm(range(15), desc="Combining pre natural..."):  # type: ignore
+    # Pre-natural (for processing subject 1 - 9)
+    if i < 9:
+
+        # Load natural pre right
+        natural_pre_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-natural_pre_right_point_raw.csv"
+        )
+        natural_pre_right_odd_subject = pd.read_csv(
+            natural_pre_right_odd_subject_file_name
+        )
+
+        # Load Load natural pre left
+        natural_pre_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-natural_pre_left_point_raw.csv"
+        )
+        natural_pre_left_odd_subject = pd.read_csv(
+            natural_pre_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_pre_natural_files = pd.concat(
+                [natural_pre_right_odd_subject, natural_pre_left_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-natural baseline
+            combined_pre_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-natural_pre_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine pre-natural baseline file to csv
+            combined_pre_natural_files.to_csv(combined_pre_natural_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_pre_natural_files = pd.concat(
+                [natural_pre_left_odd_subject, natural_pre_right_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-natural baseline
+            combined_pre_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-natural_pre_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine pre-natural baseline file to csv
+            combined_pre_natural_files.to_csv(combined_pre_natural_files_label)
+
+    # Pre-natural (for processing subject 10 onwards)
+    else:
+        # Load natural pre right
+        natural_pre_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-natural_pre_right_point_raw.csv"
+        )
+        natural_pre_right_odd_subject = pd.read_csv(
+            natural_pre_right_odd_subject_file_name
+        )
+
+        # Load Load natural pre left
+        natural_pre_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-natural_pre_left_point_raw.csv"
+        )
+        natural_pre_left_odd_subject = pd.read_csv(
+            natural_pre_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_pre_natural_files = pd.concat(
+                [natural_pre_right_odd_subject, natural_pre_left_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-natural baseline
+            combined_pre_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-natural_pre_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine pre-natural baseline file to csv
+            combined_pre_natural_files.to_csv(combined_pre_natural_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_pre_natural_files = pd.concat(
+                [natural_pre_left_odd_subject, natural_pre_right_odd_subject]
+            )
+
+            # Create  file name for combine files of pre-natural baseline
+            combined_pre_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-natural_pre_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine pre-natural baseline file to csv
+            combined_pre_natural_files.to_csv(combined_pre_natural_files_label)
+
+
+# %% [markdown]
+# #### Combine post natural experimental
+
+# %%
+for i in tqdm(range(15), desc="Combining post natural..."):  # type: ignore
+    # post-natural (for processing subject 1 - 9)
+    if i < 9:
+
+        # Load natural post right
+        natural_post_right_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-natural_post_right_point_raw.csv"
+        )
+        natural_post_right_odd_subject = pd.read_csv(
+            natural_post_right_odd_subject_file_name
+        )
+
+        # Load Load natural post left
+        natural_post_left_odd_subject_file_name = (
+            "EyeTracker-S0" + str(i + 1) + "-natural_post_left_point_raw.csv"
+        )
+        natural_post_left_odd_subject = pd.read_csv(
+            natural_post_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_post_natural_files = pd.concat(
+                [natural_post_right_odd_subject, natural_post_left_odd_subject]
+            )
+
+            # Create  file name for combine files of post-natural baseline
+            combined_post_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-natural_post_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine post-natural baseline file to csv
+            combined_post_natural_files.to_csv(combined_post_natural_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_post_natural_files = pd.concat(
+                [natural_post_left_odd_subject, natural_post_right_odd_subject]
+            )
+
+            # Create  file name for combine files of post-natural baseline
+            combined_post_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S0"
+                + str(i + 1)
+                + "-natural_post_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine post-natural baseline file to csv
+            combined_post_natural_files.to_csv(combined_post_natural_files_label)
+
+    # post-natural (for processing subject 10 onwards)
+    else:
+        # Load natural post right
+        natural_post_right_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-natural_post_right_point_raw.csv"
+        )
+        natural_post_right_odd_subject = pd.read_csv(
+            natural_post_right_odd_subject_file_name
+        )
+
+        # Load Load natural post left
+        natural_post_left_odd_subject_file_name = (
+            "EyeTracker-S" + str(i + 1) + "-natural_post_left_point_raw.csv"
+        )
+        natural_post_left_odd_subject = pd.read_csv(
+            natural_post_left_odd_subject_file_name
+        )
+
+        # Check if i (index in this looping) == EVEN number that takes ODD actual subject no, then labeling the file name of hand is RIGHT-LEFT
+        # For example, i = 0 actually takes S01 and keeps going...
+        if (i % 2) == 0:
+
+            # Combine RIGHT => LEFT hand data
+            combined_post_natural_files = pd.concat(
+                [natural_post_right_odd_subject, natural_post_left_odd_subject]
+            )
+
+            # Create  file name for combine files of post-natural baseline
+            combined_post_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-natural_post_right_left_point_combined_raw.csv"
+            )
+
+            # Save combine post-natural baseline file to csv
+            combined_post_natural_files.to_csv(combined_post_natural_files_label)
+
+        # Check if i (index in this looping) == ODD number that takes EVEN actual subject no, then labeling the file name of hand is LEFT_RIGHT
+        # For example, i = 1 actually takes S02 and keeps going...
+        else:
+
+            # Combine LEFT => RIGHT hand data
+            combined_post_natural_files = pd.concat(
+                [natural_post_left_odd_subject, natural_post_right_odd_subject]
+            )
+
+            # Create  file name for combine files of post-natural baseline
+            combined_post_natural_files_label = (
+                raw_combined_experimental_data_directory
+                + "EyeTracker-S"
+                + str(i + 1)
+                + "-natural_post_left_right_point_combined_raw.csv"
+            )
+
+            # Save combine post-natural baseline file to csv
+            combined_post_natural_files.to_csv(combined_post_natural_files_label)
