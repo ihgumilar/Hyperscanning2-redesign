@@ -25,12 +25,20 @@ import os
 # ### Baseline data
 
 # %% [markdown]
-# #### Define a directory where we store raw eeg files (*.fif), which are not combined yet (Baseline data)
+# #### Define some directories :
+# *  Where we store raw eeg files (*.fif), which are not combined yet (Baseline data) 
+#
+# *  Where we want to store combined baseline data
 
 # %%
 # Go to a directory that stores raw fif file (not combined files)
-raw_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/"
-os.chdir(raw_dir)
+raw_dir_baseline = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/"
+
+# Folder to store combined eye tracker data (baseline data)
+raw_combined_baseline_data_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+
+# Change to directory which stores raw baseline data (not combined)
+os.chdir(raw_dir_baseline)
 
 # %% [markdown]
 # #### Combine pre averted baseline
@@ -61,7 +69,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_pre_right_left_point_combined_raw.fif"
@@ -82,7 +90,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_pre_left_right_point_combined_raw.fif"
@@ -119,7 +127,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_pre_right_left_point_combined_raw.fif"
@@ -140,7 +148,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_pre_left_right_point_combined_raw.fif"
@@ -179,7 +187,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_post_right_left_point_combined_raw.fif"
@@ -200,7 +208,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_post_left_right_point_combined_raw.fif"
@@ -239,7 +247,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_post_right_left_point_combined_raw.fif"
@@ -260,7 +268,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+                "raw_combined_baseline_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_post_left_right_point_combined_raw.fif"
@@ -274,12 +282,23 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
 # ### Experimental
 
 # %% [markdown]
-# #### Combine pre averted experimental
+# #### Define some directories :
+# *  Where we store raw eeg files (*.fif), which are not combined yet (Experimental data) 
+#
+# *  Where we want to store combined experimental data
 
 # %%
 # Go to a directory that stores raw fif file (not combined files)
-raw_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/"
-os.chdir(raw_dir)
+raw_dir_experimental = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/"
+
+# Folder to store combined eye tracker data (baseline data)
+raw_combined_experimental_data_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+
+# Change to directory which stores raw baseline data (not combined)
+os.chdir(raw_dir_experimental)
+
+# %% [markdown]
+# #### Combine pre averted experimental
 
 # %%
 
@@ -307,7 +326,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_pre_right_left_point_combined_raw.fif"
@@ -328,7 +347,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_pre_left_right_point_combined_raw.fif"
@@ -365,7 +384,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_pre_right_left_point_combined_raw.fif"
@@ -386,7 +405,7 @@ for i in tqdm(range(16), desc="Combining pre averted..."):  # type: ignore
             )
 
             combined_pre_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_pre_left_right_point_combined_raw.fif"
@@ -425,7 +444,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_post_right_left_point_combined_raw.fif"
@@ -446,7 +465,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-averted_post_left_right_point_combined_raw.fif"
@@ -485,7 +504,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_post_right_left_point_combined_raw.fif"
@@ -506,7 +525,7 @@ for i in tqdm(range(16), desc="Combining post averted..."):  # type: ignore
             )
 
             combined_post_averted_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-averted_post_left_right_point_combined_raw.fif"
@@ -545,7 +564,7 @@ for i in tqdm(range(16), desc="Combining pre direct..."):  # type: ignore
             )
 
             combined_pre_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-direct_pre_right_left_point_combined_raw.fif"
@@ -566,7 +585,7 @@ for i in tqdm(range(16), desc="Combining pre direct..."):  # type: ignore
             )
 
             combined_pre_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-direct_pre_left_right_point_combined_raw.fif"
@@ -603,7 +622,7 @@ for i in tqdm(range(16), desc="Combining pre direct..."):  # type: ignore
             )
 
             combined_pre_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-direct_pre_right_left_point_combined_raw.fif"
@@ -624,7 +643,7 @@ for i in tqdm(range(16), desc="Combining pre direct..."):  # type: ignore
             )
 
             combined_pre_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-direct_pre_left_right_point_combined_raw.fif"
@@ -663,7 +682,7 @@ for i in tqdm(range(16), desc="Combining post direct..."):  # type: ignore
             )
 
             combined_post_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-direct_post_right_left_point_combined_raw.fif"
@@ -684,7 +703,7 @@ for i in tqdm(range(16), desc="Combining post direct..."):  # type: ignore
             )
 
             combined_post_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-direct_post_left_right_point_combined_raw.fif"
@@ -721,7 +740,7 @@ for i in tqdm(range(16), desc="Combining post direct..."):  # type: ignore
             )
 
             combined_post_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-direct_post_right_left_point_combined_raw.fif"
@@ -742,7 +761,7 @@ for i in tqdm(range(16), desc="Combining post direct..."):  # type: ignore
             )
 
             combined_post_direct_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-direct_post_left_right_point_combined_raw.fif"
@@ -781,7 +800,7 @@ for i in tqdm(range(16), desc="Combining pre natural..."):  # type: ignore
             )
 
             combined_pre_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-natural_pre_right_left_point_combined_raw.fif"
@@ -802,7 +821,7 @@ for i in tqdm(range(16), desc="Combining pre natural..."):  # type: ignore
             )
 
             combined_pre_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-natural_pre_left_right_point_combined_raw.fif"
@@ -839,7 +858,7 @@ for i in tqdm(range(16), desc="Combining pre natural..."):  # type: ignore
             )
 
             combined_pre_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-natural_pre_right_left_point_combined_raw.fif"
@@ -860,7 +879,7 @@ for i in tqdm(range(16), desc="Combining pre natural..."):  # type: ignore
             )
 
             combined_pre_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-natural_pre_left_right_point_combined_raw.fif"
@@ -899,7 +918,7 @@ for i in tqdm(range(16), desc="Combining post natural..."):  # type: ignore
             )
 
             combined_post_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-natural_post_right_left_point_combined_raw.fif"
@@ -920,7 +939,7 @@ for i in tqdm(range(16), desc="Combining post natural..."):  # type: ignore
             )
 
             combined_post_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S0"
                 + str(i + 1)
                 + "-natural_post_left_right_point_combined_raw.fif"
@@ -959,7 +978,7 @@ for i in tqdm(range(16), desc="Combining post natural..."):  # type: ignore
             )
 
             combined_post_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-natural_post_right_left_point_combined_raw.fif"
@@ -980,7 +999,7 @@ for i in tqdm(range(16), desc="Combining post natural..."):  # type: ignore
             )
 
             combined_post_natural_files_label = (
-                "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+                "raw_combined_experimental_data_directory"
                 + "S"
                 + str(i + 1)
                 + "-natural_post_left_right_point_combined_raw.fif"
