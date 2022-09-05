@@ -1,3 +1,20 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: title,-all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
+
+# %%
 import statistics
 import os
 from icecream import ic
@@ -29,6 +46,16 @@ import warnings
 from timeit import default_timer as timer
 warnings.filterwarnings("ignore")
 
+# %%
+# Change to directory where this file is located so that LabelConverter.py can be imported
+path_2_eeg_analysis_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/EEG/analysis/"
+os.chdir(path_2_eeg_analysis_dir)
+os.getcwd()
+
+
+# %% [markdown]
+# ## Function to count how long processing files for each eye condition
+
 # %% Time conversion
 def convert(seconds):
     seconds = seconds % (24 * 3600)
@@ -37,10 +64,16 @@ def convert(seconds):
     minutes = seconds // 60
     seconds %= 60
     return "%d:%02d:%02d" % (hour, minutes, seconds)
-# %% markdown
-Direct eye(Pre - training)
+# %% markdown [markdown]
+# ## Direct eye(Pre - training)
 # %%
 # Container for no. of connections of ALL participants
+path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+odd_subject_suffix = "-direct_pre_right_left_point_combined_raw.fif"
+even_subject_suffix = "-direct_pre_left_right_point_combined_raw.fif"
+path_2_dir_2_save_preprocessed_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
+path_2_dir_raw_combined_eeg_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+
 start = timer()
 
 all_deleted_epochs_indices_direct_pre = []
@@ -61,7 +94,7 @@ total_n_connections_all_pairs_direct_pre = []
 
 list_circular_correlation_direct_pre_no_filter_all = []
 
-# Bad channels
+# TODO :Define bad channels for each participant
 original_bad_channels_all = [['FP1', 'C3', 'T7'], ['FP1', 'F7', 'C4'], ['FP1', 'Fp2', 'F7', 'C4'],
                          ['FP1'],  ['FP1', 'Fp2', 'F7', 'C4', 'P4'], [
                              'FP1', 'Fp2', 'F7', 'C4', 'P4'], [],
@@ -81,21 +114,47 @@ original_bad_channels_all = [['FP1', 'C3', 'T7'], ['FP1', 'F7', 'C4'], ['FP1', '
 
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
+
+# TODO : Adjust the loop number up to 16 files (so far)
 begin = 0
-end = 32
+end = 16
 step = 2
 
 for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some coffee..."):
 
-    # NOTE: Exclude pair 2 - file of subject no.3 & 4 (the data is not good)
-    if (i == 2):  # NOTE: Indicate pair
-        continue
-    fname1_direct = "/hpc/igum002/codes/frontiers_hyperscanning2/eeg_data_combined_fif/S" + \
-        str(i + 1) + "-direct_pre_right_left_point_combined_raw.fif"
-    # fname1_direct = "/hpc/igum002/codes/frontiers_hyperscanning2/eeg_data_combined_fif/S1-direct_pre_right_left_point_combined_raw.fif"
-    fname2_direct = "/hpc/igum002/codes/frontiers_hyperscanning2/eeg_data_combined_fif/S" + \
-        str(i + 2) + "-direct_pre_left_right_point_combined_raw.fif"
-    # fname2_direct = "/hpc/igum002/codes/frontiers_hyperscanning2/eeg_data_combined_fif/S2-direct_pre_left_right_point_combined_raw.fif"
+    os.chdir(path_2_dir_raw_combined_eeg_data)
+    
+    # If we want to exclude pair that wants to be skipped
+    # For example, if pair 2 is bad, then files of subject no.3 & 4 (the data is not good) will not be processed
+    # Uncomment this line, in case you have files that want to be skipped
+    # if (i == 2):  # NOTE: Indicate pair
+    #     continue
+
+    
+    # Subject no. 1 - 10
+    if ((i + 1) <= 9):
+        fname1_direct = path_2_experimental_data_dir + "S0" + str(i + 1) + odd_subject_suffix
+        fname2_direct = path_2_experimental_data_dir + "S0" + str(i + 2) + even_subject_suffix
+        # Replace fname2_direct variable
+        if((i + 2) == 10):
+            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+
+    # Subject no. 11 - 20
+    elif ((i + 1) >= 11):
+        fname1_direct = path_2_experimental_data_dir + "S" + str(i + 1) + odd_subject_suffix
+        fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+        # Replace fname2_direct variable
+        if((i + 2) == 20):
+            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+    
+    # Subject no. 21 - 30
+    elif ((i + 1) >= 21):
+        fname1_direct = path_2_experimental_data_dir + "S" + str(i + 1) + odd_subject_suffix
+        fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+        # Replace fname2_direct variable
+        if((i + 2) == 30):
+            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+
 
     freq_bands = {'Theta': [4, 7],
                   'Alpha': [7.5, 13],
@@ -117,6 +176,9 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     # original_bad_channels2 = original_bad_channels_all[1]
 
     # os.getcwd() # delete this
+    
+    # TODO : Adjust to the path where baseline / experimental combined eeg data is stored
+    #        Ucomment the following line     
     # os.chdir('/hpc/igum002/codes/frontiers_hyperscanning2/eeg_data_combined_fif/')
 
     raw1_direct = mne.io.read_raw_fif(
@@ -158,17 +220,20 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
                         fit_params=dict(extended=True),
                         random_state=42)
 
-    cleaned_epochs_ICA = prep.ICA_choice_comp(
-        icas, [epo1_direct, epo2_direct])
+    cleaned_epochs_ICA = prep.ICA_autocorrect(icas, [epo1_direct, epo2_direct], verbose=True)
+
+
+    # cleaned_epochs_ICA = prep.ICA_choice_comp(
+    #     icas, [epo1_direct, epo2_direct])
 
 
     # Autoreject
     # Applying local AutoReject for each participant rejecting bad epochs, rejecting or interpolating partially bad channels removing the same bad channels and epochs across participants plotting signal before and after (verbose=True)
     # Auto-reject with ICA
 
-    # TODO: Populate indices of bad epochs into a list
-    cleaned_epochs_AR, delete_epochs_indices = prep.AR_local(
-        cleaned_epochs_ICA, verbose=False)
+    # Populate indices of bad epochs into a list. Now are there are 3 outputs
+    cleaned_epochs_AR, percentage_rejected_epoch, delete_epochs_indices = prep.AR_local(
+        cleaned_epochs_ICA, verbose=True)
 
     # Populate indices of deleted epochs into a list. We need this to reject epochs in eye tracker data
     # length of the list will be a half of number of participants
@@ -198,7 +263,7 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     # With ICA (Compute complex signal, that will be used as input for calculationg connectivity, eg. power-correlation score)
     complex_signal = analyses.compute_freq_bands(data_inter, sampling_rate,
                                                  freq_bands)
-    # Computing frequency- and time-frequency-domain connectivity, 'plv'
+    # Computing frequency- and time-frequency-domain connectivity, using circular correlation 'ccorr'
     result = analyses.compute_sync(complex_signal, mode='ccorr')
     #
     # NOTE: Slicing results to get the Inter-brain part of the matrix.
@@ -212,6 +277,10 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     list_circular_correlation_direct_pre_no_filter_all.append(beta)
     list_circular_correlation_direct_pre_no_filter_all.append(gamma)
 
+# Change to a directory where we want to save the above populated lists (pre-processed data)
+os.chdir(path_2_dir_2_save_preprocessed_data)
+
+# Save the into pkl file
 with open('list_circular_correlation_scores_all_pairs_direct_pre_no_filter.pkl', 'wb') as handle:
     pickle.dump(list_circular_correlation_direct_pre_no_filter_all, handle,
                 protocol=pickle.HIGHEST_PROTOCOL)
