@@ -215,7 +215,7 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     # Preprocessing epochs
     # Computing global AutoReject and Independant Components Analysis for each participant
     icas = prep.ICA_fit([epo1_direct, epo2_direct],
-                        n_components=16,
+                        n_components=15,
                         method='infomax',
                         fit_params=dict(extended=True),
                         random_state=42)
