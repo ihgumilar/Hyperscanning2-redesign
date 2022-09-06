@@ -69,10 +69,10 @@ def convert(seconds):
 # %%
 # Container for no. of connections of ALL participants
 path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
-odd_subject_suffix = "-direct_pre_right_left_point_combined_raw.fif"
-even_subject_suffix = "-direct_pre_left_right_point_combined_raw.fif"
 path_2_dir_2_save_preprocessed_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
-path_2_dir_raw_combined_eeg_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+odd_subject_direct_pre_suffix = "-direct_pre_right_left_point_combined_raw.fif"
+even_subject_direct_post_suffix = "-direct_pre_left_right_point_combined_raw.fif"
+
 
 start = timer()
 
@@ -115,14 +115,14 @@ original_bad_channels_all = [['FP1', 'C3', 'T7'], ['FP1', 'F7', 'C4'], ['FP1', '
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number up to 16 files (so far)
+# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
 end = 16
 step = 2
 
 for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some coffee..."):
 
-    os.chdir(path_2_dir_raw_combined_eeg_data)
+    os.chdir(path_2_experimental_data_dir)
     
     # If we want to exclude pair that wants to be skipped
     # For example, if pair 2 is bad, then files of subject no.3 & 4 (the data is not good) will not be processed
@@ -133,27 +133,36 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     
     # Subject no. 1 - 10
     if ((i + 1) <= 9):
-        fname1_direct = path_2_experimental_data_dir + "S0" + str(i + 1) + odd_subject_suffix
-        fname2_direct = path_2_experimental_data_dir + "S0" + str(i + 2) + even_subject_suffix
+        fname1_direct = path_2_experimental_data_dir + "S0" + str(i + 1) + odd_subject_direct_pre_suffix
+        fname2_direct = path_2_experimental_data_dir + "S0" + str(i + 2) + even_subject_direct_post_suffix
         # Replace fname2_direct variable
         if((i + 2) == 10):
-            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_direct_post_suffix
+        
+        # Indicator of which files are being processed
+        print(f"Processing S-{i + 1} & S-{i + 2}")
 
     # Subject no. 11 - 20
     elif ((i + 1) >= 11):
-        fname1_direct = path_2_experimental_data_dir + "S" + str(i + 1) + odd_subject_suffix
-        fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+        fname1_direct = path_2_experimental_data_dir + "S" + str(i + 1) + odd_subject_direct_pre_suffix
+        fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_direct_post_suffix
         # Replace fname2_direct variable
         if((i + 2) == 20):
-            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_direct_post_suffix
+
+        # Indicator of which files are being processed
+        print(f"Processing S-{i + 1} & S-{i + 2}")
     
     # Subject no. 21 - 30
     elif ((i + 1) >= 21):
-        fname1_direct = path_2_experimental_data_dir + "S" + str(i + 1) + odd_subject_suffix
-        fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+        fname1_direct = path_2_experimental_data_dir + "S" + str(i + 1) + odd_subject_direct_pre_suffix
+        fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_direct_post_suffix
         # Replace fname2_direct variable
         if((i + 2) == 30):
-            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_suffix
+            fname2_direct = path_2_experimental_data_dir + "S" + str(i + 2) + even_subject_direct_post_suffix
+
+        # Indicator of which files are being processed
+        print(f"Processing S-{i + 1} & S-{i + 2}")
 
 
     freq_bands = {'Theta': [4, 7],
@@ -172,14 +181,7 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     # Get original bad channels for odd and even subject
     original_bad_channels1 = original_bad_channels_all[i]
     original_bad_channels2 = original_bad_channels_all[i + 1]
-    # original_bad_channels1 = original_bad_channels_all[0]
-    # original_bad_channels2 = original_bad_channels_all[1]
-
-    # os.getcwd() # delete this
     
-    # TODO : Adjust to the path where baseline / experimental combined eeg data is stored
-    #        Ucomment the following line     
-    # os.chdir('/hpc/igum002/codes/frontiers_hyperscanning2/eeg_data_combined_fif/')
 
     raw1_direct = mne.io.read_raw_fif(
         fname_S1_direct, preload=True, verbose=False)
@@ -223,10 +225,6 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     cleaned_epochs_ICA = prep.ICA_autocorrect(icas, [epo1_direct, epo2_direct], verbose=True)
 
 
-    # cleaned_epochs_ICA = prep.ICA_choice_comp(
-    #     icas, [epo1_direct, epo2_direct])
-
-
     # Autoreject
     # Applying local AutoReject for each participant rejecting bad epochs, rejecting or interpolating partially bad channels removing the same bad channels and epochs across participants plotting signal before and after (verbose=True)
     # Auto-reject with ICA
@@ -256,7 +254,7 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     data_psd = np.array([psd1.psd, psd2.psd])
 
     #
-    # ### Connectivity
+    # # Connectivity
     # with ICA
     data_inter = np.array([preproc_S1, preproc_S2])
     # Computing analytic signal per frequency band
@@ -277,19 +275,37 @@ for i in tqdm(range(begin, end, step), desc="Please, listen 2 music & have some 
     list_circular_correlation_direct_pre_no_filter_all.append(beta)
     list_circular_correlation_direct_pre_no_filter_all.append(gamma)
 
+    # Check if inter-brain connection scores have been put into a list
+    print(f"(pre-direct) inter-brain connection scores of S-{i + 1} & S-{i + 2} \
+        have been put into a list (theta, alpha, beta, gamma)")
+
 # Change to a directory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
-# Save the into pkl file
+# Save the scores of inter-brain synchrony from each pair into pkl file
 with open('list_circular_correlation_scores_all_pairs_direct_pre_no_filter.pkl', 'wb') as handle:
     pickle.dump(list_circular_correlation_direct_pre_no_filter_all, handle,
                 protocol=pickle.HIGHEST_PROTOCOL)
+
+# NOTE : The structure of files is each pair will have 4 lists, which has the following order
+#        * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to subject 1,
+#        * then move the 2nd four lists which belong to subject 2 and so on. 
+print("(pre-direct) All inter-brain synchrony scores (theta, alpha, beta, gamma) of all pairs have been saved into a pickle file")
+
+# Save indices of deleted epochs from each pair into pkl file
+# NOTE : Length of list once pkl file is loaded is equal to the number of pairs
+# If we have 15 pairs, then there will be 15 lists within that pkl file
+with open('list_deleted_epoch_indices_direct_pre.pkl', 'wb') as handle:
+    pickle.dump(all_deleted_epochs_indices_direct_pre, handle,
+                protocol=pickle.HIGHEST_PROTOCOL)
+print("(pre-direct) All indices of deleted epochs have been saved into a pickle file")
+
 
 # Count elapsed time
 end = timer()
 # Calling function to convert seconds to hour minute, second
 print(f"Processed time : {convert(end - start)}")
-#
+
 # %% Save real power-correlation scores into a list
 # TODO: Save list of power-correlation scores into pickle file
 # os.getcwd()
