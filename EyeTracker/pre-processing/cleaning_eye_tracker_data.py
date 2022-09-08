@@ -82,7 +82,7 @@ def delete_epoch_eye_tracker(eyetracker_data_path, path2save_cleaned_data, file_
         if idx >= 1:
             counter += 1
 
-        # TODO Understand what this code does. Error when processing subject 11 
+        # TODO  Understand what this code does. Error when processing subject 11 
         # NOTE Indices of deleted epochs of EEG, there are only 8 lists for now. Since there are 8 pairs.
         # Those indices are used for each pair of eye tracker data
 
