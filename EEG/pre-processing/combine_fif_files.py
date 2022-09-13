@@ -15,25 +15,25 @@
 # ---
 
 # %% [markdown]
-# ### Relevant packages
+# ## Relevant packages
 
 # %%
 import mne
 from tqdm import tqdm
 
 # %% [markdown]
+# ## Experimental data
+
+# %% [markdown]
 # ### Define paths and variables
 
 # %%
 # Go to a directory that stores raw fif file (not combined files)
-raw_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/"
+raw_experimental_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/"
 # Directory where to save combined fif files
-combined_experimental_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/temp_raw_combined_experimental_data/"
+combined_experimental_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
 # Change working directory
-os.chdir(raw_dir)
-
-# %% [markdown]
-# ### Experimental data
+os.chdir(raw_experimental_dir)
 
 # %% [markdown]
 # #### Odd subjects (1-9)
@@ -333,4 +333,150 @@ for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
 
 
 
+print("You files have combined, sir !. Just continue your coffee :)")
+
+# %% [markdown]
+# ## Baseline data
+
+# %% [markdown]
+# #### Define path and variables
+
+# %%
+# Go to a directory that stores raw fif file (not combined files)
+raw_baseline_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/"
+# Directory where to save combined fif files
+combined_baseline_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
+# Change working directory
+os.chdir(raw_baseline_dir)
+
+# %% [markdown]
+# #### Odd subjects (1-9)
+
+# %%
+begin = 0
+end = 9
+step = 2
+
+for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
+       
+    # Pre-averted
+        averted_pre_right_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+1) + "-averted_pre_right_point_raw.fif", verbose=False)
+        averted_pre_left_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+1) + "-averted_pre_left_point_raw.fif", verbose=False)
+        averted_pre_files_to_combine = [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+        combined_pre_averted_files = mne.concatenate_raws(averted_pre_files_to_combine)
+        combined_pre_averted_files_label = combined_baseline_dir + "S0" + str(i+1) + "-averted_pre_right_left_point_combined_raw.fif"
+        combined_pre_averted_files.save(combined_pre_averted_files_label, overwrite=True)
+
+    # Post-averted
+        averted_post_right_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+1) + "-averted_post_right_point_raw.fif", verbose=False)
+        averted_post_left_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+1) + "-averted_post_left_point_raw.fif", verbose=False)
+        averted_post_files_to_combine = [averted_post_right_odd_subject, averted_post_left_odd_subject]
+        combined_post_averted_files = mne.concatenate_raws(averted_post_files_to_combine)
+        combined_post_averted_files_label = combined_baseline_dir + "S0" + str(i+1) + "-averted_post_right_left_point_combined_raw.fif"
+        combined_post_averted_files.save(combined_post_averted_files_label, overwrite=True)
+
+print("You files have combined, sir !. Just continue your coffee :)")
+
+# %% [markdown]
+# #### Even subjects (2-8)
+
+# %%
+begin = 0
+end = 8
+step = 2
+
+for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
+       
+    # Pre-averted
+        averted_pre_right_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+2) + "-averted_pre_right_point_raw.fif", verbose=False)
+        averted_pre_left_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+2) + "-averted_pre_left_point_raw.fif", verbose=False)
+        averted_pre_files_to_combine = [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+        combined_pre_averted_files = mne.concatenate_raws(averted_pre_files_to_combine)
+        combined_pre_averted_files_label = combined_baseline_dir + "S0" + str(i+2) + "-averted_pre_right_left_point_combined_raw.fif"
+        combined_pre_averted_files.save(combined_pre_averted_files_label, overwrite=True)
+
+    # Post-averted
+        averted_post_right_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+2) + "-averted_post_right_point_raw.fif", verbose=False)
+        averted_post_left_odd_subject = mne.io.read_raw_fif("EEG-S0" + str(i+2) + "-averted_post_left_point_raw.fif", verbose=False)
+        averted_post_files_to_combine = [averted_post_right_odd_subject, averted_post_left_odd_subject]
+        combined_post_averted_files = mne.concatenate_raws(averted_post_files_to_combine)
+        combined_post_averted_files_label = combined_baseline_dir + "S0" + str(i+2) + "-averted_post_right_left_point_combined_raw.fif"
+        combined_post_averted_files.save(combined_post_averted_files_label, overwrite=True)
+
+print("You files have combined, sir !. Just continue your coffee :)")
+
+# %% [markdown]
+# #### Even subjects (10 and onwards, eg. 10, 12, 14, etc..)
+
+# %%
+begin = 10
+end = 16
+step = 2
+
+for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
+    
+    # Grab only file No. 10 and combine
+    if (i==10):
+        # Pre-averted
+        averted_pre_right_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i) + "-averted_pre_right_point_raw.fif", verbose=False)
+        averted_pre_left_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i) + "-averted_pre_left_point_raw.fif", verbose=False)
+        averted_pre_files_to_combine = [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+        combined_pre_averted_files = mne.concatenate_raws(averted_pre_files_to_combine)
+        combined_pre_averted_files_label = combined_baseline_dir + "S" + str(i) + "-averted_pre_right_left_point_combined_raw.fif"
+        combined_pre_averted_files.save(combined_pre_averted_files_label, overwrite=True)
+
+        # Post-averted
+        averted_post_right_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i) + "-averted_post_right_point_raw.fif", verbose=False)
+        averted_post_left_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i) + "-averted_post_left_point_raw.fif", verbose=False)
+        averted_post_files_to_combine = [averted_post_right_odd_subject, averted_post_left_odd_subject]
+        combined_post_averted_files = mne.concatenate_raws(averted_post_files_to_combine)
+        combined_post_averted_files_label = combined_baseline_dir + "S" + str(i) + "-averted_post_right_left_point_combined_raw.fif"
+        combined_post_averted_files.save(combined_post_averted_files_label, overwrite=True)
+
+    # Combine file no.12, 14, etc..
+    if (i+2 > 10):
+        # Pre-averted
+        averted_pre_right_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+2) + "-averted_pre_right_point_raw.fif", verbose=False)
+        averted_pre_left_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+2) + "-averted_pre_left_point_raw.fif", verbose=False)
+        averted_pre_files_to_combine = [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+        combined_pre_averted_files = mne.concatenate_raws(averted_pre_files_to_combine)
+        combined_pre_averted_files_label = combined_baseline_dir + "S" + str(i+2) + "-averted_pre_right_left_point_combined_raw.fif"
+        combined_pre_averted_files.save(combined_pre_averted_files_label, overwrite=True)
+
+        # Post-averted
+        averted_post_right_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+2) + "-averted_post_right_point_raw.fif", verbose=False)
+        averted_post_left_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+2) + "-averted_post_left_point_raw.fif", verbose=False)
+        averted_post_files_to_combine = [averted_post_right_odd_subject, averted_post_left_odd_subject]
+        combined_post_averted_files = mne.concatenate_raws(averted_post_files_to_combine)
+        combined_post_averted_files_label = combined_baseline_dir + "S" + str(i+2) + "-averted_post_right_left_point_combined_raw.fif"
+        combined_post_averted_files.save(combined_post_averted_files_label, overwrite=True)
+
+print("You files have combined, sir !. Just continue your coffee :)")
+
+# %% [markdown]
+# #### Odd subjects (11 and onwards, eg. 11, 13, 15, etc...)
+
+# %%
+begin = 10
+end = 16
+step = 2
+
+for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
+       
+    # Pre-averted
+        averted_pre_right_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+1) + "-averted_pre_right_point_raw.fif", verbose=False)
+        averted_pre_left_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+1) + "-averted_pre_left_point_raw.fif", verbose=False)
+        averted_pre_files_to_combine = [averted_pre_right_odd_subject, averted_pre_left_odd_subject]
+        combined_pre_averted_files = mne.concatenate_raws(averted_pre_files_to_combine)
+        combined_pre_averted_files_label = combined_baseline_dir + "S" + str(i+1) + "-averted_pre_right_left_point_combined_raw.fif"
+        combined_pre_averted_files.save(combined_pre_averted_files_label, overwrite=True)
+
+    # Post-averted
+        averted_post_right_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+1) + "-averted_post_right_point_raw.fif", verbose=False)
+        averted_post_left_odd_subject = mne.io.read_raw_fif("EEG-S" + str(i+1) + "-averted_post_left_point_raw.fif", verbose=False)
+        averted_post_files_to_combine = [averted_post_right_odd_subject, averted_post_left_odd_subject]
+        combined_post_averted_files = mne.concatenate_raws(averted_post_files_to_combine)
+        combined_post_averted_files_label = combined_baseline_dir + "S" + str(i+1) + "-averted_post_right_left_point_combined_raw.fif"
+        combined_post_averted_files.save(combined_post_averted_files_label, overwrite=True)
+ 
 print("You files have combined, sir !. Just continue your coffee :)")
