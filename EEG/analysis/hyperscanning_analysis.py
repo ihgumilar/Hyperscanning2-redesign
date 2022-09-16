@@ -66,6 +66,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_direct_pre_suffix = "-direct_pre_right_left_point_combined_raw.fif"
 even_subject_direct_pre_suffix = "-direct_pre_left_right_point_combined_raw.fif"
 
@@ -359,6 +360,29 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
+    # Extract file name from path (subject 1)
+    s_indicator1 = fname_S1_direct.find("S") 
+    epoched_file_name_S1 = input[s_indicator1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    s_indicator2 = fname_S2_direct.find("S") 
+    epoched_file_name_S2 = input[s_indicator2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+
+    # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
+
+
 # Change to a directory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
@@ -394,6 +418,22 @@ end = timer()
 # Calling function to convert seconds to hour minute, second
 print(f"Processed time : {convert(end - start)}")
 
+# %%
+import copy
+
+# %%
+input = copy.copy(fname_S1_direct)
+print(input)
+s_indicator = input.find("S") 
+epoched_f_name = input[s_indicator:].split(" "[0])
+epoched_f_name = epoched_f_name[0]
+epoched_f_name 
+# ext_name = fname
+
+# %%
+epoched_f_name = epoched_f_name[:-4] + "-epo.fif"
+epoched_f_name
+
 # %% markdown [markdown]
 # ## Direct eye(Post - training)
 # %%
@@ -402,8 +442,8 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-odd_subject_direct_post_suffix = "-direct_post_right_left_point_combined_raw.fif"
-even_subject_direct_post_suffix = "-direct_post_left_right_point_combined_raw.fif"
+odd_subject_direct_post_suffix = "-direct_post_left_right_point_combined_raw.fif"
+even_subject_direct_post_suffix = "-direct_post_right_left_point_combined_raw.fif"
 
 
 start = timer()
@@ -1075,8 +1115,8 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-odd_subject_averted_post_suffix = "-averted_post_right_left_point_combined_raw.fif"
-even_subject_averted_post_suffix = "-averted_post_left_right_point_combined_raw.fif"
+odd_subject_averted_post_suffix = "-averted_post_left_right_point_combined_raw.fif"
+even_subject_averted_post_suffix = "-averted_post_right_left_point_combined_raw.fif"
 
 
 start = timer()
@@ -1752,8 +1792,8 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-odd_subject_natural_post_suffix = "-natural_post_right_left_point_combined_raw.fif"
-even_subject_natural_post_suffix = "-natural_post_left_right_point_combined_raw.fif"
+odd_subject_natural_post_suffix = "-natural_post_left_right_point_combined_raw.fif"
+even_subject_natural_post_suffix = "-natural_post_right_left_point_combined_raw.fif"
 
 
 start = timer()
@@ -2425,8 +2465,8 @@ print(f"Processed time : {convert(end - start)}")
 # Container for no. of connections of ALL participants
 path_2_baseline_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
 path_2_dir_2_save_preprocessed_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
-odd_subject_averted_baseline_post_suffix = "-averted_pre_right_left_point_combined_raw.fif"
-even_subject_averted_baseline_post_suffix = "-averted_pre_left_right_point_combined_raw.fif"
+odd_subject_averted_baseline_post_suffix = "-averted_pre_left_right_point_combined_raw.fif"
+even_subject_averted_baseline_post_suffix = "-averted_pre_right_left_point_combined_raw.fif"
 
 
 start = timer()
