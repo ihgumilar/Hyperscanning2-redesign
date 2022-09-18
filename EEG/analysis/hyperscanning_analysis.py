@@ -2180,17 +2180,17 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
-    preproc_filename1 = fname_S1_averted
+    preproc_filename1 = fname_S1_natural
     # NOTE Be careful when there is "S" in path
-    s_indicator_index_1 = fname_S1_averted.find("S") 
+    s_indicator_index_1 = fname_S1_natural.find("S") 
     epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
     epoched_file_name_S1 = epoched_file_name_S1[0]
     epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
 
     # Extract file name from path (subject 2)
-    preproc_filename2 = fname_S2_averted
+    preproc_filename2 = fname_S2_natural
     # NOTE Be careful when there is "S" in path
-    s_indicator_index_2 = fname_S2_averted.find("S") 
+    s_indicator_index_2 = fname_S2_natural.find("S") 
     epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
     epoched_file_name_S2 = epoched_file_name_S2[0]
     epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
