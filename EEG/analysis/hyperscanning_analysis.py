@@ -423,22 +423,6 @@ end = timer()
 # Calling function to convert seconds to hour minute, second
 print(f"Processed time : {convert(end - start)}")
 
-# %%
-import copy
-
-# %%
-input = copy.copy(fname_S1_direct)
-print(input)
-s_indicator = input.find("S") 
-epoched_f_name = input[s_indicator:].split(" "[0])
-epoched_f_name = epoched_f_name[0]
-epoched_f_name 
-# ext_name = fname
-
-# %%
-epoched_f_name = epoched_f_name[:-4] + "-epo.fif"
-epoched_f_name
-
 # %% markdown [markdown]
 # ## Direct eye(Post - training)
 # %%
@@ -447,6 +431,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_direct_post_suffix = "-direct_post_left_right_point_combined_raw.fif"
 even_subject_direct_post_suffix = "-direct_post_right_left_point_combined_raw.fif"
 
@@ -740,6 +725,32 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
+    # Extract file name from path (subject 1)
+    preproc_filename1 = fname_S1_direct
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_1 = fname_S1_direct.find("S") 
+    epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    preproc_filename2 = fname_S2_direct
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_2 = fname_S2_direct.find("S") 
+    epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+    # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
+    
+
 # Change to a directory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
@@ -784,6 +795,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_averted_pre_suffix = "-averted_pre_right_left_point_combined_raw.fif"
 even_subject_averted_pre_suffix = "-averted_pre_left_right_point_combined_raw.fif"
 
@@ -947,7 +959,7 @@ for i in tqdm(
         "Theta": [4, 7],
         "Alpha": [7.5, 13],
         "Beta": [13.5, 29.5],
-        "Gamma": [30, 40],
+        "Gamma": [30, 40]
     }
 
     freq_bands = OrderedDict(freq_bands)
@@ -1077,7 +1089,32 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
-# Change to a avertedory where we want to save the above populated lists (pre-processed data)
+    # Extract file name from path (subject 1)
+    preproc_filename1 = fname_S1_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_1 = fname_S1_averted.find("S") 
+    epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    preproc_filename2 = fname_S2_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_2 = fname_S2_averted.find("S") 
+    epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+    # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
+
+# Change to a a directory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
 # Save the scores of inter-brain synchrony from each pair into pkl file
@@ -1120,6 +1157,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_averted_post_suffix = "-averted_post_left_right_point_combined_raw.fif"
 even_subject_averted_post_suffix = "-averted_post_right_left_point_combined_raw.fif"
 
@@ -1413,7 +1451,32 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
-# Change to a avertedory where we want to save the above populated lists (pre-processed data)
+    # Extract file name from path (subject 1)
+    preproc_filename1 = fname_S1_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_1 = fname_S1_averted.find("S") 
+    epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    preproc_filename2 = fname_S2_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_2 = fname_S2_averted.find("S") 
+    epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+     # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
+
+# Change to a directory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
 # Save the scores of inter-brain synchrony from each pair into pkl file
@@ -1460,6 +1523,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_natural_pre_suffix = "-natural_pre_right_left_point_combined_raw.fif"
 even_subject_natural_pre_suffix = "-natural_pre_left_right_point_combined_raw.fif"
 
@@ -1753,7 +1817,31 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
-# Change to a naturalory where we want to save the above populated lists (pre-processed data)
+    preproc_filename1 = fname_S1_natural
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_1 = fname_S1_natural.find("S") 
+    epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    preproc_filename2 = fname_S2_natural
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_2 = fname_S2_natural.find("S") 
+    epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+    # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
+
+# Change to a a directory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
 # Save the scores of inter-brain synchrony from each pair into pkl file
@@ -1773,6 +1861,7 @@ print(
     "(pre-natural) All inter-brain synchrony scores (theta, alpha, beta, gamma) of all pairs have been saved into a pickle file"
 )
 
+    
 # Save indices of deleted epochs from each pair into pkl file
 # NOTE : Length of list once pkl file is loaded is equal to the number of pairs
 # If we have 15 pairs, then there will be 15 lists within that pkl file
@@ -1797,6 +1886,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_natural_post_suffix = "-natural_post_left_right_point_combined_raw.fif"
 even_subject_natural_post_suffix = "-natural_post_right_left_point_combined_raw.fif"
 
@@ -2090,7 +2180,31 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
-# Change to a naturalory where we want to save the above populated lists (pre-processed data)
+    preproc_filename1 = fname_S1_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_1 = fname_S1_averted.find("S") 
+    epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    preproc_filename2 = fname_S2_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_2 = fname_S2_averted.find("S") 
+    epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+    # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
+
+# Change to a directory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
 # Save the scores of inter-brain synchrony from each pair into pkl file
@@ -2135,6 +2249,7 @@ print(f"Processed time : {convert(end - start)}")
 # Container for no. of connections of ALL participants
 path_2_baseline_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
 path_2_dir_2_save_preprocessed_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_averted_baseline_pre_suffix = "-averted_pre_right_left_point_combined_raw.fif"
 even_subject_averted_baseline_pre_suffix = "-averted_pre_left_right_point_combined_raw.fif"
 
@@ -2428,6 +2543,30 @@ for i in tqdm(
         have been put into a list (theta, alpha, beta, gamma)"
     )
 
+    preproc_filename1 = fname_S1_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_1 = fname_S1_averted.find("S") 
+    epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    preproc_filename2 = fname_S2_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_2 = fname_S2_averted.find("S") 
+    epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+    # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
+
 # Change to a avertedory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
 
@@ -2470,6 +2609,7 @@ print(f"Processed time : {convert(end - start)}")
 # Container for no. of connections of ALL participants
 path_2_baseline_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
 path_2_dir_2_save_preprocessed_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
 odd_subject_averted_baseline_post_suffix = "-averted_pre_left_right_point_combined_raw.fif"
 even_subject_averted_baseline_post_suffix = "-averted_pre_right_left_point_combined_raw.fif"
 
@@ -2762,6 +2902,30 @@ for i in tqdm(
         f"(pre-averted) inter-brain connection scores of S-{i + 1} & S-{i + 2} \
         have been put into a list (theta, alpha, beta, gamma)"
     )
+
+    preproc_filename1 = fname_S1_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_1 = fname_S1_averted.find("S") 
+    epoched_file_name_S1 = preproc_filename1[s_indicator_index_1:].split(" "[0])
+    epoched_file_name_S1 = epoched_file_name_S1[0]
+    epoched_file_name_S1 = epoched_file_name_S1[:-4] + "-epo.fif"
+
+    # Extract file name from path (subject 2)
+    preproc_filename2 = fname_S2_averted
+    # NOTE Be careful when there is "S" in path
+    s_indicator_index_2 = fname_S2_averted.find("S") 
+    epoched_file_name_S2 = preproc_filename2[s_indicator_index_2:].split(" "[0])
+    epoched_file_name_S2 = epoched_file_name_S2[0]
+    epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
+
+    # Change to a directory where we want to save raw pre processed epoched data
+    os.chdir(path_2_dir_2_save_raw_preprocessed_epoched_data)
+
+    # Save pre-processed (epoched) data of subject 1
+    preproc_S1.save(epoched_file_name_S1, overwrite=True)
+
+    # Save pre-processed (epoched) data of subject 2
+    preproc_S2.save(epoched_file_name_S2, overwrite=True)
 
 # Change to a avertedory where we want to save the above populated lists (pre-processed data)
 os.chdir(path_2_dir_2_save_preprocessed_data)
