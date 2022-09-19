@@ -1,4 +1,21 @@
-def convert_ihshan_paired_channel_label(channels):
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
+
+# %%
+def get_electrode_labels_connections(channels):
     """Giving labels of paired channels that are statistically connected
         This is using OpenBCI. Remember this !! (16 x 16 channels = 256).
 
