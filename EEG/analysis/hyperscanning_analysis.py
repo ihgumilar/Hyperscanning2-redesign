@@ -2249,7 +2249,7 @@ print(f"Processed time : {convert(end - start)}")
 # Container for no. of connections of ALL participants
 path_2_baseline_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
 path_2_dir_2_save_preprocessed_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
-path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_baseline_epoched_data/"
 odd_subject_averted_baseline_pre_suffix = "-averted_pre_right_left_point_combined_raw.fif"
 even_subject_averted_baseline_pre_suffix = "-averted_pre_left_right_point_combined_raw.fif"
 
@@ -2333,21 +2333,21 @@ for i in tqdm(
 
     # Subject no. 1 - 10
     if (i + 1) <= 9:
-        fname1_averted = (
+        fname1_averted_pre_baseline = (
             path_2_baseline_data_dir
             + "S0"
             + str(i + 1)
             + odd_subject_averted_baseline_pre_suffix
         )
-        fname2_averted = (
+        fname2_averted_pre_baseline = (
             path_2_baseline_data_dir
             + "S0"
             + str(i + 2)
             + even_subject_averted_baseline_pre_suffix
         )
-        # Replace fname2_averted variable
+        # Replace fname2_averted_pre_baseline variable
         if (i + 2) == 10:
-            fname2_averted = (
+            fname2_averted_pre_baseline = (
                 path_2_baseline_data_dir
                 + "S"
                 + str(i + 2)
@@ -2359,21 +2359,21 @@ for i in tqdm(
 
     # Subject no. 11 - 20
     elif (i + 1) >= 11:
-        fname1_averted = (
+        fname1_averted_pre_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 1)
             + odd_subject_averted_baseline_pre_suffix
         )
-        fname2_averted = (
+        fname2_averted_pre_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 2)
             + even_subject_averted_baseline_pre_suffix
         )
-        # Replace fname2_averted variable
+        # Replace fname2_averted_pre_baseline variable
         if (i + 2) == 20:
-            fname2_averted = (
+            fname2_averted_pre_baseline = (
                 path_2_baseline_data_dir
                 + "S"
                 + str(i + 2)
@@ -2385,21 +2385,21 @@ for i in tqdm(
 
     # Subject no. 21 - 30
     elif (i + 1) >= 21:
-        fname1_averted = (
+        fname1_averted_pre_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 1)
             + odd_subject_averted_baseline_pre_suffix
         )
-        fname2_averted = (
+        fname2_averted_pre_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 2)
             + even_subject_averted_baseline_pre_suffix
         )
-        # Replace fname2_averted variable
+        # Replace fname2_averted_pre_baseline variable
         if (i + 2) == 30:
-            fname2_averted = (
+            fname2_averted_pre_baseline = (
                 path_2_baseline_data_dir
                 + "S"
                 + str(i + 2)
@@ -2421,8 +2421,8 @@ for i in tqdm(
     # Container for no. of connections of each band from ONE participant
     # total_n_connections_theta = []
 
-    fname_S1_averted = fname1_averted
-    fname_S2_averted = fname2_averted
+    fname_S1_averted = fname1_averted_pre_baseline
+    fname_S2_averted = fname2_averted_pre_baseline
 
     # Get original bad channels for odd and even subject
     original_bad_channels1 = original_bad_channels_all[i]
@@ -2609,15 +2609,14 @@ print(f"Processed time : {convert(end - start)}")
 # Container for no. of connections of ALL participants
 path_2_baseline_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/"
 path_2_dir_2_save_preprocessed_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
-path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_epoched_data/"
-odd_subject_averted_baseline_post_suffix = "-averted_pre_left_right_point_combined_raw.fif"
-even_subject_averted_baseline_post_suffix = "-averted_pre_right_left_point_combined_raw.fif"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_baseline_epoched_data/"
+odd_subject_averted_baseline_post_suffix = "-averted_post_left_right_point_combined_raw.fif"
+even_subject_averted_baseline_post_suffix = "-averted_post_right_left_point_combined_raw.fif"
 
 
 start = timer()
 
 all_deleted_epochs_indices_averted_baseline_post = []
-
 total_n_connections_all_pairs_averted_baseline_post = []
 
 list_circular_correlation_scores_all_theta = []
@@ -2691,23 +2690,72 @@ for i in tqdm(
     # if (i == 2):  # NOTE: Indicate pair
     #     continue
 
-    # Subject no. 1 - 10
+    # # Subject no. 1 - 10
+    # if (i + 1) <= 9:
+    #     fname1_averted_post_baseline = (
+    #         path_2_baseline_data_dir
+    #         + "S0"
+    #         + str(i + 1)
+    #         + odd_subject_averted_baseline_post_suffix
+    #     )
+    #     fname2_averted_post_baseline = (
+    #         path_2_baseline_data_dir
+    #         + "S0"
+    #         + str(i + 2)
+    #         + even_subject_averted_baseline_post_suffix
+    #     )
+    #     # Replace fname2_averted_post_baseline variable
+    #     if (i + 2) == 10:
+    #         fname2_averted_post_baseline = (
+    #             path_2_baseline_data_dir
+    #             + "S"
+    #             + str(i + 2)
+    #             + even_subject_averted_baseline_post_suffix
+    #         )
+
+    #     # Indicator of which files are being processed
+    #     print(f"Processing S-{i + 1} & S-{i + 2}")
+
+    # # Subject no. 11 - 20
+    # elif (i + 1) >= 11:
+    #     fname1_averted_post_baseline = (
+    #         path_2_baseline_data_dir
+    #         + "S"
+    #         + str(i + 1)
+    #         + odd_subject_averted_baseline_post_suffix
+    #     )
+    #     fname2_averted_post_baseline = (
+    #         path_2_baseline_data_dir
+    #         + "S"
+    #         + str(i + 2)
+    #         + even_subject_averted_baseline_post_suffix
+    #     )
+    #     # Replace fname2_averted_post_baseline variable
+    #     if (i + 2) == 20:
+    #         fname2_averted_post_baseline = (
+    #             path_2_baseline_data_dir
+    #             + "S"
+    #             + str(i + 2)
+    #             + even_subject_averted_baseline_post_suffix
+    #         )
+
+        # Subject no. 1 - 10
     if (i + 1) <= 9:
-        fname1_averted = (
+        fname1_averted_post_baseline = (
             path_2_baseline_data_dir
             + "S0"
             + str(i + 1)
             + odd_subject_averted_baseline_post_suffix
         )
-        fname2_averted = (
+        fname2_averted_post_baseline = (
             path_2_baseline_data_dir
             + "S0"
             + str(i + 2)
             + even_subject_averted_baseline_post_suffix
         )
-        # Replace fname2_averted variable
+        # Replace fname2_averted_post_baseline variable
         if (i + 2) == 10:
-            fname2_averted = (
+            fname2_averted_post_baseline = (
                 path_2_baseline_data_dir
                 + "S"
                 + str(i + 2)
@@ -2719,21 +2767,21 @@ for i in tqdm(
 
     # Subject no. 11 - 20
     elif (i + 1) >= 11:
-        fname1_averted = (
+        fname1_averted_post_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 1)
             + odd_subject_averted_baseline_post_suffix
         )
-        fname2_averted = (
+        fname2_averted_post_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 2)
             + even_subject_averted_baseline_post_suffix
         )
-        # Replace fname2_averted variable
+        # Replace fname2_averted_post_baseline variable
         if (i + 2) == 20:
-            fname2_averted = (
+            fname2_averted_post_baseline = (
                 path_2_baseline_data_dir
                 + "S"
                 + str(i + 2)
@@ -2745,21 +2793,47 @@ for i in tqdm(
 
     # Subject no. 21 - 30
     elif (i + 1) >= 21:
-        fname1_averted = (
+        fname1_averted_post_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 1)
             + odd_subject_averted_baseline_post_suffix
         )
-        fname2_averted = (
+        fname2_averted_post_baseline = (
             path_2_baseline_data_dir
             + "S"
             + str(i + 2)
             + even_subject_averted_baseline_post_suffix
         )
-        # Replace fname2_averted variable
+        # Replace fname2_averted_post_baseline variable
         if (i + 2) == 30:
-            fname2_averted = (
+            fname2_averted_post_baseline = (
+                path_2_baseline_data_dir
+                + "S"
+                + str(i + 2)
+                + even_subject_averted_baseline_post_suffix
+            )
+      
+        # Indicator of which files are being processed
+        print(f"Processing S-{i + 1} & S-{i + 2}")
+
+    # Subject no. 21 - 30
+    elif (i + 1) >= 21:
+        fname1_averted_post_baseline = (
+            path_2_baseline_data_dir
+            + "S"
+            + str(i + 1)
+            + odd_subject_averted_baseline_post_suffix
+        )
+        fname2_averted_post_baseline = (
+            path_2_baseline_data_dir
+            + "S"
+            + str(i + 2)
+            + even_subject_averted_baseline_post_suffix
+        )
+        # Replace fname2_averted_post_baseline variable
+        if (i + 2) == 30:
+            fname2_averted_post_baseline = (
                 path_2_baseline_data_dir
                 + "S"
                 + str(i + 2)
@@ -2781,8 +2855,8 @@ for i in tqdm(
     # Container for no. of connections of each band from ONE participant
     # total_n_connections_theta = []
 
-    fname_S1_averted = fname1_averted
-    fname_S2_averted = fname2_averted
+    fname_S1_averted = fname1_averted_post_baseline
+    fname_S2_averted = fname2_averted_post_baseline
 
     # Get original bad channels for odd and even subject
     original_bad_channels1 = original_bad_channels_all[i]
@@ -2961,6 +3035,9 @@ print("(pre-averted) All indices of deleted epochs have been saved into a pickle
 end = timer()
 # Calling function to convert seconds to hour minute, second
 print(f"Processed time : {convert(end - start)}")
+
+# %%
+fname_S1_averted
 
 # %% [markdown]
 # ## Add : Read pkl file
