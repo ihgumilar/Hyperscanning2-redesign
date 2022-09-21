@@ -14,8 +14,8 @@
 #     name: python3
 # ---
 
-# %% [markdown]
-# ### Relevant packages
+# %%
+### Relevant packages
 
 import os
 import pickle
@@ -32,6 +32,8 @@ from LabelConverter import get_electrode_labels_connections
 
 # %% [markdown]
 # #### Just in case failed in importing LabelConverter
+
+# %%
 # If there is an error in importing LabelConter, then run the following line to change working directory
 # Then run the above cell again
 os.chdir("/hpc/igum002/codes/Hyperscanning2-redesign/EEG/analysis")
@@ -39,6 +41,7 @@ os.chdir("/hpc/igum002/codes/Hyperscanning2-redesign/EEG/analysis")
 # %% [markdown]
 # ### Statistical analysis (averted_pre)
 
+# %%
 # IMPORTANT ! Define some paths
 
 # Where preprocessed files are stored (REMEMBER ! Different eye condition (pre/pro) requires a unique directory)
@@ -90,7 +93,7 @@ ch_names = [
 ch_types = ["eeg"] * 16
 info = mne.create_info(ch_names=ch_names, sfreq=125, ch_types=ch_types)
 
-# list_circular_correlation_reality_pre_no_filter_all = []
+list_circular_correlation_reality_pre_no_filter_all = []
 
 for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
@@ -453,6 +456,7 @@ for i in tqdm(
 # %% [markdown]
 # ### Load data (significant connections)
 
+# %%
 # Load the data
 plv80 = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/Pre_coh_combined_pair_S9_and_S10_connection_data.pkl"
 
@@ -461,8 +465,10 @@ plv80 = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connect
 dataplv80 = pd.read_pickle(plv80)
 
 # %% [markdown]
-### Get labels of significant connections
+# ## Get labels of significant connections
 # and count how many occurences of each possible connections
+
+# %%
 
 # Get significant matrix for each frequency (i.e, theta, alpha, beta, and gamma)
 a_theta = dataplv80[0]
@@ -496,4 +502,4 @@ print(
 )
 
 # NOTE: In case, we want to sort from least to most common. Jus uncomment this
-# list(reversed(total_connections_labels.most_common()))
+list(reversed(total_connections_labels.most_common()))
