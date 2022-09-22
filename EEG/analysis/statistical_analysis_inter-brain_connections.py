@@ -369,7 +369,7 @@ for i in tqdm(
                     combined_idx_ccorr = [participant1_channel, participant2_channel]
                     
                     # Convert indices to pair of electorde labels
-                    electrode_pair_ccorr = get_electrode_labels_connections(combined_idx_ccorr)
+                    electrode_pair_ccorr = get_electrode_labels_connections(tuple(combined_idx_ccorr))
 
                     # Combine electrode pair with actual score (in dictionary format)
                     electrode_pair_n_actual_score_ccor = {electrode_pair_ccorr:sig_actual_scores_ccorr}
@@ -407,7 +407,7 @@ for i in tqdm(
                     combined_idx_plv = [participant1_channel, participant2_channel]
 
                     # Convert indices to pair of electorde labels
-                    electrode_pair_plv = get_electrode_labels_connections(combined_idx_plv)
+                    electrode_pair_plv = get_electrode_labels_connections(tuple(combined_idx_plv))
 
                     # Combine electrode pair with actual score (in dictionary format)
                     electrode_pair_n_actual_score_ccor = {electrode_pair_plv:sig_actual_scores_plv}
@@ -445,7 +445,7 @@ for i in tqdm(
                     combined_idx_coh = [participant1_channel, participant2_channel]
 
                     # Convert indices to pair of electorde labels
-                    electrode_pair_coh = get_electrode_labels_connections(combined_idx_coh)
+                    electrode_pair_coh = get_electrode_labels_connections(tuple(combined_idx_coh))
 
                     # Combine electrode pair with actual score (in dictionary format)
                     electrode_pair_n_actual_score_ccor = {electrode_pair_coh:sig_actual_scores_coh}
