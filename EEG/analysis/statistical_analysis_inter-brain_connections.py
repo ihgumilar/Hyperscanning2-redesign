@@ -103,8 +103,8 @@ for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
 ):
 
-    filename1 = list_of_files[i + 1]
-    filename2 = list_of_files[i + 2]
+    filename1 = list_of_files[i]
+    filename2 = list_of_files[i + 1]
 
     # Load preprocessed epochs
     load_epoch_S1 = mne.read_epochs(filename1, preload=True)
@@ -206,10 +206,24 @@ for i in tqdm(
     
     #TODO Define lists that contain significant actual scores (ccor, plv, coh) along with electrode pair labels
     
-    all_electrode_pair_n_actual_score_ccorr = []
-    all_electrode_pair_n_actual_score_plv = []
-    all_electrode_pair_n_actual_score_coh = []
+    ccorr_combined_freqs_electrode_pair_n_actual_score = []
+    plv_combined_freqs_electrode_pair_n_actual_score = []
+    coh_combined_freqs_electrode_pair_n_actual_score = []
     
+    electrode_pair_n_actual_score_theta_ccorr = []
+    electrode_pair_n_actual_score_alpha_ccorr = []
+    electrode_pair_n_actual_score_beta_ccorr = []
+    electrode_pair_n_actual_score_gamma_ccorr = []
+
+    electrode_pair_n_actual_score_theta_plv = []
+    electrode_pair_n_actual_score_alpha_plv = []
+    electrode_pair_n_actual_score_beta_plv = []
+    electrode_pair_n_actual_score_gamma_plv = []
+
+    electrode_pair_n_actual_score_theta_coh = []
+    electrode_pair_n_actual_score_alpha_coh = []
+    electrode_pair_n_actual_score_beta_coh = []
+    electrode_pair_n_actual_score_gamma_coh = []
 
     for participant1_channel in range(len(ch_names)):
         for participant2_channel in range(len(ch_names)):
@@ -364,18 +378,43 @@ for i in tqdm(
 
                     #TODO Get actual significant scores that are calculated by ccorr method
                     sig_actual_scores_ccorr = ccorr_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
-                    
+
                     #TODO Get indices of actual significant scores that are calculated by ccorr method                                        
                     combined_idx_ccorr = [participant1_channel, participant2_channel]
-                    
+
                     # Convert indices to pair of electorde labels
                     electrode_pair_ccorr = get_electrode_labels_connections(tuple(combined_idx_ccorr))
 
                     # Combine electrode pair with actual score (in dictionary format)
-                    electrode_pair_n_actual_score_ccor = {electrode_pair_ccorr:sig_actual_scores_ccorr}
+                    electrode_pair_n_actual_score_ccorr = {electrode_pair_ccorr:sig_actual_scores_ccorr}
 
-                    # Put all actual significant scores calculated by ccor along with electrode pair labels into a list
-                    all_electrode_pair_n_actual_score_ccorr.append(electrode_pair_n_actual_score_ccor)
+                    # TODO Put electrode pair with actual score into a separate list depending on its frequency
+                    # if theta,
+                    if (iterate_each_freq == 0):
+                        electrode_pair_n_actual_score_theta_ccorr.append(electrode_pair_n_actual_score_ccorr)
+                    # alpha, 
+                    elif (iterate_each_freq == 1):
+                        electrode_pair_n_actual_score_alpha_ccorr.append(electrode_pair_n_actual_score_ccorr)
+                    # beta,
+                    elif (iterate_each_freq == 2):
+                        electrode_pair_n_actual_score_beta_ccorr.append(electrode_pair_n_actual_score_ccorr)
+                    # gamma
+                    elif (iterate_each_freq == 3):
+                        electrode_pair_n_actual_score_gamma_ccorr.append(electrode_pair_n_actual_score_ccorr)
+
+                # Put all (freqs) actual significant scores calculated by ccorr along with electrode pair labels into a list
+                # if theta,
+                if (iterate_each_freq == 0):
+                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_ccorr)
+                # alpha, 
+                elif (iterate_each_freq == 1):
+                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_ccorr)
+                # beta,
+                elif (iterate_each_freq == 2):
+                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_ccorr)
+                # gamma
+                elif (iterate_each_freq == 3):
+                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_ccorr)
                     
 
                 # calculate mean and standard deviation for each frequency band using plv
@@ -410,10 +449,35 @@ for i in tqdm(
                     electrode_pair_plv = get_electrode_labels_connections(tuple(combined_idx_plv))
 
                     # Combine electrode pair with actual score (in dictionary format)
-                    electrode_pair_n_actual_score_ccor = {electrode_pair_plv:sig_actual_scores_plv}
+                    electrode_pair_n_actual_score_plv = {electrode_pair_plv:sig_actual_scores_plv}
 
-                    # Put all actual significant scores calculated by ccor along with electrode pair labels into a list
-                    all_electrode_pair_n_actual_score_plv.append(electrode_pair_n_actual_score_ccor)
+                    # TODO Put electrode pair with actual score into a separate list depending on its frequency
+                    # if theta,
+                    if (iterate_each_freq == 0):
+                        electrode_pair_n_actual_score_theta_plv.append(electrode_pair_n_actual_score_plv)
+                    # alpha, 
+                    elif (iterate_each_freq == 1):
+                        electrode_pair_n_actual_score_alpha_plv.append(electrode_pair_n_actual_score_plv)
+                    # beta,
+                    elif (iterate_each_freq == 2):
+                        electrode_pair_n_actual_score_beta_plv.append(electrode_pair_n_actual_score_plv)
+                    # gamma
+                    elif (iterate_each_freq == 3):
+                        electrode_pair_n_actual_score_gamma_plv.append(electrode_pair_n_actual_score_plv)
+
+                # Put all (freqs) actual significant scores calculated by plv along with electrode pair labels into a list
+                # if theta,
+                if (iterate_each_freq == 0):
+                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_plv)
+                # alpha, 
+                elif (iterate_each_freq == 1):
+                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_plv)
+                # beta,
+                elif (iterate_each_freq == 2):
+                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_plv)
+                # gamma
+                elif (iterate_each_freq == 3):
+                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_plv)
 
 
                 # calculate mean and standard deviation for each frequency band using coh
@@ -448,10 +512,35 @@ for i in tqdm(
                     electrode_pair_coh = get_electrode_labels_connections(tuple(combined_idx_coh))
 
                     # Combine electrode pair with actual score (in dictionary format)
-                    electrode_pair_n_actual_score_ccor = {electrode_pair_coh:sig_actual_scores_coh}
+                    electrode_pair_n_actual_score_coh = {electrode_pair_coh:sig_actual_scores_coh}
 
-                    # Put all actual significant scores calculated by ccor along with electrode pair labels into a list
-                    all_electrode_pair_n_actual_score_coh.append(electrode_pair_n_actual_score_ccor)
+                    # TODO Put electrode pair with actual score into a separate list depending on its frequency
+                    # if theta,
+                    if (iterate_each_freq == 0):
+                        electrode_pair_n_actual_score_theta_coh.append(electrode_pair_n_actual_score_coh)
+                    # alpha, 
+                    elif (iterate_each_freq == 1):
+                        electrode_pair_n_actual_score_alpha_coh.append(electrode_pair_n_actual_score_coh)
+                    # beta,
+                    elif (iterate_each_freq == 2):
+                        electrode_pair_n_actual_score_beta_coh.append(electrode_pair_n_actual_score_coh)
+                    # gamma
+                    elif (iterate_each_freq == 3):
+                        electrode_pair_n_actual_score_gamma_coh.append(electrode_pair_n_actual_score_coh)
+
+                # Put all (freqs) actual significant scores calculated by coh along with electrode pair labels into a list
+                # if theta,
+                if (iterate_each_freq == 0):
+                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_coh)
+                # alpha, 
+                elif (iterate_each_freq == 1):
+                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_coh)
+                # beta,
+                elif (iterate_each_freq == 2):
+                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_coh)
+                # gamma
+                elif (iterate_each_freq == 3):
+                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_coh)
 
     # convert the 4 x 16 x 16 array into a list
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
@@ -485,7 +574,7 @@ for i in tqdm(
     )
     with open(saved_actual_score_filename1, "wb") as handle:
         pickle.dump(
-            all_electrode_pair_n_actual_score_ccorr,
+            ccorr_combined_freqs_electrode_pair_n_actual_score,
             handle,
             protocol=pickle.HIGHEST_PROTOCOL,
         )
@@ -518,7 +607,7 @@ for i in tqdm(
     )
     with open(saved_actual_score_filename1, "wb") as handle:
         pickle.dump(
-            all_electrode_pair_n_actual_score_plv,
+            plv_combined_freqs_electrode_pair_n_actual_score,
             handle,
             protocol=pickle.HIGHEST_PROTOCOL,
         )
@@ -550,7 +639,7 @@ for i in tqdm(
     )
     with open(saved_actual_score_filename1, "wb") as handle:
         pickle.dump(
-            all_electrode_pair_n_actual_score_coh,
+            coh_combined_freqs_electrode_pair_n_actual_score,
             handle,
             protocol=pickle.HIGHEST_PROTOCOL,
         )
@@ -617,8 +706,9 @@ for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
 ):
 
-    filename1 = list_of_files[i + 1]
-    filename2 = list_of_files[i + 2]
+   
+    filename1 = list_of_files[i]
+    filename2 = list_of_files[i + 1]
 
     # Load preprocessed epochs
     load_epoch_S1 = mne.read_epochs(filename1, preload=True)
@@ -1031,8 +1121,8 @@ for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
 ):
 
-    filename1 = list_of_files[i + 1]
-    filename2 = list_of_files[i + 2]
+    filename1 = list_of_files[i]
+    filename2 = list_of_files[i + 1]
 
     # Load preprocessed epochs
     load_epoch_S1 = mne.read_epochs(filename1, preload=True)
@@ -1445,8 +1535,8 @@ for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
 ):
 
-    filename1 = list_of_files[i + 1]
-    filename2 = list_of_files[i + 2]
+    filename1 = list_of_files[i]
+    filename2 = list_of_files[i + 1]
 
     # Load preprocessed epochs
     load_epoch_S1 = mne.read_epochs(filename1, preload=True)
@@ -1859,8 +1949,8 @@ for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
 ):
 
-    filename1 = list_of_files[i + 1]
-    filename2 = list_of_files[i + 2]
+    filename1 = list_of_files[i]
+    filename2 = list_of_files[i + 1]
 
     # Load preprocessed epochs
     load_epoch_S1 = mne.read_epochs(filename1, preload=True)
@@ -2273,8 +2363,9 @@ for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
 ):
 
-    filename1 = list_of_files[i + 1]
-    filename2 = list_of_files[i + 2]
+
+    filename1 = list_of_files[i]
+    filename2 = list_of_files[i + 1]
 
     # Load preprocessed epochs
     load_epoch_S1 = mne.read_epochs(filename1, preload=True)
