@@ -95,6 +95,17 @@ info = mne.create_info(ch_names=ch_names, sfreq=125, ch_types=ch_types)
 
 list_circular_correlation_reality_pre_no_filter_all = []
 
+#TODO Lists of significant actual scores for all participants (ccor, plv, coh)
+# all_participants_sig_actual_scores_ccorr = []
+# all_participants_sig_actual_scores_plv = []
+# all_participants_sig_actual_scores_coh = []
+
+#TODO Lists of indices of significant actual scores for all participants (ccor, plv, coh)
+# all_participants_sig_idx_actual_scores_ccorr = []
+# all_participants_sig_idx_actual_scores_plv = []
+# all_participants_sig_idx_actual_scores_coh = []
+
+
 for i in tqdm(
     range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
 ):
@@ -199,6 +210,17 @@ for i in tqdm(
     ]
 
     ############ Implemanting Permutation test ################################
+    
+    # Define lists that contain significant actual scores (ccor, plv, coh)
+    sig_actual_scores_ccorr = []
+    sig_actual_scores_plv = []
+    sig_actual_scores_coh = []
+
+    # Define lists that contain indices of significant actual scores (ccor, plv, coh)
+    sig_idx_actual_scores_ccorr = []
+    sig_idx_actual_scores_plv = []
+    sig_idx_actual_scores_coh = []
+
 
     for participant1_channel in range(len(ch_names)):
         for participant2_channel in range(len(ch_names)):
@@ -340,10 +362,7 @@ for i in tqdm(
                 ccorr_std_permuted = np.std(
                     combined_k_ccorr_frequency_permuted[iterate_each_freq]
                 )
-                ccorr_z_score = (
-                    ccorr_combined_ground_truth_matrices[iterate_each_freq][
-                        participant1_channel
-                    ][participant2_channel]
+                ccorr_z_score = (ccorr_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
                     - ccorr_mean_permuted
                 ) / ccorr_std_permuted
                 # checking if the z score is greater than z value (p < .05) i.e. if the connection is significant or not. this serves as a marker of significant connection between two electrodes
@@ -353,6 +372,18 @@ for i in tqdm(
                     ccorr_combined_freq_n_connections[iterate_each_freq][
                         participant1_channel
                     ][participant2_channel] = 1
+
+                    #TODO Populate actual significant scores that are calculated by ccorr method
+                    sig_actual_scores_ccorr.append(ccorr_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel])
+                    # Put into main list that contains all participants significant scores
+                    # all_participants_sig_actual_scores_ccorr.append(sig_actual_scores_ccorr)
+                    
+                    #TODO Populate indices of actual significant scores that are calculated by ccorr method                                        
+                    combined_idx_ccorr = [participant1_channel, participant2_channel]
+                    sig_idx_actual_scores_ccorr.append(tuple(combined_idx_ccorr))
+                    # Put into main list that contains all participants' indices of significant scores
+                    # all_participants_sig_idx_actual_scores_ccorr.apend(sig_idx_actual_scores_ccorr)
+
                     # print(f"{combined_ground_truth_matrices_names[iterate_each_freq]} connection between Participant1 {ch_names[participant1_channel]} and Participant2 {ch_names[participant2_channel]} is significant")
 
                 # calculate mean and standard deviation for each frequency band using plv
@@ -375,6 +406,18 @@ for i in tqdm(
                     plv_combined_freq_n_connections[iterate_each_freq][
                         participant1_channel
                     ][participant2_channel] = 1
+                    
+                    #TODO Populate actual significant scores that are calculated by PLV method
+                    sig_actual_scores_plv.append(plv_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel])
+                    # Put into main list that contains all participants significant scores
+                    # all_participants_sig_actual_scores_plv.append(sig_actual_scores_plv)
+                    
+                    #TODO Populate indices of actual significant scores that are calculated by PLV method                                        
+                    combined_idx_plv = [participant1_channel, participant2_channel]
+                    sig_idx_actual_scores_plv.append(tuple(combined_idx_plv))
+                    # Put into main list that contains all participants' indices of significant scores
+                    # all_participants_sig_idx_actual_scores_plv.apend(sig_idx_actual_scores_plv)
+                    
                     # print(f"{combined_ground_truth_matrices_names[iterate_each_freq]} connection between Participant1 {ch_names[participant1_channel]} and Participant2 {ch_names[participant2_channel]} is significant")
 
                 # calculate mean and standard deviation for each frequency band using coh
@@ -397,6 +440,18 @@ for i in tqdm(
                     coh_combined_freq_n_connections[iterate_each_freq][
                         participant1_channel
                     ][participant2_channel] = 1
+
+                    #TODO Populate actual significant scores that are calculated by coh method
+                    sig_actual_scores_coh.append(coh_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel])
+                    # Put into main list that contains all participants significant scores
+                    # all_participants_sig_actual_scores_coh.append(sig_actual_scores_coh)
+
+                    #TODO Populate indices of actual significant scores that are calculated by coh method                                        
+                    combined_idx_coh = [participant1_channel, participant2_channel]
+                    sig_idx_actual_scores_coh.append(tuple(combined_idx_coh))
+                    # Put into main list that contains all participants' indices of significant scores
+                    # all_participants_sig_idx_actual_scores_coh.apend(sig_idx_actual_scores_coh)
+
                     # print(f"{combined_ground_truth_matrices_names[iterate_each_freq]} connection between Participant1 {ch_names[participant1_channel]} and Participant2 {ch_names[participant2_channel]} is significant")
 
     # convert the 4 x 16 x 16 array into a list
@@ -420,6 +475,40 @@ for i in tqdm(
             protocol=pickle.HIGHEST_PROTOCOL,
         )
 
+    # TODO Save actual significant scores of ccorr for a pair
+    saved_actual_score_filename1 = (
+        saved_directory
+        + "Pre_ccorr_combined_pair_S"
+        + str(i + 1)
+        + "_and_S"
+        + str(i + 2)
+        + "_actual_score_data.pkl"
+    )
+    with open(saved_actual_score_filename1, "wb") as handle:
+        pickle.dump(
+            sig_actual_scores_coh,
+            handle,
+            protocol=pickle.HIGHEST_PROTOCOL,
+        )
+
+    # TODO Save indices of actual significant scores of ccorr for a pair
+    saved_idx_actual_score_filename1 = (
+        saved_directory
+        + "Pre_ccorr_combined_pair_S"
+        + str(i + 1)
+        + "_and_S"
+        + str(i + 2)
+        + "_idx_actual_score_data.pkl"
+    )
+    with open(saved_idx_actual_score_filename1, "wb") as handle:
+        pickle.dump(
+            sig_idx_actual_scores_coh,
+            handle,
+            protocol=pickle.HIGHEST_PROTOCOL,
+        )
+
+
+
     # save plv connection data for a pair
     saved_filename2 = (
         saved_directory
@@ -435,6 +524,39 @@ for i in tqdm(
             handle,
             protocol=pickle.HIGHEST_PROTOCOL,
         )
+        
+    # TODO Save actual significant scores of plv for a pair
+    saved_actual_score_filename2 = (
+        saved_directory
+        + "Pre_plv_combined_pair_S"
+        + str(i + 1)
+        + "_and_S"
+        + str(i + 2)
+        + "_actual_score_data.pkl"
+    )
+    with open(saved_actual_score_filename1, "wb") as handle:
+        pickle.dump(
+            sig_actual_scores_plv,
+            handle,
+            protocol=pickle.HIGHEST_PROTOCOL,
+        )
+
+    # TODO Save indices of actual significant scores of plv for a pair
+    saved_idx_actual_score_filename2 = (
+        saved_directory
+        + "Pre_plv_combined_pair_S"
+        + str(i + 1)
+        + "_and_S"
+        + str(i + 2)
+        + "_idx_actual_score_data.pkl"
+    )
+    with open(saved_idx_actual_score_filename1, "wb") as handle:
+        pickle.dump(
+            sig_idx_actual_scores_plv,
+            handle,
+            protocol=pickle.HIGHEST_PROTOCOL,
+        )
+
 
     # save coh connection data for a pair
     saved_filename3 = (
@@ -448,6 +570,38 @@ for i in tqdm(
     with open(saved_filename3, "wb") as handle:
         pickle.dump(
             coh_combined_freq_n_connections_list,
+            handle,
+            protocol=pickle.HIGHEST_PROTOCOL,
+        )
+
+    # TODO Save actual significant scores of coh for a pair
+    saved_actual_score_filename2 = (
+        saved_directory
+        + "Pre_coh_combined_pair_S"
+        + str(i + 1)
+        + "_and_S"
+        + str(i + 2)
+        + "_actual_score_data.pkl"
+    )
+    with open(saved_actual_score_filename1, "wb") as handle:
+        pickle.dump(
+            sig_actual_scores_coh,
+            handle,
+            protocol=pickle.HIGHEST_PROTOCOL,
+        )
+
+    # TODO Save indices of actual significant scores of coh for a pair
+    saved_idx_actual_score_filename2 = (
+        saved_directory
+        + "Pre_coh_combined_pair_S"
+        + str(i + 1)
+        + "_and_S"
+        + str(i + 2)
+        + "_idx_actual_score_data.pkl"
+    )
+    with open(saved_idx_actual_score_filename1, "wb") as handle:
+        pickle.dump(
+            sig_idx_actual_scores_coh,
             handle,
             protocol=pickle.HIGHEST_PROTOCOL,
         )
