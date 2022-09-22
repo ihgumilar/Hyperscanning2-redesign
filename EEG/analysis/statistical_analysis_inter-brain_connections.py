@@ -16,10 +16,13 @@
 
 # %%
 ### Relevant packages
+# If there is an error in importing LabelConter, then run the following line to change working directory
+# Then run the above cell again
+os.chdir("/hpc/igum002/codes/Hyperscanning2-redesign/EEG/analysis")
 
 import os
 import pickle
-from collections import Counter
+from collections import Counter, OrderedDict
 
 import mne
 import numpy as np
