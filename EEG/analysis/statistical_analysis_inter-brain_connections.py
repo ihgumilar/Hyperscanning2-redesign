@@ -363,7 +363,7 @@ for i in tqdm(
                     ][participant2_channel] = 1
 
                     #TODO Get actual significant scores that are calculated by ccorr method
-                    sig_actual_scores_ccorr = ccorr_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel])
+                    sig_actual_scores_ccorr = ccorr_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
                     
                     #TODO Get indices of actual significant scores that are calculated by ccorr method                                        
                     combined_idx_ccorr = [participant1_channel, participant2_channel]
@@ -401,7 +401,7 @@ for i in tqdm(
                     
 
                     #TODO Get actual significant scores that are calculated by plv method
-                    sig_actual_scores_plv = plv_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel])
+                    sig_actual_scores_plv = plv_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
 
                     #TODO Get indices of actual significant scores that are calculated by plv method                                        
                     combined_idx_plv = [participant1_channel, participant2_channel]
@@ -439,7 +439,7 @@ for i in tqdm(
 
 
                     #TODO Get actual significant scores that are calculated by coh method
-                    sig_actual_scores_coh = coh_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel])
+                    sig_actual_scores_coh = coh_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
 
                     #TODO Get indices of actual significant scores that are calculated by coh method                                        
                     combined_idx_coh = [participant1_channel, participant2_channel]
