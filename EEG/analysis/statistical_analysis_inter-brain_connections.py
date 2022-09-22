@@ -402,19 +402,19 @@ for i in tqdm(
                     elif (iterate_each_freq == 3):
                         electrode_pair_n_actual_score_gamma_ccorr.append(electrode_pair_n_actual_score_ccorr)
 
-                # Put all (freqs) actual significant scores calculated by ccorr along with electrode pair labels into a list
-                # if theta,
-                if (iterate_each_freq == 0):
-                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_ccorr)
-                # alpha, 
-                elif (iterate_each_freq == 1):
-                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_ccorr)
-                # beta,
-                elif (iterate_each_freq == 2):
-                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_ccorr)
-                # gamma
-                elif (iterate_each_freq == 3):
-                    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_ccorr)
+                    # # Put all (freqs) actual significant scores calculated by ccorr along with electrode pair labels into a list
+                    # # if theta,
+                    # if (iterate_each_freq == 0):
+                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_ccorr)
+                    # # alpha, 
+                    # elif (iterate_each_freq == 1):
+                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_ccorr)
+                    # # beta,
+                    # elif (iterate_each_freq == 2):
+                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_ccorr)
+                    # # gamma
+                    # elif (iterate_each_freq == 3):
+                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_ccorr)
                     
 
                 # calculate mean and standard deviation for each frequency band using plv
@@ -465,19 +465,19 @@ for i in tqdm(
                     elif (iterate_each_freq == 3):
                         electrode_pair_n_actual_score_gamma_plv.append(electrode_pair_n_actual_score_plv)
 
-                # Put all (freqs) actual significant scores calculated by plv along with electrode pair labels into a list
-                # if theta,
-                if (iterate_each_freq == 0):
-                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_plv)
-                # alpha, 
-                elif (iterate_each_freq == 1):
-                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_plv)
-                # beta,
-                elif (iterate_each_freq == 2):
-                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_plv)
-                # gamma
-                elif (iterate_each_freq == 3):
-                    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_plv)
+                    # # Put all (freqs) actual significant scores calculated by plv along with electrode pair labels into a list
+                    # # if theta,
+                    # if (iterate_each_freq == 0):
+                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_plv)
+                    # # alpha, 
+                    # elif (iterate_each_freq == 1):
+                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_plv)
+                    # # beta,
+                    # elif (iterate_each_freq == 2):
+                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_plv)
+                    # # gamma
+                    # elif (iterate_each_freq == 3):
+                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_plv)
 
 
                 # calculate mean and standard deviation for each frequency band using coh
@@ -528,20 +528,38 @@ for i in tqdm(
                     elif (iterate_each_freq == 3):
                         electrode_pair_n_actual_score_gamma_coh.append(electrode_pair_n_actual_score_coh)
 
-                # Put all (freqs) actual significant scores calculated by coh along with electrode pair labels into a list
-                # if theta,
-                if (iterate_each_freq == 0):
-                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_coh)
-                # alpha, 
-                elif (iterate_each_freq == 1):
-                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_coh)
-                # beta,
-                elif (iterate_each_freq == 2):
-                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_coh)
-                # gamma
-                elif (iterate_each_freq == 3):
-                    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_coh)
+                    # # Put all (freqs) actual significant scores calculated by coh along with electrode pair labels into a list
+                    # # if theta,
+                    # if (iterate_each_freq == 0):
+                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_coh)
+                    # # alpha, 
+                    # elif (iterate_each_freq == 1):
+                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_coh)
+                    # # beta,
+                    # elif (iterate_each_freq == 2):
+                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_coh)
+                    # # gamma
+                    # elif (iterate_each_freq == 3):
+                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_coh)
 
+    # Combine all freqs electrode pair and actual scores (ccorr)
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_ccorr)
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_ccorr)
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_ccorr)
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_ccorr)
+    
+    # Combine all freqs electrode pair and actual scores (plv)
+    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_plv)
+    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_plv)
+    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_plv)
+    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_plv)
+        
+    # Combine all freqs electrode pair and actual scores (coh)
+    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_coh)
+    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_coh)
+    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_coh)
+    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_coh)
+    
     # convert the 4 x 16 x 16 array into a list
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
@@ -605,7 +623,7 @@ for i in tqdm(
         + str(i + 2)
         + "_actual_score_data.pkl"
     )
-    with open(saved_actual_score_filename1, "wb") as handle:
+    with open(saved_actual_score_filename2, "wb") as handle:
         pickle.dump(
             plv_combined_freqs_electrode_pair_n_actual_score,
             handle,
@@ -629,7 +647,7 @@ for i in tqdm(
         )
 
     # TODO Save actual significant scores of coh for a pair
-    saved_actual_score_filename2 = (
+    saved_actual_score_filename3 = (
         saved_directory
         + "Pre_coh_combined_pair_S"
         + str(i + 1)
