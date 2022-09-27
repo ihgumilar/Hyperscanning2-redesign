@@ -9,7 +9,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.11.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
 #     language: python
 #     name: python3
 # ---
@@ -45,12 +45,11 @@ os.chdir("/hpc/igum002/codes/Hyperscanning2-redesign/EEG/analysis")
 # ### Statistical analysis (averted_pre)
 
 # %%
-# IMPORTANT ! Define some paths
 
-# Where preprocessed files are stored (REMEMBER ! Different eye condition (pre/pro) requires a unique directory)
+# TODO Where preprocessed files are stored (REMEMBER ! Different eye condition (pre/pro) requires a unique directory)
 path_2_preproc_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_pre/"
 
-# Directory to save significant connections (REMEMBER ! Different eye condition (pre/pro) requires a unique directory)
+# TODO Directory to save significant connections (REMEMBER ! Different eye condition (pre/pro) requires a unique directory)
 saved_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
 
 # IMPORTANT ! how many permutations you want
@@ -95,8 +94,6 @@ ch_names = [
 ]
 ch_types = ["eeg"] * 16
 info = mne.create_info(ch_names=ch_names, sfreq=125, ch_types=ch_types)
-
-list_circular_correlation_reality_pre_no_filter_all = []
 
 
 for i in tqdm(
@@ -154,6 +151,8 @@ for i in tqdm(
         :, 0:n_ch, n_ch : 2 * n_ch
     ]
 
+    # TODO Get the type of data this and change the type to ndarray in later down the section
+    # So that it can be the same type of data ndarray of ground truth and ndarray of significant connection
     # ground truth matrix using ccorr
     ccorr_combined_ground_truth_matrices = [
         theta_ccorr,
@@ -203,13 +202,13 @@ for i in tqdm(
     ]
 
     ############ Implemanting Permutation test ################################
-    
-    #TODO Define lists that contain significant actual scores (ccor, plv, coh) along with electrode pair labels
-    
+
+    # TODO Define lists that contain significant actual scores (ccor, plv, coh) along with electrode pair labels
+
     ccorr_combined_freqs_electrode_pair_n_actual_score = []
     plv_combined_freqs_electrode_pair_n_actual_score = []
     coh_combined_freqs_electrode_pair_n_actual_score = []
-    
+
     electrode_pair_n_actual_score_theta_ccorr = []
     electrode_pair_n_actual_score_alpha_ccorr = []
     electrode_pair_n_actual_score_beta_ccorr = []
@@ -236,7 +235,8 @@ for i in tqdm(
             rng = np.random.default_rng(42)  # set a random seed
 
             # Permute for several times as defined above
-            n_perms
+            #TODO Change this to 80 for real one
+            n_perms = 80
 
             k_ccorr_theta_permuted = (
                 []
@@ -365,7 +365,10 @@ for i in tqdm(
                 ccorr_std_permuted = np.std(
                     combined_k_ccorr_frequency_permuted[iterate_each_freq]
                 )
-                ccorr_z_score = (ccorr_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
+                ccorr_z_score = (
+                    ccorr_combined_ground_truth_matrices[iterate_each_freq][
+                        participant1_channel
+                    ][participant2_channel]
                     - ccorr_mean_permuted
                 ) / ccorr_std_permuted
                 # checking if the z score is greater than z value (p < .05) i.e. if the connection is significant or not. this serves as a marker of significant connection between two electrodes
@@ -375,47 +378,6 @@ for i in tqdm(
                     ccorr_combined_freq_n_connections[iterate_each_freq][
                         participant1_channel
                     ][participant2_channel] = 1
-
-                    #TODO Get actual significant scores that are calculated by ccorr method
-                    sig_actual_scores_ccorr = ccorr_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
-
-                    #TODO Get indices of actual significant scores that are calculated by ccorr method                                        
-                    combined_idx_ccorr = [participant1_channel, participant2_channel]
-
-                    # Convert indices to pair of electorde labels
-                    electrode_pair_ccorr = get_electrode_labels_connections(tuple(combined_idx_ccorr))
-
-                    # Combine electrode pair with actual score (in dictionary format)
-                    electrode_pair_n_actual_score_ccorr = {electrode_pair_ccorr:sig_actual_scores_ccorr}
-
-                    # TODO Put electrode pair with actual score into a separate list depending on its frequency
-                    # if theta,
-                    if (iterate_each_freq == 0):
-                        electrode_pair_n_actual_score_theta_ccorr.append(electrode_pair_n_actual_score_ccorr)
-                    # alpha, 
-                    elif (iterate_each_freq == 1):
-                        electrode_pair_n_actual_score_alpha_ccorr.append(electrode_pair_n_actual_score_ccorr)
-                    # beta,
-                    elif (iterate_each_freq == 2):
-                        electrode_pair_n_actual_score_beta_ccorr.append(electrode_pair_n_actual_score_ccorr)
-                    # gamma
-                    elif (iterate_each_freq == 3):
-                        electrode_pair_n_actual_score_gamma_ccorr.append(electrode_pair_n_actual_score_ccorr)
-
-                    # # Put all (freqs) actual significant scores calculated by ccorr along with electrode pair labels into a list
-                    # # if theta,
-                    # if (iterate_each_freq == 0):
-                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_ccorr)
-                    # # alpha, 
-                    # elif (iterate_each_freq == 1):
-                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_ccorr)
-                    # # beta,
-                    # elif (iterate_each_freq == 2):
-                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_ccorr)
-                    # # gamma
-                    # elif (iterate_each_freq == 3):
-                    #     ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_ccorr)
-                    
 
                 # calculate mean and standard deviation for each frequency band using plv
                 plv_mean_permuted = np.mean(
@@ -437,47 +399,6 @@ for i in tqdm(
                     plv_combined_freq_n_connections[iterate_each_freq][
                         participant1_channel
                     ][participant2_channel] = 1
-                    
-
-                    #TODO Get actual significant scores that are calculated by plv method
-                    sig_actual_scores_plv = plv_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
-
-                    #TODO Get indices of actual significant scores that are calculated by plv method                                        
-                    combined_idx_plv = [participant1_channel, participant2_channel]
-
-                    # Convert indices to pair of electorde labels
-                    electrode_pair_plv = get_electrode_labels_connections(tuple(combined_idx_plv))
-
-                    # Combine electrode pair with actual score (in dictionary format)
-                    electrode_pair_n_actual_score_plv = {electrode_pair_plv:sig_actual_scores_plv}
-
-                    # TODO Put electrode pair with actual score into a separate list depending on its frequency
-                    # if theta,
-                    if (iterate_each_freq == 0):
-                        electrode_pair_n_actual_score_theta_plv.append(electrode_pair_n_actual_score_plv)
-                    # alpha, 
-                    elif (iterate_each_freq == 1):
-                        electrode_pair_n_actual_score_alpha_plv.append(electrode_pair_n_actual_score_plv)
-                    # beta,
-                    elif (iterate_each_freq == 2):
-                        electrode_pair_n_actual_score_beta_plv.append(electrode_pair_n_actual_score_plv)
-                    # gamma
-                    elif (iterate_each_freq == 3):
-                        electrode_pair_n_actual_score_gamma_plv.append(electrode_pair_n_actual_score_plv)
-
-                    # # Put all (freqs) actual significant scores calculated by plv along with electrode pair labels into a list
-                    # # if theta,
-                    # if (iterate_each_freq == 0):
-                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_plv)
-                    # # alpha, 
-                    # elif (iterate_each_freq == 1):
-                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_plv)
-                    # # beta,
-                    # elif (iterate_each_freq == 2):
-                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_plv)
-                    # # gamma
-                    # elif (iterate_each_freq == 3):
-                    #     plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_plv)
 
 
                 # calculate mean and standard deviation for each frequency band using coh
@@ -502,68 +423,185 @@ for i in tqdm(
                     ][participant2_channel] = 1
 
 
-                    #TODO Get actual significant scores that are calculated by coh method
-                    sig_actual_scores_coh = coh_combined_ground_truth_matrices[iterate_each_freq][participant1_channel][participant2_channel]
-
-                    #TODO Get indices of actual significant scores that are calculated by coh method                                        
-                    combined_idx_coh = [participant1_channel, participant2_channel]
-
-                    # Convert indices to pair of electorde labels
-                    electrode_pair_coh = get_electrode_labels_connections(tuple(combined_idx_coh))
-
-                    # Combine electrode pair with actual score (in dictionary format)
-                    electrode_pair_n_actual_score_coh = {electrode_pair_coh:sig_actual_scores_coh}
-
-                    # TODO Put electrode pair with actual score into a separate list depending on its frequency
-                    # if theta,
-                    if (iterate_each_freq == 0):
-                        electrode_pair_n_actual_score_theta_coh.append(electrode_pair_n_actual_score_coh)
-                    # alpha, 
-                    elif (iterate_each_freq == 1):
-                        electrode_pair_n_actual_score_alpha_coh.append(electrode_pair_n_actual_score_coh)
-                    # beta,
-                    elif (iterate_each_freq == 2):
-                        electrode_pair_n_actual_score_beta_coh.append(electrode_pair_n_actual_score_coh)
-                    # gamma
-                    elif (iterate_each_freq == 3):
-                        electrode_pair_n_actual_score_gamma_coh.append(electrode_pair_n_actual_score_coh)
-
-                    # # Put all (freqs) actual significant scores calculated by coh along with electrode pair labels into a list
-                    # # if theta,
-                    # if (iterate_each_freq == 0):
-                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_coh)
-                    # # alpha, 
-                    # elif (iterate_each_freq == 1):
-                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_coh)
-                    # # beta,
-                    # elif (iterate_each_freq == 2):
-                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_coh)
-                    # # gamma
-                    # elif (iterate_each_freq == 3):
-                    #     coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_coh)
-
-    # Combine all freqs electrode pair and actual scores (ccorr)
-    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_ccorr)
-    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_ccorr)
-    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_ccorr)
-    ccorr_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_ccorr)
-    
-    # Combine all freqs electrode pair and actual scores (plv)
-    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_plv)
-    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_plv)
-    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_plv)
-    plv_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_plv)
-        
-    # Combine all freqs electrode pair and actual scores (coh)
-    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_theta_coh)
-    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_alpha_coh)
-    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_beta_coh)
-    coh_combined_freqs_electrode_pair_n_actual_score.append(electrode_pair_n_actual_score_gamma_coh)
-    
-    # convert the 4 x 16 x 16 array into a list
+    # convert the 4 x 16 x 16 array into a list (marker significant connection matrix)
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
     coh_combined_freq_n_connections_list = list(coh_combined_freq_n_connections)
+
+    # Progress getting actual score from marker significant connection matrix (ccorr)
+    # Iterate over frequency (there are 4 , ie. theta, alpha, beta, gamma)
+    theta_sig_electrode_pair_ccorr = []
+    alpha_sig_electrode_pair_ccorr = []
+    beta_sig_electrode_pair_ccorr = []
+    gamma_sig_electrode_pair_ccorr = []
+
+    for idx_freq in range(len(ccorr_combined_freq_n_connections)):
+        # Iterate over row of matrix (16 x 16)
+        for idx_row, row in enumerate(ccorr_combined_freq_n_connections[idx_freq]):
+            # Iterate over column of matrix (16 x 16)
+            for idx_col, col in enumerate(ccorr_combined_freq_n_connections[idx_freq][idx_row]):
+                if ccorr_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
+                    idx_sig_connection = tuple([idx_row, idx_col])
+                    # Get actual score
+                    actual_score = ccorr_combined_ground_truth_matrices[idx_freq][
+                        idx_row
+                    ][idx_col]
+                    # Get pair label of electorode
+                    sig_electrode_pair_label = get_electrode_labels_connections(
+                        idx_sig_connection
+                    )
+
+                    electrode_pair_n_actual_score_ccorr = {
+                        sig_electrode_pair_label: actual_score
+                    }
+
+                    # Put that string into a unique list (theta, alpha, beta, or gamma list for ccorr)
+                    if idx_freq == 0:
+                        theta_sig_electrode_pair_ccorr.append(
+                            electrode_pair_n_actual_score_ccorr
+                        )
+                    elif idx_freq == 1:
+                        alpha_sig_electrode_pair_ccorr.append(
+                            electrode_pair_n_actual_score_ccorr
+                        )
+                    elif idx_freq == 2:
+                        beta_sig_electrode_pair_ccorr.append(
+                            electrode_pair_n_actual_score_ccorr
+                        )
+                    elif idx_freq == 3:
+                        gamma_sig_electrode_pair_ccorr.append(
+                            electrode_pair_n_actual_score_ccorr
+                        )
+
+    # Create main list that contains all the above 4 lists of frequency.
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(
+        theta_sig_electrode_pair_ccorr
+    )
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(
+        alpha_sig_electrode_pair_ccorr
+    )
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(
+        beta_sig_electrode_pair_ccorr
+    )
+    ccorr_combined_freqs_electrode_pair_n_actual_score.append(
+        gamma_sig_electrode_pair_ccorr
+    )
+
+    # Progress getting actual score from marker significant connection matrix (plv)
+    # Iterate over frequency (there are 4 , ie. theta, alpha, beta, gamma)
+    theta_sig_electrode_pair_plv = []
+    alpha_sig_electrode_pair_plv = []
+    beta_sig_electrode_pair_plv = []
+    gamma_sig_electrode_pair_plv = []
+
+    for idx_freq in range(len(plv_combined_freq_n_connections)):
+        # Iterate over row of matrix (16 x 16)
+        for idx_row, row in enumerate(plv_combined_freq_n_connections[idx_freq]):
+            # Iterate over column of matrix (16 x 16)
+            for idx_col, col in enumerate(plv_combined_freq_n_connections[idx_freq][idx_row]):
+                if plv_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
+                    idx_sig_connection = tuple([idx_row, idx_col])
+                    # Get actual score
+                    actual_score = plv_combined_ground_truth_matrices[idx_freq][
+                        idx_row
+                    ][idx_col]
+                    # Get pair label of electorode
+                    sig_electrode_pair_label = get_electrode_labels_connections(
+                        idx_sig_connection
+                    )
+
+                    electrode_pair_n_actual_score_plv = {
+                        sig_electrode_pair_label: actual_score
+                    }
+
+                    # Put that string into a unique list (theta, alpha, beta, or gamma list for plv)
+                    if idx_freq == 0:
+                        theta_sig_electrode_pair_plv.append(
+                            electrode_pair_n_actual_score_plv
+                        )
+                    elif idx_freq == 1:
+                        alpha_sig_electrode_pair_plv.append(
+                            electrode_pair_n_actual_score_plv
+                        )
+                    elif idx_freq == 2:
+                        beta_sig_electrode_pair_plv.append(
+                            electrode_pair_n_actual_score_plv
+                        )
+                    elif idx_freq == 3:
+                        gamma_sig_electrode_pair_plv.append(
+                            electrode_pair_n_actual_score_plv
+                        )
+
+    # Create main list that contains all the above 4 lists of frequency.
+    plv_combined_freqs_electrode_pair_n_actual_score.append(
+        theta_sig_electrode_pair_plv
+    )
+    plv_combined_freqs_electrode_pair_n_actual_score.append(
+        alpha_sig_electrode_pair_plv
+    )
+    plv_combined_freqs_electrode_pair_n_actual_score.append(beta_sig_electrode_pair_plv)
+    plv_combined_freqs_electrode_pair_n_actual_score.append(
+        gamma_sig_electrode_pair_plv
+    )
+
+    # Progress getting actual score from marker significant connection matrix (coh)
+    # Iterate over frequency (there are 4 , ie. theta, alpha, beta, gamma)
+    theta_sig_electrode_pair_coh = []
+    alpha_sig_electrode_pair_coh = []
+    beta_sig_electrode_pair_coh = []
+    gamma_sig_electrode_pair_coh = []
+
+    for idx_freq in range(len(coh_combined_freq_n_connections)):
+        # Iterate over row of matrix (16 x 16)
+        for idx_row, row in enumerate(coh_combined_freq_n_connections[idx_freq]):
+            # Iterate over column of matrix (16 x 16)
+            for idx_col, col in enumerate(coh_combined_freq_n_connections[idx_freq][idx_row]):
+                if coh_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
+                    idx_sig_connection = tuple([idx_row, idx_col])
+                    # Get actual score
+                    actual_score = coh_combined_ground_truth_matrices[idx_freq][
+                        idx_row
+                    ][idx_col]
+                    # Get pair label of electorode
+                    sig_electrode_pair_label = get_electrode_labels_connections(
+                        idx_sig_connection
+                    )
+
+                    electrode_pair_n_actual_score_coh = {
+                        sig_electrode_pair_label: actual_score
+                    }
+
+                    # Put that string into a unique list (theta, alpha, beta, or gamma list for coh)
+                    if idx_freq == 0:
+                        theta_sig_electrode_pair_coh.append(
+                            electrode_pair_n_actual_score_coh
+                        )
+                    elif idx_freq == 1:
+                        alpha_sig_electrode_pair_coh.append(
+                            electrode_pair_n_actual_score_coh
+                        )
+                    elif idx_freq == 2:
+                        beta_sig_electrode_pair_coh.append(
+                            electrode_pair_n_actual_score_coh
+                        )
+                    elif idx_freq == 3:
+                        gamma_sig_electrode_pair_coh.append(
+                            electrode_pair_n_actual_score_coh
+                        )
+
+    # Create main list that contains all the above 4 lists of frequency.
+    coh_combined_freqs_electrode_pair_n_actual_score.append(
+        theta_sig_electrode_pair_coh
+    )
+    coh_combined_freqs_electrode_pair_n_actual_score.append(
+        alpha_sig_electrode_pair_coh
+    )
+    coh_combined_freqs_electrode_pair_n_actual_score.append(beta_sig_electrode_pair_coh)
+    coh_combined_freqs_electrode_pair_n_actual_score.append(
+        gamma_sig_electrode_pair_coh
+    )
+
+    # So there will be 3 main containers (actual score of ccor, plv, coh). Each of them has 4 lists (theta, alpha, beta, and gamma)
 
     # save ccorr connection data for a pair
     saved_filename1 = (
@@ -581,7 +619,7 @@ for i in tqdm(
             protocol=pickle.HIGHEST_PROTOCOL,
         )
 
-    # TODO Save actual significant scores of ccorr for a pair
+    # Save actual significant scores of ccorr for a pair
     saved_actual_score_filename1 = (
         saved_directory
         + "Pre_ccorr_combined_pair_S"
@@ -596,7 +634,6 @@ for i in tqdm(
             handle,
             protocol=pickle.HIGHEST_PROTOCOL,
         )
-
 
     # save plv connection data for a pair
     saved_filename2 = (
@@ -613,8 +650,8 @@ for i in tqdm(
             handle,
             protocol=pickle.HIGHEST_PROTOCOL,
         )
-        
-    # TODO Save actual significant scores of plv for a pair
+
+    # Save actual significant scores of plv for a pair
     saved_actual_score_filename2 = (
         saved_directory
         + "Pre_plv_combined_pair_S"
@@ -646,7 +683,7 @@ for i in tqdm(
             protocol=pickle.HIGHEST_PROTOCOL,
         )
 
-    # TODO Save actual significant scores of coh for a pair
+    # Save actual significant scores of coh for a pair
     saved_actual_score_filename3 = (
         saved_directory
         + "Pre_coh_combined_pair_S"
@@ -655,7 +692,7 @@ for i in tqdm(
         + str(i + 2)
         + "_actual_score_data.pkl"
     )
-    with open(saved_actual_score_filename1, "wb") as handle:
+    with open(saved_actual_score_filename3, "wb") as handle:
         pickle.dump(
             coh_combined_freqs_electrode_pair_n_actual_score,
             handle,
