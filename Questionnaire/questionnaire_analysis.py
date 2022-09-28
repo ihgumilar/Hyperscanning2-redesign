@@ -23,7 +23,8 @@ import os
 import numpy as np
 import pandas as pd
 
-from scipy.stats import ttest_rel
+from scipy.stats import ttest_rel, f_oneway
+ 
 
 # %% [markdown]
 # ### List files in questionnaire folder
@@ -365,6 +366,9 @@ df_natural_post.head()
     
 
 # %% [markdown]
+# ## T-test
+
+# %% [markdown]
 # ### SPGQ T-test averted pre vs averted post (Sig*)
 
 # %%
@@ -437,3 +441,100 @@ result_natural_copresence_pre_vs_copresence_post = ttest_rel(copresence_natural_
 print(f"means of CoPresence natural_pre : {np.mean(copresence_natural_pre)}")
 print(f"means of CoPresence natural_post : {np.mean(copresence_natural_post)}")
 print(result_natural_copresence_pre_vs_copresence_post)
+
+# %% [markdown]
+# ### Empathy T-test averted pre vs averted post (Sig*)
+
+# %%
+empathy_averted_pre = df_averted_pre["Empathy SPGQ"]
+empathy_averted_post = df_averted_post["Empathy SPGQ"]
+result_averted_empathy_pre_vs_empathy_post = ttest_rel(empathy_averted_pre, empathy_averted_post)
+
+print(f"means of empathy  averted_pre : {np.mean(empathy_averted_pre)}")
+print(f"means of empathy  averted_post : {np.mean(empathy_averted_post)}")
+print(result_averted_empathy_pre_vs_empathy_post)
+
+# %% [markdown]
+# ### Empathy T-test direct pre vs direct post (Sig*)
+
+# %%
+empathy_direct_pre = df_direct_pre["Empathy SPGQ"]
+empathy_direct_post = df_direct_post["Empathy SPGQ"]
+result_direct_empathy_pre_vs_empathy_post = ttest_rel(empathy_direct_pre, empathy_direct_post)
+
+print(f"means of empathy  direct_pre : {np.mean(empathy_direct_pre)}")
+print(f"means of empathy  direct_post : {np.mean(empathy_direct_post)}")
+print(result_direct_empathy_pre_vs_empathy_post)
+
+# %% [markdown]
+# ### Empathy T-test natural pre vs natural post (Sig*)
+
+# %%
+empathy_natural_pre = df_natural_pre["Empathy SPGQ"]
+empathy_natural_post = df_natural_post["Empathy SPGQ"]
+result_natural_empathy_pre_vs_empathy_post = ttest_rel(empathy_natural_pre, empathy_natural_post)
+
+print(f"means of empathy  natural_pre : {np.mean(empathy_natural_pre)}")
+print(f"means of empathy  natural_post : {np.mean(empathy_natural_post)}")
+print(result_natural_empathy_pre_vs_empathy_post)
+
+# %% [markdown]
+# ## ANOVA Eye Gaze post test (Averted, Direct, and Natural)
+
+# %%
+# Get some data of SPGQ from each post test of eye condition
+averted_post_spgq = df_averted_post["SPGQ Total"]
+direct_post_spgq = df_direct_post["SPGQ Total"]
+natural_post_spgq = df_natural_post["SPGQ Total"]
+
+# Conduct the one-way ANOVA
+print(f"means of averted post SPGQ : {np.mean(averted_post_spgq)}")
+print(f"means of direct post SPGQ : {np.mean(direct_post_spgq)}")
+print(f"means of natural post SPGQ :{np.mean(natural_post_spgq)}")
+
+f_oneway(averted_post_spgq, direct_post_spgq, natural_post_spgq)
+
+# %% [markdown]
+# ## Statistical Summary
+
+# %% [markdown]
+# ### Averted Pre
+
+# %%
+print("averted pre")
+df_averted_pre.describe()
+
+# %% [markdown]
+# ### Averted Post
+
+# %%
+print("averted post")
+df_averted_post.describe()
+
+# %% [markdown]
+# ### Direct Pre
+
+# %%
+print("direct pre")
+df_direct_pre.describe()
+
+# %% [markdown]
+# ### Direct Post
+
+# %%
+print("direct post")
+df_direct_post.describe()
+
+# %% [markdown]
+# ### Natural Pre
+
+# %%
+print("natural pre")
+df_natural_pre.describe()
+
+# %% [markdown]
+# ### Natural Post
+
+# %%
+print("natural post")
+df_natural_post.describe()
