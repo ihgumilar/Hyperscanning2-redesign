@@ -28,7 +28,7 @@ import pandas as pd
 
 # %%
 # ### List files in data folder
-questionnaire_folder = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire"
+questionnaire_folder = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
 files = os.listdir(questionnaire_folder)
 
 # %%
@@ -91,32 +91,48 @@ for idx in range(begin_idx_question, len(averted_questions), step_idx_question):
 # * See here for details https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#
 
 # %% [markdown]
-# ### Scoring for each subscale
+# ### Scoring for each subscale (averted_pre)
+# - Combine into a single dataframe
 
 # %%
 # ### Load questrionnaire data
-df = pd.read_csv(
-    "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/S01_avertedEyesquestionnaire_2022-06-27_T_15-01-07.csv",
-    sep=";",
-)
 
-# Sum subscore of empathy
-df["Empathy_spgq"] = df["Answer"][:7].sum()
+averted_pre_all_data_list = []
+# TODO Create a loop that takes all files from the above list
+for idx, file in enumerate(averted_pre_questions):
 
-# Sum subscore of negative feeling
-df["NegativeFeelings_spgq"] = df["Answer"][7:13].sum()
+    file_to_load = questionnaire_folder + file
 
-# Sum subscore of behavioral
-df["Behavioural_spgq"] = df["Answer"][13:21].sum()
+    df = pd.read_csv(file_to_load, sep=";",)
 
-# Sum total of copresence
-df["CoPresence_Total"] = df["Answer"][7:13].sum()
+    # Sum subscore of empathy
+    df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
-df.head()
+    # Sum subscore of negative feeling
+    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
+
+    # Sum subscore of behavioral
+    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
+
+    # Total score of SPGQ
+    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
+    df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
+
+    # Total score of copresence
+    df["CoPresence Total"] = df["Answer"][7:13].sum()
 
 
-# %% [markdown]
-# Filter data that contains empathy
-# Add more keyword for filtering
-# df_empathy = df[df["QuestionID"].str.contains("empathy")]
-# df["Empathy"] = df.iloc[0:7]
+    # Get first row and all columns
+    df_clean = df.iloc[0:1, 4:]
+
+    # Put into a list
+    averted_pre_all_data_list.append(df_clean)
+
+# Combine int a single dataframe for averted pre
+df_averted_pre = pd.concat(averted_pre_all_data_list, ignore_index=True)
+
+df_averted_pre
+
+
+    
+
