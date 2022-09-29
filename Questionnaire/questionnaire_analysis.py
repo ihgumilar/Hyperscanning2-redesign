@@ -23,6 +23,7 @@ import os
 import numpy as np
 import pandas as pd
 import scikit_posthocs as sp
+import pingouin as pg
 
 from scipy import stats
 from scipy.stats import ttest_rel, f_oneway, pearsonr
@@ -88,13 +89,13 @@ for idx in range(begin_idx_question, len(averted_questions), step_idx_question):
 
 
 # %% [markdown]
-# ### Note :
+# ### Note : Related to questionnaires
 # There are 2 questionnaires here that we use in the experiment : 
-# * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales
+# * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales (Higher score, Higher Social Presence)
 #     * Psychological involvement - Empathy
 #     * Psychological involvement - Negative feelings
 #     * Psychological involvement - Behavioral engagement
-# * Co-Presence questionnaire
+# * Co-Presence questionnaire (REMEMBER : HIGER score, indicates LESS CoPresence !!!)
 # * See here for details https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#
 
 # %% [markdown]
@@ -550,6 +551,8 @@ stats.friedmanchisquare(averted_post_spgq, direct_post_spgq, natural_post_spgq)
 
 # %% [markdown]
 # - Combine all dataframes and put in order with subject, eye gaze, and SPGQ total score
+# - SPGQ total score analyzed by Repeated Measure ANOVA
+#
 
 # %%
 # Get SPGQ from first row from each dataframe and put into a list (SPGQ_all)
@@ -590,10 +593,26 @@ print("CoPresence Total score in post training")
 print(AnovaRM(data=df_all_eyes_post, depvar="CoPresence", subject="Subject", within=["EyeGaze"]).fit())
 
 # %% [markdown]
+# #### SPGQ Total score using pingouin package
+
+# %%
+res_spgq = pg.rm_anova(dv="SPGQTotal", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
+                   detailed=True)
+print(res_spgq)                   
+
+# %% [markdown]
+# ### Repeated measure ANOVA CoPresence using pingouin (Sig*)
+
+# %%
+res_copresence = pg.rm_anova(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
+                   detailed=True)
+print(res_copresence)                   
+
+# %% [markdown]
 # ## Posthoc Tests
 
 # %% [markdown]
-# ### Tukey's test
+# ### Tukey's test CoPresence
 
 # %%
 # perform Tukey's test
@@ -603,18 +622,8 @@ tukey = pairwise_tukeyhsd(endog=df_all_eyes_post["CoPresence"],
 print(tukey)
 
 # %% [markdown]
-# ### Repeated measure ANOVA using pingouin
-# Move up later on
-
-# %%
-import pingouin as pg
-res = pg.rm_anova(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
-                   detailed=True)
-print(res)                   
-
-# %% [markdown]
-# ### Benjamini/Hochberg FDR correction using pingouin
-# Using pingouin package
+# ### Benjamini/Hochberg FDR correction CoPresence using pingouin (Sig*)
+#
 
 # %%
 post_hoc_pingouin = pg.pairwise_tests(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
