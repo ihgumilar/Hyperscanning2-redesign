@@ -22,8 +22,12 @@
 import os
 import numpy as np
 import pandas as pd
+import scikit_posthocs as sp
 
-from scipy.stats import ttest_rel, f_oneway
+from scipy import stats
+from scipy.stats import ttest_rel, f_oneway, pearsonr
+from statsmodels.stats.anova import AnovaRM
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
  
 
 # %% [markdown]
@@ -366,6 +370,32 @@ df_natural_post.head()
     
 
 # %% [markdown]
+# ## Checking normal distribution
+
+# %% [markdown]
+# ### Averted pre & Averted post
+
+# %%
+# averted pre
+print("averted pre")
+print(stats.normaltest(df_averted_pre["SPGQ Total"]))
+# averted post
+print("averted post")
+print(stats.normaltest(df_averted_post["SPGQ Total"]))
+# direct pre
+print("direct pre")
+print(stats.normaltest(df_direct_pre["SPGQ Total"]))
+# direct post - not normally distributed
+print("direct post - not normally distributed")
+print(stats.normaltest(df_direct_post["SPGQ Total"]))
+# natural pre
+print("natural pre")
+print(stats.normaltest(df_natural_pre["SPGQ Total"]))
+# natural post - not normally distributed
+print("natural post - not normally distributed")
+print(stats.normaltest(df_natural_post["SPGQ Total"]))
+
+# %% [markdown]
 # ## T-test
 
 # %% [markdown]
@@ -443,7 +473,7 @@ print(f"means of CoPresence natural_post : {np.mean(copresence_natural_post)}")
 print(result_natural_copresence_pre_vs_copresence_post)
 
 # %% [markdown]
-# ### Empathy T-test averted pre vs averted post (Sig*)
+# ### Empathy T-test averted pre vs averted post
 
 # %%
 empathy_averted_pre = df_averted_pre["Empathy SPGQ"]
@@ -479,7 +509,11 @@ print(f"means of empathy  natural_post : {np.mean(empathy_natural_post)}")
 print(result_natural_empathy_pre_vs_empathy_post)
 
 # %% [markdown]
-# ## ANOVA Eye Gaze post test (Averted, Direct, and Natural)
+# ## Repeated measures more than 2 treatments were given to the same subjects
+
+# %% [markdown]
+# ### ANOVA Eye Gaze post test (Averted, Direct, & Natural)
+# Parametric test.
 
 # %%
 # Get some data of SPGQ from each post test of eye condition
@@ -493,6 +527,123 @@ print(f"means of direct post SPGQ : {np.mean(direct_post_spgq)}")
 print(f"means of natural post SPGQ :{np.mean(natural_post_spgq)}")
 
 f_oneway(averted_post_spgq, direct_post_spgq, natural_post_spgq)
+
+# %% [markdown]
+# ### Friedman test Eye Gaze post test (Averted, Direct, & Natural)
+# Non-parametric test. This test is alternative to repeated measures ANOVA
+
+# %%
+# Get some data of SPGQ from each post test of eye condition
+averted_post_spgq = df_averted_post["SPGQ Total"]
+direct_post_spgq = df_direct_post["SPGQ Total"]
+natural_post_spgq = df_natural_post["SPGQ Total"]
+
+# Conduct the one-way ANOVA
+print(f"means of averted post SPGQ : {np.mean(averted_post_spgq)}")
+print(f"means of direct post SPGQ : {np.mean(direct_post_spgq)}")
+print(f"means of natural post SPGQ :{np.mean(natural_post_spgq)}")
+
+stats.friedmanchisquare(averted_post_spgq, direct_post_spgq, natural_post_spgq)
+
+# %% [markdown]
+# ### Repeated measure ANOVA
+
+# %% [markdown]
+# - Combine all dataframes and put in order with subject, eye gaze, and SPGQ total score
+
+# %%
+# Get SPGQ from first row from each dataframe and put into a list (SPGQ_all)
+
+spgq_all = []
+copresence_all = []
+for idx in range(len(spgq_averted_post)):
+    spgq_all.append(spgq_averted_post[idx])
+    spgq_all.append(spgq_direct_post[idx])
+    spgq_all.append(spgq_natural_post[idx])
+    # CoPresence
+    copresence_all.append(copresence_averted_post[idx])
+    copresence_all.append(copresence_direct_post[idx])
+    copresence_all.append(copresence_natural_post[idx])
+
+# Create subject number
+subject_no = list(range(1,25))
+subject = np.repeat(subject_no, 3)
+
+# Create eye gaze number
+# 1 = averted post
+# 2 = direct post
+# 3 = natural post
+eye_gaze = np.tile([1, 2, 3], 24)
+
+df_all_eyes_post = pd.DataFrame({"Subject" : subject,
+                                "EyeGaze" : eye_gaze,
+                                "SPGQTotal" : spgq_all,
+                                "CoPresence" : copresence_all})
+
+
+#perform the repeated measures ANOVA (SPGQ)
+print("SPGQ Total score in post training")
+print(AnovaRM(data=df_all_eyes_post, depvar="SPGQTotal", subject="Subject", within=["EyeGaze"]).fit())
+
+print("CoPresence Total score in post training")
+#perform the repeated measures ANOVA (CoPresence)
+print(AnovaRM(data=df_all_eyes_post, depvar="CoPresence", subject="Subject", within=["EyeGaze"]).fit())
+
+# %% [markdown]
+# ## Posthoc Tests
+
+# %% [markdown]
+# ### Tukey's test
+
+# %%
+# perform Tukey's test
+tukey = pairwise_tukeyhsd(endog=df_all_eyes_post["CoPresence"],
+                          groups=df_all_eyes_post['EyeGaze'],)
+
+print(tukey)
+
+# %% [markdown]
+# ### Repeated measure ANOVA using pingouin
+# Move up later on
+
+# %%
+import pingouin as pg
+res = pg.rm_anova(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
+                   detailed=True)
+print(res)                   
+
+# %% [markdown]
+# ### Benjamini/Hochberg FDR correction using pingouin
+# Using pingouin package
+
+# %%
+post_hoc_pingouin = pg.pairwise_tests(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
+                                        padjust="fdr_bh")
+
+print(post_hoc_pingouin)                                        
+
+# %% [markdown]
+# ### Scheffe test
+
+# %%
+sp.posthoc_scheffe(df_all_eyes_post, val_col='CoPresence', group_col='EyeGaze')
+
+# %% [markdown]
+# ## Correlation
+
+# %% [markdown]
+# #### SPGQ & CoPresence Correlation
+
+# %%
+corr_spgq_copresence_averted_post = pearsonr(averted_post_spgq, copresence_averted_post)
+print(f"Correlation SPGQ & CoPresence averted post {corr_spgq_copresence_averted_post}")
+print(" ")
+corr_spgq_copresence_direct_post = pearsonr(direct_post_spgq, copresence_direct_post)
+print(f"Correlation SPGQ & CoPresence direct post{corr_spgq_copresence_direct_post}")
+print(" ")
+corr_spgq_copresence_natural_post = pearsonr(natural_post_spgq, copresence_natural_post)
+print(f"Correlation SPGQ & CoPresence natural post{corr_spgq_copresence_natural_post}")
+
 
 # %% [markdown]
 # ## Statistical Summary
