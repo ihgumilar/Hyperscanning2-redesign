@@ -29,7 +29,7 @@ from scipy import stats
 from scipy.stats import ttest_rel, f_oneway, pearsonr
 from statsmodels.stats.anova import AnovaRM
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
- 
+
 
 # %% [markdown]
 # ### List files in questionnaire folder
@@ -510,7 +510,7 @@ print(f"means of empathy  natural_post : {np.mean(empathy_natural_post)}")
 print(result_natural_empathy_pre_vs_empathy_post)
 
 # %% [markdown]
-# ## Repeated measures more than 2 treatments were given to the same subjects
+# ## ANOVA
 
 # %% [markdown]
 # ### ANOVA Eye Gaze post test (Averted, Direct, & Natural)
@@ -547,7 +547,7 @@ print(f"means of natural post SPGQ :{np.mean(natural_post_spgq)}")
 stats.friedmanchisquare(averted_post_spgq, direct_post_spgq, natural_post_spgq)
 
 # %% [markdown]
-# ### Repeated measure ANOVA
+# ### Combine all dataframes and put in order with subject, eye gaze, and SPGQ ready for ANCOVA
 
 # %% [markdown]
 # - Combine all dataframes and put in order with subject, eye gaze, and SPGQ total score
@@ -557,16 +557,31 @@ stats.friedmanchisquare(averted_post_spgq, direct_post_spgq, natural_post_spgq)
 # %%
 # Get SPGQ from first row from each dataframe and put into a list (SPGQ_all)
 
-spgq_all = []
-copresence_all = []
+spgq_pre_all = []
+spgq_post_all = []
+copresence_pre_all = []
+copresence_post_all = []
 for idx in range(len(spgq_averted_post)):
-    spgq_all.append(spgq_averted_post[idx])
-    spgq_all.append(spgq_direct_post[idx])
-    spgq_all.append(spgq_natural_post[idx])
+
+    # SPGQ Pre
+    spgq_pre_all.append(spgq_averted_pre[idx])
+    spgq_pre_all.append(spgq_direct_pre[idx])
+    spgq_pre_all.append(spgq_natural_pre[idx])
+
+    # SPGQ Post
+    spgq_post_all.append(spgq_averted_post[idx])
+    spgq_post_all.append(spgq_direct_post[idx])
+    spgq_post_all.append(spgq_natural_post[idx])
+
     # CoPresence
-    copresence_all.append(copresence_averted_post[idx])
-    copresence_all.append(copresence_direct_post[idx])
-    copresence_all.append(copresence_natural_post[idx])
+    copresence_pre_all.append(copresence_averted_pre[idx])
+    copresence_pre_all.append(copresence_direct_pre[idx])
+    copresence_pre_all.append(copresence_natural_pre[idx])
+
+    # CoPresence Post
+    copresence_post_all.append(copresence_averted_post[idx])
+    copresence_post_all.append(copresence_direct_post[idx])
+    copresence_post_all.append(copresence_natural_post[idx])
 
 # Create subject number
 subject_no = list(range(1,25))
@@ -578,19 +593,22 @@ subject = np.repeat(subject_no, 3)
 # 3 = natural post
 eye_gaze = np.tile([1, 2, 3], 24)
 
-df_all_eyes_post = pd.DataFrame({"Subject" : subject,
+df_all_eyes = pd.DataFrame({"Subject" : subject,
                                 "EyeGaze" : eye_gaze,
-                                "SPGQTotal" : spgq_all,
-                                "CoPresence" : copresence_all})
+                                "SPGQTotal_Pre" : spgq_pre_all,
+                                "SPGQTotal_Post" : spgq_post_all,
+                                "CoPresence_Pre" : copresence_pre_all,
+                                "CoPresence_Post" : copresence_post_all})
 
 
-#perform the repeated measures ANOVA (SPGQ)
-print("SPGQ Total score in post training")
-print(AnovaRM(data=df_all_eyes_post, depvar="SPGQTotal", subject="Subject", within=["EyeGaze"]).fit())
+df_all_eyes.head()
+# #perform the repeated measures ANOVA (SPGQ)
+# print("SPGQ Total score in post training")
+# print(AnovaRM(data=df_all_eyes_post, depvar="SPGQTotal", subject="Subject", within=["EyeGaze"]).fit())
 
-print("CoPresence Total score in post training")
-#perform the repeated measures ANOVA (CoPresence)
-print(AnovaRM(data=df_all_eyes_post, depvar="CoPresence", subject="Subject", within=["EyeGaze"]).fit())
+# print("CoPresence Total score in post training")
+# #perform the repeated measures ANOVA (CoPresence)
+# print(AnovaRM(data=df_all_eyes_post, depvar="CoPresence", subject="Subject", within=["EyeGaze"]).fit())
 
 # %% [markdown]
 # #### SPGQ Total score using pingouin package
@@ -607,6 +625,28 @@ print(res_spgq)
 res_copresence = pg.rm_anova(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
                    detailed=True)
 print(res_copresence)                   
+
+# %% [markdown]
+# ## ANCOVA
+
+# %% [markdown]
+# ### SPGQ Total
+
+# %%
+#perform ANCOVA
+pg.ancova(data=df_all_eyes, dv='SPGQTotal_Post', covar='SPGQTotal_Pre', between='EyeGaze')
+
+
+# %% [markdown]
+# ### CoPResence Total
+
+# %%
+#perform ANCOVA
+pg.ancova(data=df_all_eyes, dv='CoPresence_Post', covar='CoPresence_Pre', between='EyeGaze')
+
+
+# %%
+df_all_eyes.head()
 
 # %% [markdown]
 # ## Posthoc Tests
