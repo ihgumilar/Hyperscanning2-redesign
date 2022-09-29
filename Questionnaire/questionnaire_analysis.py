@@ -510,6 +510,128 @@ print(f"means of empathy  natural_post : {np.mean(empathy_natural_post)}")
 print(result_natural_empathy_pre_vs_empathy_post)
 
 # %% [markdown]
+# ## Combine all dataframes and put in different combinations so that it is ready for ANCOVA
+
+# %%
+# Since empathy, negative feelings and behavioral engagement are not yet extracted
+# into series from dataframe, then we do it here
+
+# Empathy pre
+empathy_averted_pre =  df_averted_pre["Empathy SPGQ"]
+empathy_averted_post =  df_averted_post["Empathy SPGQ"]
+empathy_direct_pre =  df_direct_pre["Empathy SPGQ"]
+empathy_direct_post =  df_direct_post["Empathy SPGQ"]
+empathy_natural_pre =  df_natural_pre["Empathy SPGQ"]
+empathy_natural_post =  df_natural_post["Empathy SPGQ"]
+
+# Negative feelings
+negative_feelings_averted_pre =  df_averted_pre["NegativeFeelings SPGQ"]
+negative_feelings_averted_post =  df_averted_post["NegativeFeelings SPGQ"]
+negative_feelings_direct_pre =  df_direct_pre["NegativeFeelings SPGQ"]
+negative_feelings_direct_post =  df_direct_post["NegativeFeelings SPGQ"]
+negative_feelings_natural_pre =  df_natural_pre["NegativeFeelings SPGQ"]
+negative_feelings_natural_post =  df_natural_post["NegativeFeelings SPGQ"]
+
+# Behavioural engagement
+behavioural_averted_pre =  df_averted_pre["Behavioural SPGQ"]
+behavioural_averted_post =  df_averted_post["Behavioural SPGQ"]
+behavioural_direct_pre =  df_direct_pre["Behavioural SPGQ"]
+behavioural_direct_post =  df_direct_post["Behavioural SPGQ"]
+behavioural_natural_pre =  df_natural_pre["Behavioural SPGQ"]
+behavioural_natural_post =  df_natural_post["Behavioural SPGQ"]
+
+
+# Define all lists
+empathy_pre_spgq_all = []
+empathy_post_spgq_all = []
+negative_feelings_pre_spgq_all = []
+negative_feelings_post_spgq_all = []
+behavioural_pre_spgq_all = []
+behavioural_post_spgq_all = []
+spgq_pre_all = []
+spgq_post_all = []
+copresence_pre_all = []
+copresence_post_all = []
+
+for idx in range(len(negative_feelings_averted_pre)):
+
+    # Empathy Pre
+    empathy_pre_spgq_all.append(empathy_averted_pre[idx])
+    empathy_pre_spgq_all.append(empathy_direct_pre[idx])
+    empathy_pre_spgq_all.append(empathy_natural_pre[idx])
+
+    # Empathy Post
+    empathy_post_spgq_all.append(empathy_averted_post[idx])
+    empathy_post_spgq_all.append(empathy_direct_post[idx])
+    empathy_post_spgq_all.append(empathy_natural_post[idx])
+
+    # Negative feelings Pre
+    negative_feelings_pre_spgq_all.append(negative_feelings_averted_pre[idx])
+    negative_feelings_pre_spgq_all.append(negative_feelings_direct_pre[idx])
+    negative_feelings_pre_spgq_all.append(negative_feelings_natural_pre[idx])
+
+    # Negative feelings Post
+    negative_feelings_post_spgq_all.append(negative_feelings_averted_post[idx])
+    negative_feelings_post_spgq_all.append(negative_feelings_direct_post[idx])
+    negative_feelings_post_spgq_all.append(negative_feelings_natural_post[idx])
+
+    # Behavioural engagement Pre
+    behavioural_pre_spgq_all.append(behavioural_averted_pre[idx])
+    behavioural_pre_spgq_all.append(behavioural_direct_pre[idx])
+    behavioural_pre_spgq_all.append(behavioural_natural_pre[idx])
+
+    # Behavioural engagement Post
+    behavioural_post_spgq_all.append(behavioural_averted_post[idx])
+    behavioural_post_spgq_all.append(behavioural_direct_post[idx])
+    behavioural_post_spgq_all.append(behavioural_natural_post[idx])
+    
+    # SPGQ Pre
+    spgq_pre_all.append(spgq_averted_pre[idx])
+    spgq_pre_all.append(spgq_direct_pre[idx])
+    spgq_pre_all.append(spgq_natural_pre[idx])
+
+    # SPGQ Post
+    spgq_post_all.append(spgq_averted_post[idx])
+    spgq_post_all.append(spgq_direct_post[idx])
+    spgq_post_all.append(spgq_natural_post[idx])
+
+    # CoPresence
+    copresence_pre_all.append(copresence_averted_pre[idx])
+    copresence_pre_all.append(copresence_direct_pre[idx])
+    copresence_pre_all.append(copresence_natural_pre[idx])
+
+    # CoPresence Post
+    copresence_post_all.append(copresence_averted_post[idx])
+    copresence_post_all.append(copresence_direct_post[idx])
+    copresence_post_all.append(copresence_natural_post[idx])
+
+# Create subject number
+subject_no = list(range(1,25))
+subject = np.repeat(subject_no, 3)
+
+# Create eye gaze number
+# 1 = averted post
+# 2 = direct post
+# 3 = natural post
+eye_gaze = np.tile([1, 2, 3], 24)
+
+df_all_eyes = pd.DataFrame({"Subject" : subject,
+                            "EyeGaze" : eye_gaze,
+                            "Empathy_Pre" : empathy_pre_spgq_all,
+                            "Empathy_Post" : empathy_post_spgq_all,
+                            "NegativeFeelings_Pre" : negative_feelings_pre_spgq_all,
+                            "NegativeFeelings_Post" : negative_feelings_post_spgq_all,
+                            "Behavioural_Pre" : behavioural_pre_spgq_all,
+                            "Behavioural_Post" : behavioural_post_spgq_all,
+                            "SPGQTotal_Pre" : spgq_pre_all,
+                            "SPGQTotal_Post" : spgq_post_all,
+                            "CoPresence_Pre" : copresence_pre_all,
+                            "CoPresence_Post" : copresence_post_all})
+
+
+df_all_eyes.head()
+
+# %% [markdown]
 # ## ANOVA
 
 # %% [markdown]
@@ -547,74 +669,10 @@ print(f"means of natural post SPGQ :{np.mean(natural_post_spgq)}")
 stats.friedmanchisquare(averted_post_spgq, direct_post_spgq, natural_post_spgq)
 
 # %% [markdown]
-# ### Combine all dataframes and put in order with subject, eye gaze, and SPGQ ready for ANCOVA
-
-# %% [markdown]
-# - Combine all dataframes and put in order with subject, eye gaze, and SPGQ total score
-# - SPGQ total score analyzed by Repeated Measure ANOVA
-#
+# ### SPGQ Total score using pingouin package
 
 # %%
-# Get SPGQ from first row from each dataframe and put into a list (SPGQ_all)
-
-spgq_pre_all = []
-spgq_post_all = []
-copresence_pre_all = []
-copresence_post_all = []
-for idx in range(len(spgq_averted_post)):
-
-    # SPGQ Pre
-    spgq_pre_all.append(spgq_averted_pre[idx])
-    spgq_pre_all.append(spgq_direct_pre[idx])
-    spgq_pre_all.append(spgq_natural_pre[idx])
-
-    # SPGQ Post
-    spgq_post_all.append(spgq_averted_post[idx])
-    spgq_post_all.append(spgq_direct_post[idx])
-    spgq_post_all.append(spgq_natural_post[idx])
-
-    # CoPresence
-    copresence_pre_all.append(copresence_averted_pre[idx])
-    copresence_pre_all.append(copresence_direct_pre[idx])
-    copresence_pre_all.append(copresence_natural_pre[idx])
-
-    # CoPresence Post
-    copresence_post_all.append(copresence_averted_post[idx])
-    copresence_post_all.append(copresence_direct_post[idx])
-    copresence_post_all.append(copresence_natural_post[idx])
-
-# Create subject number
-subject_no = list(range(1,25))
-subject = np.repeat(subject_no, 3)
-
-# Create eye gaze number
-# 1 = averted post
-# 2 = direct post
-# 3 = natural post
-eye_gaze = np.tile([1, 2, 3], 24)
-
-df_all_eyes = pd.DataFrame({"Subject" : subject,
-                                "EyeGaze" : eye_gaze,
-                                "SPGQTotal_Pre" : spgq_pre_all,
-                                "SPGQTotal_Post" : spgq_post_all,
-                                "CoPresence_Pre" : copresence_pre_all,
-                                "CoPresence_Post" : copresence_post_all})
-
-
-df_all_eyes.head()
-# #perform the repeated measures ANOVA (SPGQ)
-# print("SPGQ Total score in post training")
-# print(AnovaRM(data=df_all_eyes_post, depvar="SPGQTotal", subject="Subject", within=["EyeGaze"]).fit())
-
-# print("CoPresence Total score in post training")
-# #perform the repeated measures ANOVA (CoPresence)
-# print(AnovaRM(data=df_all_eyes_post, depvar="CoPresence", subject="Subject", within=["EyeGaze"]).fit())
-
-# %% [markdown]
-# #### SPGQ Total score using pingouin package
-
-# %%
-res_spgq = pg.rm_anova(dv="SPGQTotal", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
+res_spgq = pg.rm_anova(dv="SPGQTotal_Post", within="EyeGaze", subject="Subject", data=df_all_eyes,
                    detailed=True)
 print(res_spgq)                   
 
@@ -645,8 +703,26 @@ pg.ancova(data=df_all_eyes, dv='SPGQTotal_Post', covar='SPGQTotal_Pre', between=
 pg.ancova(data=df_all_eyes, dv='CoPresence_Post', covar='CoPresence_Pre', between='EyeGaze')
 
 
+# %% [markdown]
+# ### Empathy SPGQ
+
 # %%
-df_all_eyes.head()
+#perform ANCOVA
+pg.ancova(data=df_all_eyes, dv='Empathy_Post', covar='Empathy_Pre', between='EyeGaze')
+
+# %% [markdown]
+# ### Negative feelings SPGQ
+
+# %%
+#perform ANCOVA
+pg.ancova(data=df_all_eyes, dv='NegativeFeelings_Post', covar='NegativeFeelings_Pre', between='EyeGaze')
+
+# %% [markdown]
+# ### Behavioural engagement SPGQ
+
+# %%
+#perform ANCOVA
+pg.ancova(data=df_all_eyes, dv='Behavioural_Post', covar='Behavioural_Pre', between='EyeGaze')
 
 # %% [markdown]
 # ## Posthoc Tests
