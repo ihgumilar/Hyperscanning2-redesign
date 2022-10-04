@@ -13,7 +13,7 @@ In this experiment, there are three main data that will be analyzed :
 ### Pre-processing
 
 1. Separate EEG between baseline & experimetal data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/f54c3a44ccd1b2e586ed60be23421e21ae0a3468)&#x20;
-2. Combine pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/b0c996d8f6e9dcc01445d04cccc79e27709230a4)&#x20;
+2. Combine pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/9aa1e7aa7f3d721bdd485afedffaf1b7442f2e4c)&#x20;
 
 * **ToDo:** Change loop from 16 to whatever length of files that are available)
 
