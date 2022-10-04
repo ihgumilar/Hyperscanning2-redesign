@@ -9,7 +9,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.11.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
 #     language: python
 #     name: python3
 # ---
@@ -165,7 +165,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -279,7 +279,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -411,7 +411,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -459,7 +459,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
