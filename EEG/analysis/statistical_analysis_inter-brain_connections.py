@@ -20,6 +20,7 @@
 # Then run the above cell again
 
 import os
+
 os.chdir("/hpc/igum002/codes/Hyperscanning2-redesign/EEG/analysis")
 import pickle
 from collections import Counter, OrderedDict
@@ -53,7 +54,7 @@ path_2_preproc_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EE
 saved_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
 
 # IMPORTANT ! how many permutations you want
-n_perms = 80
+n_perms = 150
 
 # List files that are contained in a specified directory
 list_of_files = os.listdir(path_2_preproc_averted_pre)
@@ -235,8 +236,8 @@ for i in tqdm(
             rng = np.random.default_rng(42)  # set a random seed
 
             # Permute for several times as defined above
-            #TODO Change this to 80 for real one
-            n_perms = 80
+            # TODO Change this to 80 for real one
+            n_perms = 150
 
             k_ccorr_theta_permuted = (
                 []
@@ -400,7 +401,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
                 # calculate mean and standard deviation for each frequency band using coh
                 coh_mean_permuted = np.mean(
                     combined_k_coh_frequency_permuted[iterate_each_freq]
@@ -422,7 +422,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
     # convert the 4 x 16 x 16 array into a list (marker significant connection matrix)
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
@@ -439,7 +438,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(ccorr_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(ccorr_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                ccorr_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if ccorr_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -498,7 +499,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(plv_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(plv_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                plv_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if plv_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -555,7 +558,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(coh_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(coh_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                coh_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if coh_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -711,7 +716,7 @@ path_2_preproc_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/E
 saved_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post/"
 
 # IMPORTANT ! how many permutations you want
-n_perms = 80
+n_perms = 150
 
 # List files that are contained in a specified directory
 list_of_files = os.listdir(path_2_preproc_averted_post)
@@ -893,8 +898,8 @@ for i in tqdm(
             rng = np.random.default_rng(42)  # set a random seed
 
             # Permute for several times as defined above
-            #TODO Change this to 80 for real one
-            n_perms = 80
+            # TODO Change this to 80 for real one
+            n_perms = 150
 
             k_ccorr_theta_permuted = (
                 []
@@ -1058,7 +1063,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
                 # calculate mean and standard deviation for each frequency band using coh
                 coh_mean_permuted = np.mean(
                     combined_k_coh_frequency_permuted[iterate_each_freq]
@@ -1080,7 +1084,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
     # convert the 4 x 16 x 16 array into a list (marker significant connection matrix)
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
@@ -1097,7 +1100,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(ccorr_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(ccorr_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                ccorr_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if ccorr_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -1156,7 +1161,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(plv_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(plv_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                plv_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if plv_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -1213,7 +1220,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(coh_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(coh_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                coh_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if coh_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -1369,7 +1378,7 @@ path_2_preproc_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG
 saved_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre/"
 
 # IMPORTANT ! how many permutations you want
-n_perms = 80
+n_perms = 150
 
 # List files that are contained in a specified directory
 list_of_files = os.listdir(path_2_preproc_direct_pre)
@@ -1551,8 +1560,8 @@ for i in tqdm(
             rng = np.random.default_rng(42)  # set a random seed
 
             # Permute for several times as defined above
-            #TODO Change this to 80 for real one
-            n_perms = 80
+            # TODO Change this to 80 for real one
+            n_perms = 150
 
             k_ccorr_theta_permuted = (
                 []
@@ -1716,7 +1725,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
                 # calculate mean and standard deviation for each frequency band using coh
                 coh_mean_permuted = np.mean(
                     combined_k_coh_frequency_permuted[iterate_each_freq]
@@ -1738,7 +1746,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
     # convert the 4 x 16 x 16 array into a list (marker significant connection matrix)
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
@@ -1755,7 +1762,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(ccorr_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(ccorr_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                ccorr_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if ccorr_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -1814,7 +1823,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(plv_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(plv_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                plv_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if plv_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -1871,7 +1882,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(coh_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(coh_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                coh_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if coh_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -2027,7 +2040,7 @@ path_2_preproc_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EE
 saved_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post/"
 
 # IMPORTANT ! how many permutations you want
-n_perms = 80
+n_perms = 150
 
 # List files that are contained in a specified directory
 list_of_files = os.listdir(path_2_preproc_direct_post)
@@ -2209,8 +2222,8 @@ for i in tqdm(
             rng = np.random.default_rng(42)  # set a random seed
 
             # Permute for several times as defined above
-            #TODO Change this to 80 for real one
-            n_perms = 80
+            # TODO Change this to 80 for real one
+            n_perms = 150
 
             k_ccorr_theta_permuted = (
                 []
@@ -2374,7 +2387,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
                 # calculate mean and standard deviation for each frequency band using coh
                 coh_mean_permuted = np.mean(
                     combined_k_coh_frequency_permuted[iterate_each_freq]
@@ -2396,7 +2408,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
     # convert the 4 x 16 x 16 array into a list (marker significant connection matrix)
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
@@ -2413,7 +2424,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(ccorr_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(ccorr_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                ccorr_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if ccorr_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -2472,7 +2485,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(plv_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(plv_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                plv_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if plv_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -2529,7 +2544,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(coh_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(coh_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                coh_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if coh_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -2685,7 +2702,7 @@ path_2_preproc_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EE
 saved_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/"
 
 # IMPORTANT ! how many permutations you want
-n_perms = 80
+n_perms = 150
 
 # List files that are contained in a specified directory
 list_of_files = os.listdir(path_2_preproc_natural_pre)
@@ -2867,8 +2884,8 @@ for i in tqdm(
             rng = np.random.default_rng(42)  # set a random seed
 
             # Permute for several times as defined above
-            #TODO Change this to 80 for real one
-            n_perms = 80
+            # TODO Change this to 80 for real one
+            n_perms = 150
 
             k_ccorr_theta_permuted = (
                 []
@@ -3032,7 +3049,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
                 # calculate mean and standard deviation for each frequency band using coh
                 coh_mean_permuted = np.mean(
                     combined_k_coh_frequency_permuted[iterate_each_freq]
@@ -3054,7 +3070,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
     # convert the 4 x 16 x 16 array into a list (marker significant connection matrix)
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
@@ -3071,7 +3086,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(ccorr_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(ccorr_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                ccorr_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if ccorr_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -3130,7 +3147,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(plv_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(plv_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                plv_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if plv_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -3187,7 +3206,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(coh_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(coh_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                coh_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if coh_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -3342,7 +3363,7 @@ path_2_preproc_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/E
 saved_directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/"
 
 # IMPORTANT ! how many permutations you want
-n_perms = 80
+n_perms = 150
 
 # List files that are contained in a specified directory
 list_of_files = os.listdir(path_2_preproc_natural_post)
@@ -3524,8 +3545,8 @@ for i in tqdm(
             rng = np.random.default_rng(42)  # set a random seed
 
             # Permute for several times as defined above
-            #TODO Change this to 80 for real one
-            n_perms = 80
+            # TODO Change this to 80 for real one
+            n_perms = 150
 
             k_ccorr_theta_permuted = (
                 []
@@ -3689,7 +3710,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
                 # calculate mean and standard deviation for each frequency band using coh
                 coh_mean_permuted = np.mean(
                     combined_k_coh_frequency_permuted[iterate_each_freq]
@@ -3711,7 +3731,6 @@ for i in tqdm(
                         participant1_channel
                     ][participant2_channel] = 1
 
-
     # convert the 4 x 16 x 16 array into a list (marker significant connection matrix)
     ccorr_combined_freq_n_connections_list = list(ccorr_combined_freq_n_connections)
     plv_combined_freq_n_connections_list = list(plv_combined_freq_n_connections)
@@ -3728,7 +3747,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(ccorr_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(ccorr_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                ccorr_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if ccorr_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -3787,7 +3808,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(plv_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(plv_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                plv_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if plv_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
@@ -3844,7 +3867,9 @@ for i in tqdm(
         # Iterate over row of matrix (16 x 16)
         for idx_row, row in enumerate(coh_combined_freq_n_connections[idx_freq]):
             # Iterate over column of matrix (16 x 16)
-            for idx_col, col in enumerate(coh_combined_freq_n_connections[idx_freq][idx_row]):
+            for idx_col, col in enumerate(
+                coh_combined_freq_n_connections[idx_freq][idx_row]
+            ):
                 if coh_combined_freq_n_connections[idx_freq][idx_row][idx_col] == 1:
                     idx_sig_connection = tuple([idx_row, idx_col])
                     # Get actual score
