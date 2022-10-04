@@ -1,4 +1,17 @@
+---
+cover: .gitbook/assets/experiment_picture.jpg
+coverY: 394.7208121827411
+---
+
 # Hyperscanning2-redesign
+
+The objective of this experiment is to find whether different eye gaze directions : averted, direct, and natural, affects the inter-brain synchrony.&#x20;
+
+
+
+Explain the task more details here later !
+
+
 
 **Note** : A **difference** between **Hyperscanning2** and **Hyperscanning2-redesign** is the later adding questionnaire inside VR and also improved the UNITY that is used for the experiment.
 
@@ -12,22 +25,83 @@ In this experiment, there are three main data that will be analyzed :
 
 ### Pre-processing
 
-1. Separate EEG between baseline & experimetal data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/f54c3a44ccd1b2e586ed60be23421e21ae0a3468)&#x20;
-2. Combine pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/9aa1e7aa7f3d721bdd485afedffaf1b7442f2e4c)&#x20;
+**Note** : The storage refers to HPC of ABI
 
-* **ToDo:** Change loop from 16 to whatever length of files that are available)
+1.  **Separate** EEG between baseline & experimetal data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/f54c3a44ccd1b2e586ed60be23421e21ae0a3468)&#x20;
 
-1. Clean EEG data for both baseline and experimental data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/ef2b503893976080800694056794df15111357f4)&#x20;
+    This will extract EEG for both baseline and experimental data and save into
 
-* **ToDo** : Update bad channels, in case the data has increased / updated
+    &#x20;**Baseline**&#x20;
+
+    &#x20;`/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/`
+
+&#x20;        **Experimental**
+
+&#x20;         **``**`          ``/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/`` `**``   ** &#x20;
+
+2\. **Combine** pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/bc3abb01d7ad8db988703aaafc3721aae1018e4c) . The result will be saved in the following folder
+
+&#x20;   **Baseline**
+
+&#x20;   ****    `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/`
+
+&#x20; ``  **Experimental**
+
+&#x20;  ****   `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data`
+
+* **`TODO`:** Change loop from 24 to whatever length of files that are available
+
+&#x20;3\. **Clean** the above-(point no.2)-combined-EEG data for both baseline and experimental data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/ef2b503893976080800694056794df15111357f4)&#x20;
+
+&#x20;    This will result in 3 files
+
+&#x20;   `1. list_deleted_epoch_indices_averted_baseline_post.pkl`
+
+&#x20;   `2. list_circular_correlation_scores_all_pairs_averted_post_no_filter.pkl (`**`ignore this kind of file. Not used in further analysis`**`)`
+
+&#x20;         The **1st and 2nd files** are located here        &#x20;
+
+&#x20;`/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/`
+
+&#x20;   `3. preprocessed epoched files : for both baseline and experimental`
+
+&#x20;      ```       `**`For epoched baseline data is located here`**` ```&#x20;
+
+`/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_baseline_epoched_data/`
+
+&#x20;      ```       `**`For experimental data is located here`**
+
+/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed\_eeg\_data/raw\_preproc\_experiment\_epoched\_data/
+
+* **TODO** : Update bad channels, in case the data has increased / updated
 
 ### Analysis and statistical permutation
 
-1. Statistical analysis to check if the connection is significant or not. It saves significant connections as well as the actual score of such significant connection by using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/f9a8c6143e4a46d6f5a0a23c0e60406b0f1981a5)&#x20;
+1. **Statistical analysis** to check **if the connection is significant or not**. It saves significant connections as well as the actual score of such significant connection by using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/f9a8c6143e4a46d6f5a0a23c0e60406b0f1981a5)&#x20;
 
-* **ToDo:** It still needs to be moved to main branch. Once it is done, then change the commit hash that is located in the main branch
+&#x20;     For now, the number of permutation is **80.** The higher, the longer time to take to process the data !
 
-2\. Maybe we need to create a new file that counts the total number of connections and do  ANCOVA. Use this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/issues/32) to count how many connections and actual score (out of all participants)&#x20;
+&#x20;     This step will find which connection that is statistically significant for each pair (out of 256 possible connections) within four different frequencies : **theta**, **alpha**, **beta**, and **gamma.**
+
+&#x20;      ****       This will result in 2 pkl files for each pair
+
+&#x20;     1\. \*\_Significant connection.pkl&#x20;
+
+&#x20;     2\. \*\_Actual score of that significant connection along with the label of connection, eg. FP1 - F7
+
+&#x20;     The files will be stored in various folders that are available in six forms
+
+&#x20;       **averted\_**_**pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_pre/`
+
+&#x20;      _       **averted\_post** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_post/`
+
+&#x20;  ``   _**direct\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_pre/`
+
+&#x20;  ``   **direct\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_post/`
+
+* **TODO:** It still needs to be moved to main branch. Once it is done, then change the commit hash that is located in the main branch
+
+2\. We still need to create a new file that counts the total number of significant connections and do ANCOVA for all participants. Use this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/issues/32) to count how many connections and actual score (out of all participants)&#x20;
 
 ## Eye Tracker
 
