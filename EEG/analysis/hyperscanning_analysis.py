@@ -9,7 +9,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.11.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
 #     language: python
 #     name: python3
 # ---
@@ -160,7 +160,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
@@ -553,7 +553,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
@@ -945,7 +945,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
@@ -1335,7 +1335,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
@@ -1729,7 +1729,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
@@ -2120,7 +2120,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
@@ -2511,7 +2511,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
@@ -2898,7 +2898,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 16
+end = 24
 step = 2
 
 for i in tqdm(
