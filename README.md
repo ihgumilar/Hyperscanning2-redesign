@@ -88,7 +88,7 @@ In this experiment, there are three main data that will be analyzed :
 
 1. **Statistical analysis** to check **if the connection is significant or not**. It saves significant connections as well as the actual score of such significant connection by using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/4ceca7770d2bded1815168501939d43f08ad4a0b)&#x20;
 
-&#x20;     For now, the number of permutation is **80.** The higher, the longer time to take to process the data !
+&#x20;     For now, the number of permutation is **150.** The higher, the longer time to take to process the data !
 
 &#x20;     This step will find which connection that is statistically significant for each pair (out of 256 possible connections) within four different frequencies : **theta**, **alpha**, **beta**, and **gamma.**
 
