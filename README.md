@@ -32,21 +32,21 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20;        **Experimental**
 
-&#x20;         **``**`          ``/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/`` `**``   ** &#x20;
+&#x20; **``**`  ``/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/`` `**``   ** &#x20;
 
-2\. **Combine** pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/bc3abb01d7ad8db988703aaafc3721aae1018e4c) . The result will be saved in the following folder
+2\. **Combine** pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/bc3abb01d7ad8db988703aaafc3721aae1018e4c) (**Don't forget to change** end for loop from 24 (total number of files) to something (in case there is an increae in the number of files). The result will be saved in the following folder
 
-&#x20;   **Baseline**
+&#x20;  **Baseline**
 
 &#x20;   ****    `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/raw_combined_baseline_data/`
 
-&#x20; ``  **Experimental**
+&#x20;`` **Experimental**
 
 &#x20;  ****   `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data`
 
 * **`TODO`:** Change loop from 24 to whatever length of files that are available
 
-&#x20;3\. **Clean** the above-(point no.2)-combined-EEG data for both baseline and experimental data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/ef2b503893976080800694056794df15111357f4)&#x20;
+&#x20;3\. **Clean** the above-(point no.2)-combined-EEG data for both baseline and experimental data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/eef8d39904c243cd7723808e575cdbe766cde360) (**Don't forget to change** end for loop from 24 (total number of files) to something (in case there is an increae in the number of files)
 
 &#x20;    This will result in 3 files
 
@@ -78,9 +78,9 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20;  ``   **direct\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_post/`
 
-&#x20;  **`natural`**_**\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_pre/`
+&#x20;  **``   natural**_**\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_pre/`
 
-&#x20;  **`natural`\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_post/`
+&#x20;  **``   natural\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_post/`
 
 * **TODO** : Update bad channels, in case the data has increased / updated
 
@@ -110,9 +110,9 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20;  ``   **direct\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post/`
 
-&#x20;  **`natural`**_**\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/`
+&#x20;  **``   natural**_**\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/`
 
-&#x20;  **`natural`\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/`
+&#x20;  **``   natural\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/`
 
 &#x20;      **TODO:** It still needs to be moved to main branch. Once it is done, then change the commit hash that is located in the main branch
 
