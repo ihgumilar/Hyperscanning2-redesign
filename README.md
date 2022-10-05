@@ -1,8 +1,3 @@
----
-cover: .gitbook/assets/experiment_picture.jpg
-coverY: 394.7208121827411
----
-
 # Hyperscanning2-redesign
 
 The objective of this experiment is to find whether different eye gaze directions : averted, direct, and natural, affects the inter-brain synchrony.&#x20;
@@ -73,6 +68,20 @@ In this experiment, there are three main data that will be analyzed :
 
 /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed\_eeg\_data/raw\_preproc\_experiment\_epoched\_data/
 
+&#x20;**NOTE** : This still needs to be moved manually to separated folder that is listed below accordingly so that the file that runs permutation can refer to the files that are stored in the following folder. The following path are only for **EXPERIMENTAL** data
+
+&#x20;       **averted\_**_**pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_pre/`
+
+&#x20;      _       **averted\_post** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_post/`
+
+&#x20;  ``   _**direct\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_pre/`
+
+&#x20;  ``   **direct\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_post/`
+
+&#x20;  **`natural`**_**\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_pre/`
+
+&#x20;  **`natural`\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_post/`
+
 * **TODO** : Update bad channels, in case the data has increased / updated
 
 ### Analysis and statistical permutation
@@ -89,17 +98,23 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20;     2\. \*\_Actual score of that significant connection along with the label of connection, eg. FP1 - F7
 
-&#x20;     The files will be stored in various folders that are available in six forms
+&#x20;     The files will be stored in various folders that are available in six forms.&#x20;
 
-&#x20;       **averted\_**_**pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_pre/`
+&#x20;     **NOTE :** This is for **EXPERIMENTAL** data that has been permuted
 
-&#x20;      _       **averted\_post** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_post/`
+&#x20;       **averted\_**_**pre** :_ /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant\_connections/averted\_pre/
 
-&#x20;  ``   _**direct\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_pre/`
+&#x20;       _        **averted\_post** :_ /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant\_connections/averted\_post/
 
-&#x20;  ``   **direct\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_post/`
+&#x20;  ``   _**direct\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre/`
 
-* **TODO:** It still needs to be moved to main branch. Once it is done, then change the commit hash that is located in the main branch
+&#x20;  ``   **direct\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post/`
+
+&#x20;  **`natural`**_**\_pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/`
+
+&#x20;  **`natural`\_post**`: /hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/`
+
+&#x20;      **TODO:** It still needs to be moved to main branch. Once it is done, then change the commit hash that is located in the main branch
 
 2\. We still need to create a new file that counts the total number of significant connections and do ANCOVA for all participants. Use this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/issues/32) to count how many connections and actual score (out of all participants)&#x20;
 
