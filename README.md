@@ -86,7 +86,7 @@ In this experiment, there are three main data that will be analyzed :
 
 ### Analysis and statistical permutation
 
-1. **Statistical analysis** to check **if the connection is significant or not**. It saves significant connections as well as the actual score of such significant connection by using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/f9a8c6143e4a46d6f5a0a23c0e60406b0f1981a5)&#x20;
+1. **Statistical analysis** to check **if the connection is significant or not**. It saves significant connections as well as the actual score of such significant connection by using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/4ceca7770d2bded1815168501939d43f08ad4a0b)&#x20;
 
 &#x20;     For now, the number of permutation is **80.** The higher, the longer time to take to process the data !
 
