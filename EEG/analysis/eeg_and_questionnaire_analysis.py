@@ -67,9 +67,16 @@
 # Repeat the same procedure for all other eye conditions,eg. averted_post, etc
 
 
+# %% [markdown]
+# ## Relevant packages
+
 # %%
+import os 
+import re
 import pandas as pd
 
+
+# %%
 list_a = pd.read_pickle(
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl"
 )
@@ -176,4 +183,168 @@ print(total2)
 print(total3)
 
 
+
+
+# %% [markdown]
+# ## Getting all files in a folder and filter only actual score
+
+# %%
+
+directory = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre_copy"
+files = os.listdir(directory) 
+
+
+# %%
+files[:5]
+
+# %%
+
+new_plv_filename = []
+files_to_rename = []
+
+# Loop the filename
+for file in files:
+
+    # Find index "S" and get 2 characters after "S"
+    s_idx = file.index("S")
+    subj_no = file[s_idx+1 : s_idx+3]
+
+    # Check if the 2nd character is digit or not
+    # If digit, don't include. Because we want only subject no less than 10 (satuan in indonesian language :)
+    if (subj_no[-1]>="0" and subj_no[-1]<="9"):
+        pass
+
+    # If not digit, then INCLUDE ! and we want only score data 
+    else : 
+        if ("actual_score_data" in file):
+            # This populate all subject with no. less than 11
+            files_to_rename.append(file)
+
+# print(files_to_rename)
+
+
+# for idx in range(1,6):
+    
+for file in files_to_rename:
+    print(file)
+    
+
+
+# %% [markdown]
+# ## Making leading to zero adjusted for file name 
+#
+
+# %%
+############# This is to add leading zero ##########    
+# Replace S5 with S05
+
+file = 'Pre_ccorr_combined_pair_S5_and_S6_actual_score_data.pkl'    
+idx1 = file.index("5", 0)
+idx2 = file.index("6", 1)
+
+subj_no_1 = file[idx1:idx1+1]
+subj_no_2 = file[idx2:idx2+1]
+# print(subj_no_1)
+# print(subj_no_2)
+
+# No. of zeros required
+N = 1
+
+# using zfill() adding leading zero
+lead_zero_1 = subj_no_1.zfill(N + len(subj_no_1))
+
+# print result
+print("The string after adding leading zeros : " + str(lead_zero_1))
+
+new_file = file.replace("5", lead_zero_1)
+
+# new_file = file.replace("6", lead_zero_1)
+
+print(new_file)
+
+
+
+
+
+# %% [markdown]
+# ## Original sample of making leading to zero
+
+# %%
+# initializing string
+test_string = '5'
+
+# printing original string
+print("The original string : " + str(test_string))
+
+# No. of zeros required
+N = 1
+
+# using zfill()
+# adding leading zero
+res = test_string.zfill(N + len(test_string))
+
+# print result
+print("The string after adding leading zeros : " + str(res))
+
+# %%
+# TODO Find pattern in file name, eg. S5 and S6. DO looping for this.
+# TODO Get the index of that S5 and S6 or 5 / 6
+# TODO Replace S5/ S6 with subject name with leading zero
+#TODO Add filename with subject no. < 10 with 0 at the beginning, eg. S1 => S01 
+# TODO Replace old filename with new one, then rename actual name with the new one
+actual_score_files = []
+
+for file in files:
+    # actual_score_files.append(re.search(r"actual_score", file))
+    if "actual_score" and "plv" in file:
+        print(file)
+
+# %% [markdown]
+# ## Temporary
+
+# %%
+# Python3 code to demonstrate working of
+# Convert list of dictionaries to Dictionary Value list
+# Using loop
+from collections import defaultdict
+import numpy as np
+
+# initializing lists
+# list_temp = [{"Gfg" : 6},
+# 			{"Gfg" : 8},
+# 			{"Gfg" : 2},
+# 			{"Gfg" : 12},
+# 			{"Gfg" : 22}]
+
+list_temp =[]
+a = {"a" : 1}
+aa = {"a" : 2}
+b = {"b" : 1}
+bb = {"b" : 3}
+
+for i in range(4):
+    list_temp.append(a)
+    list_temp.append(aa)
+    list_temp.append(b)
+    list_temp.append(bb)
+
+# printing original list
+print("The original list : " + str(list_temp))
+
+# using loop to get dictionaries
+# defaultdict used to make default empty list
+# for each key
+res = defaultdict(list)
+for sub in list_temp:
+	for key in sub:
+		res[key].append(sub[key])
+	
+# printing result
+print("The extracted dictionary : " + str(dict(res)))
+
+average_a = np.mean(res["a"])
+average_b = np.mean(res["b"])
+
+print(f"Average score of a : {average_a}")
+print(f"Average score of b : {average_b}")
 
