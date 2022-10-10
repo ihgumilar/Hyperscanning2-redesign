@@ -195,9 +195,6 @@ files = os.listdir(directory)
 
 
 # %%
-files[:5]
-
-# %%
 
 new_plv_filename = []
 files_to_rename = []
@@ -220,15 +217,117 @@ for file in files:
             # This populate all subject with no. less than 11
             files_to_rename.append(file)
 
-# print(files_to_rename)
-
-
-# for idx in range(1,6):
+  
     
-for file in files_to_rename:
-    print(file)
+for idx in range(0,len(files_to_rename),5):
+    if (idx == 0):
+        files_per_algorithm = files_to_rename[idx:idx+5]
+        # print(files_per_algorithm)
+    elif (idx == 5):
+        files_per_algorithm = files_to_rename[idx:idx+5]
+        # print(files_per_algorithm)
+    elif (idx == 10):
+        files_per_algorithm = files_to_rename[idx:idx+5]
+        # print(files_per_algorithm)
+    
+    
+    for idx, file_per_algorithm in enumerate(files_per_algorithm):
+        if (idx==0):
+            idx1 = file_per_algorithm.index(str(idx+1))
+            idx2 = file_per_algorithm.index(str(idx+2))
+
+        elif (idx==1):
+            idx1 = file_per_algorithm.index(str(idx+2))
+            idx2 = file_per_algorithm.index(str(idx+3))
+
+        elif (idx==2):
+            idx1 = file_per_algorithm.index(str(idx+3))
+            idx2 = file_per_algorithm.index(str(idx+4))
+        
+        elif (idx==3):
+            idx1 = file_per_algorithm.index(str(idx+4))
+            idx2 = file_per_algorithm.index(str(idx+5))
+
+        elif (idx==4):
+            idx1 = file_per_algorithm.index(str(idx+5))
+            idx2 = file_per_algorithm.index(str(idx+6))
+
+
+        subj_no_1 = file_per_algorithm[idx1:idx1+1]
+        if (idx==4):
+            # Grab 10 instead of 1 for S10
+            subj_no_2 = file_per_algorithm[idx2:idx2+2]
+        else:
+            # For participant S2 - S8 (Even subject)
+            subj_no_2 = file_per_algorithm[idx2:idx2+1]
+
+       
+
+        # No. of zeros required
+        N = 1
+
+        # using zfill() adding leading zero
+        lead_zero_1 = subj_no_1.zfill(N + len(subj_no_1))
+
+        if (idx==4 and subj_no_2=="10"):
+            # Don't add leading zero to 10 since there are already 2 digits
+            lead_zero_2 = subj_no_2
+        else:
+            lead_zero_2 = subj_no_2.zfill(N + len(subj_no_2))
+
+
+        # print result
+
+
+        if (idx==0):
+            file_per_algorithm = file_per_algorithm.replace(str(idx+1), lead_zero_1)
+            file_per_algorithm = file_per_algorithm.replace(str(idx+2), lead_zero_2)
+
+        elif (idx==1):
+
+            file_per_algorithm = file_per_algorithm.replace(str(idx+2), lead_zero_1)
+            file_per_algorithm = file_per_algorithm.replace(str(idx+3), lead_zero_2)
+
+        elif (idx==2):
+
+            file_per_algorithm = file_per_algorithm.replace(str(idx+3), lead_zero_1)
+            file_per_algorithm = file_per_algorithm.replace(str(idx+4), lead_zero_2)
+        
+        elif (idx==3):
+
+            file_per_algorithm = file_per_algorithm.replace(str(idx+4), lead_zero_1)
+            file_per_algorithm = file_per_algorithm.replace(str(idx+5), lead_zero_2)
+
+        elif (idx==4):
+           
+
+            file_per_algorithm = file_per_algorithm.replace(str(idx+5), lead_zero_1)
+            # new_no_2 = file_per_algorithm.replace(str(idx+6), lead_zero_2)
+        
+        print(file_per_algorithm)
+
+
+# Replace actual filename
+       
     
 
+
+# %% [markdown]
+# ## Replace actual name still has an issue
+
+# %%
+# Still has an issue....
+## Replace actual file names
+os.chdir(directory)
+# dir_files2_replace = os.getcwd()
+for idx, old_file_name in enumerate(files_to_rename):
+    # old_file_name = os.getcwd()+"/"+val
+    os.rename(old_file_name, file_per_algorithm[idx])
+
+
+
+# %%
+files_to_rename
 
 # %% [markdown]
 # ## Making leading to zero adjusted for file name 
