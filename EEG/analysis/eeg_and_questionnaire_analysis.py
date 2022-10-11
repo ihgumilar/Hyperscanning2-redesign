@@ -14,6 +14,22 @@
 #     name: python3
 # ---
 
+# %% [markdown]
+# ## Relevant packages
+
+# %%
+import os 
+import re
+import pathlib
+import pandas as pd
+from pandas.io.api import read_pickle
+
+
+
+# %% [markdown]
+# ## Count significant connections for each eye condition: 
+# ### Divided into 4 frequencies (theta, alpha, beta, and gamma)
+
 # %%
 # ### Correlation
 # ANCOVA for significant connections
@@ -22,12 +38,52 @@
 
 # Loop for all significant connections
 # e.g., Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl (consists of 4 lists - theta, alpha, beta, & gamma)
-
 # Set up to directory path of significant connection, averted_pre
-# Gather all files that contain _connection_data keyword and put into a list (list_a)
+
+
+path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre"
+files = os.listdir(path)
+eye_condition = "averted_pre"
+freq = "theta"
 
 # Create new list to count the number of significant connection (eg. list_at, list_aa, list_ab, list_ag)
-# Loop list_a
+ccorr_sig_connections = []
+coh_sig_connections = []
+plv_sig_connections = []
+
+# Gather all files that contain _connection_data keyword and put into a list (list_a)
+# Loop list_a / for ccorr_sig_connections
+
+for file in files:
+    if ("actual_score_data" in file and "plv" in file) :
+        plv_sig_connections.append(file)
+        # Sort the list
+        plv_sig_connections.sort()
+
+    #TODO Add elif for other algorithm 
+
+# TODO Remove this later plv_sig_connections
+print(plv_sig_connections)
+
+total_sig_ccorr_connections = []
+total_sig_coh_connections = []
+total_sig_plv_connections = []
+
+#TODO Add another loop for other algorithms
+# Read pkl file
+for file in plv_sig_connections:
+    plv_file_2_read = os.path.join(path, file)
+    plv_file = read_pickle(plv_file_2_read)
+    
+    # Theta = 0th index in the list of plv_file
+    sig_theta_plv_connections = len(plv_file[0])
+    total_sig_plv_connections.append(sig_theta_plv_connections)
+    
+    #TODO Add other frequencies
+
+print("")
+print(F"total significant connections of {eye_condition} in {freq} : {total_sig_plv_connections}")
+
 # Get the first list (e.g.theta) for each subject
 # Count the lenght and put into another list (list_at)
 # Get the second list (e.g.alpha) for each subject
@@ -65,16 +121,6 @@
 # (NOTE: It seems that the code is not working yet when we combine actual score from all subjects)
 
 # Repeat the same procedure for all other eye conditions,eg. averted_post, etc
-
-
-# %% [markdown]
-# ## Relevant packages
-
-# %%
-import os 
-import re
-import pathlib
-import pandas as pd
 
 
 # %%
