@@ -23,6 +23,7 @@ import re
 import pathlib
 import pandas as pd
 from pandas.io.api import read_pickle
+from collections import namedtuple
 
 
 
@@ -31,70 +32,155 @@ from pandas.io.api import read_pickle
 # ### Divided into 4 frequencies (theta, alpha, beta, and gamma)
 
 # %%
-# ### Correlation
-# ANCOVA for significant connections
+def total_significant_connections(path: str):
 
-# ### Populate all significant connections for each eye condition, Different frequency has different list
+    """Count a number of significant connections for a certain eye condition, eg. averted_pre.
+       Divided into different algorithms (ccorr, coh, and plv) and frequencies (theta, alpha, beta, and gamma)
 
-# Loop for all significant connections
-# e.g., Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl (consists of 4 lists - theta, alpha, beta, & gamma)
-# Set up to directory path of significant connection, averted_pre
+    Parameters :
+        path (str) : A folder that contains *pkl file which contains actual scores of connections.
+                     Each *.pkl file will have a lenght of 4 (the order is theta, alpha, beta, and gamma)
+        
+    Returns:
+        all_connections (namedtuple): it returns multiple values. The order is described below:
+
+        total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+        total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+        total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections,
+
+    """
+    
+    results = namedtuple("results",
+    ["total_sig_ccorr_theta_connections", "total_sig_ccorr_alpha_connections", "total_sig_ccorr_beta_connections", "total_sig_ccorr_gamma_connections",
+    "total_sig_coh_theta_connections", "total_sig_coh_alpha_connections", "total_sig_coh_beta_connections", "total_sig_coh_gamma_connections",
+    "total_sig_plv_theta_connections", "total_sig_plv_alpha_connections", "total_sig_plv_beta_connections", "total_sig_plv_gamma_connections"])
+
+    files = os.listdir(path)
+    # Create new list to count the number of significant connection (eg. list_at, list_aa, list_ab, list_ag)
+    ccorr_sig_connections = []
+    coh_sig_connections = []
+    plv_sig_connections = []
+
+    # Separate files into different container according to algorithm
+    for file in files:
+        # ccorr
+        if ("actual_score_data" in file and "ccorr" in file):
+            ccorr_sig_connections.append(file)
+            # Sort the list
+            ccorr_sig_connections.sort()
+        # coh
+        elif ("actual_score_data" in file and "coh" in file) :
+            coh_sig_connections.append(file)
+            # Sort the list
+            coh_sig_connections.sort()
+        # plv
+        elif ("actual_score_data" in file and "plv" in file) :
+            plv_sig_connections.append(file)
+            # Sort the list
+            plv_sig_connections.sort()
+
+    # Define list for ccorr per frequency
+    total_sig_ccorr_theta_connections = []
+    total_sig_ccorr_alpha_connections = []
+    total_sig_ccorr_beta_connections = []
+    total_sig_ccorr_gamma_connections = []
+
+    # Define list for coh per frequency
+    total_sig_coh_theta_connections = []
+    total_sig_coh_alpha_connections = []
+    total_sig_coh_beta_connections = []
+    total_sig_coh_gamma_connections = []
+
+    # Define list for plv per frequency
+    total_sig_plv_theta_connections = []
+    total_sig_plv_alpha_connections = []
+    total_sig_plv_beta_connections = []
+    total_sig_plv_gamma_connections = []
 
 
-path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre"
-files = os.listdir(path)
+    # Count significant connection for ccorr algorithm and separate into 4 frequencies:
+    # theta, alpha, beta, and gamma
+    for file in ccorr_sig_connections:
+        ccorr_file_2_read = os.path.join(path, file)
+        ccorr_file = read_pickle(ccorr_file_2_read)
+        
+        # Theta = 0th index in the list
+        sig_ccorr_theta_connections = len(ccorr_file[0])
+        total_sig_ccorr_theta_connections.append(sig_ccorr_theta_connections)
+
+        # Alpha = 1st index in the list
+        sig_ccorr_alpha_connections = len(ccorr_file[1])
+        total_sig_ccorr_alpha_connections.append(sig_ccorr_alpha_connections)
+
+        # Beta = 2nd index in the list
+        sig_ccorr_beta_connections = len(ccorr_file[2])
+        total_sig_ccorr_beta_connections.append(sig_ccorr_beta_connections)
+
+        # Gamma = 3rd index in the list
+        sig_ccorr_gamma_connections = len(ccorr_file[3])
+        total_sig_ccorr_gamma_connections.append(sig_ccorr_gamma_connections)
+
+
+    # Count significant connection for coh algorithm and separate into 4 frequencies:
+    # theta, alpha, beta, and gamma
+    for file in coh_sig_connections:
+        coh_file_2_read = os.path.join(path, file)
+        coh_file = read_pickle(coh_file_2_read)
+        
+        # Theta = 0th index in the list
+        sig_coh_theta_connections = len(coh_file[0])
+        total_sig_coh_theta_connections.append(sig_coh_theta_connections)
+
+        # Alpha = 1st index in the list
+        sig_coh_alpha_connections = len(coh_file[1])
+        total_sig_coh_alpha_connections.append(sig_coh_alpha_connections)
+
+        # Beta = 2nd index in the list
+        sig_coh_beta_connections = len(coh_file[2])
+        total_sig_coh_beta_connections.append(sig_coh_beta_connections)
+
+        # Gamma = 3rd index in the list
+        sig_coh_gamma_connections = len(coh_file[3])
+        total_sig_coh_gamma_connections.append(sig_coh_gamma_connections)
+
+
+    # Count significant connection for plv algorithm and separate into 4 frequencies:
+    # theta, alpha, beta, and gamma
+    for file in plv_sig_connections:
+        plv_file_2_read = os.path.join(path, file)
+        plv_file = read_pickle(plv_file_2_read)
+        
+        # Theta = 0th index in the list
+        sig_plv_theta_connections = len(plv_file[0])
+        total_sig_plv_theta_connections.append(sig_plv_theta_connections)
+
+        # Alpha = 1st index in the list
+        sig_plv_alpha_connections = len(plv_file[1])
+        total_sig_plv_alpha_connections.append(sig_plv_alpha_connections)
+
+        # Beta = 2nd index in the list
+        sig_plv_beta_connections = len(plv_file[2])
+        total_sig_plv_beta_connections.append(sig_plv_beta_connections)
+
+        # Gamma = 3rd index in the list
+        sig_plv_gamma_connections = len(plv_file[3])
+        total_sig_plv_gamma_connections.append(sig_plv_gamma_connections)
+
+    all_connections = results(total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+    total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+    total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections)
+    
+    return all_connections
+
+# %% [markdown]
+# ## Running function to count_significant_connections
+
+# %%
+path_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre"
 eye_condition = "averted_pre"
-freq = "theta"
+return_values = total_significant_connections(path_dir)
 
-# Create new list to count the number of significant connection (eg. list_at, list_aa, list_ab, list_ag)
-ccorr_sig_connections = []
-coh_sig_connections = []
-plv_sig_connections = []
-
-# Gather all files that contain _connection_data keyword and put into a list (list_a)
-# Loop list_a / for ccorr_sig_connections
-
-for file in files:
-    if ("actual_score_data" in file and "plv" in file) :
-        plv_sig_connections.append(file)
-        # Sort the list
-        plv_sig_connections.sort()
-
-    #TODO Add elif for other algorithm 
-
-# TODO Remove this later plv_sig_connections
-print(plv_sig_connections)
-
-total_sig_ccorr_connections = []
-total_sig_coh_connections = []
-total_sig_plv_connections = []
-
-#TODO Add another loop for other algorithms
-# Read pkl file
-for file in plv_sig_connections:
-    plv_file_2_read = os.path.join(path, file)
-    plv_file = read_pickle(plv_file_2_read)
-    
-    # Theta = 0th index in the list of plv_file
-    sig_theta_plv_connections = len(plv_file[0])
-    total_sig_plv_connections.append(sig_theta_plv_connections)
-    
-    #TODO Add other frequencies
-
-print("")
-print(F"total significant connections of {eye_condition} in {freq} : {total_sig_plv_connections}")
-
-# Get the first list (e.g.theta) for each subject
-# Count the lenght and put into another list (list_at)
-# Get the second list (e.g.alpha) for each subject
-# Count the lenght and put into another list (list_aa)
-# Get the third list (e.g.beta) for each subject
-# Count the lenght and put into another list (list_ab)
-# Get the fourth list (e.g.gamma) for each subject
-# Count the lenght and put into another list (list_ag)
-# list_at, list_aa, list_ab, list_ag becomes a total length of significant connections for each eye condition, eg. averted_pre)
-
-# Repeat the same procedure for all other eye conditions,eg. averted_post, etc
+return_values[10]
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Average of Actual score %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
