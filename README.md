@@ -116,7 +116,15 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20;      **TODO:** It still needs to be moved to main branch. Once it is done, then change the commit hash that is located in the main branch
 
-2\. We still need to create a new file that counts the total number of significant connections and do ANCOVA for all participants. Use this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/issues/32) to count how many connections and actual score (out of all participants)&#x20;
+**NOTE** : 1.2. Add leading zero to subject number from 1 - 9 using a function of `add_leading_zero` which is available in this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/0375c4de54a34fd176b47165e9ee82a395d0de69) so that it would make easier to sort out the data later on.
+
+2\. Count significant connection for each eye condition which is divided into different **frequencies** (theta, alpha, beta, and gamma) and  **algorithms** (ccorr, coh, and plv). Us a function of `total_significant_connections`  which is available in this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/0375c4de54a34fd176b47165e9ee82a395d0de69).
+
+3\. ANCOVA for all participants once the above step is completed. ANCOVA which compares the number of significant connections between eye condition within a specific frequency.&#x20;
+
+4\. Use this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/issues/32) to count **average significant actual score of specific connections** out of all pairs (from dictionary), which have key (out of all participants).&#x20;
+
+&#x20;  **NOTE** : We need to populate into one container first (e.g. list) which has average score of each eye condition within a specific frequency and algorithm. This is still in progress [here](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/0375c4de54a34fd176b47165e9ee82a395d0de69)
 
 ## Eye Tracker
 
