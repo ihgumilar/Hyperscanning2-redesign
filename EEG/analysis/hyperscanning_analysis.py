@@ -144,7 +144,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -160,7 +160,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
@@ -536,7 +536,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -553,7 +553,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
@@ -928,7 +928,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -945,7 +945,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
@@ -1318,7 +1318,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -1335,7 +1335,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
@@ -1712,7 +1712,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -1729,7 +1729,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
@@ -2103,7 +2103,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -2120,7 +2120,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
@@ -2494,7 +2494,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -2511,7 +2511,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
@@ -2881,7 +2881,7 @@ original_bad_channels_all = [
     # S25
     [],
     # S26
-    [],
+    ["Fp2", "F4", "C3", "C4"],
     # S27
     [],
     # S28
@@ -2898,7 +2898,7 @@ original_bad_channels_all = [
 
 # TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(
