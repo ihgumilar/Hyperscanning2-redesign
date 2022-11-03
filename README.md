@@ -22,7 +22,7 @@ In this experiment, there are three main data that will be analyzed :
 
 **Note** : The storage refers to HPC of ABI
 
-1.  **Separate** EEG between baseline & experimetal data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/f54c3a44ccd1b2e586ed60be23421e21ae0a3468)&#x20;
+1.  **Separate** EEG between baseline & experimetal data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/2e2b86ec25220141520bf86ab7d5dcbc472b8ea4)&#x20;
 
     This will extract EEG for both baseline and experimental data and save into
 
