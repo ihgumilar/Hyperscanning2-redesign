@@ -22,6 +22,7 @@ import os
 import re
 import pathlib
 import pandas as pd
+import pingouin as pg
 from pandas.io.api import read_pickle
 from collections import namedtuple
 
@@ -176,11 +177,97 @@ def total_significant_connections(path: str):
 # ## Running function to count_significant_connections
 
 # %%
-path_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre"
-eye_condition = "averted_pre"
-return_values = total_significant_connections(path_dir)
+path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
+path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post/"
+path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre/"
+path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post/"
+path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/"
+path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/"
 
-return_values[10]
+averted_post = total_significant_connections(path_dir_averted_post)
+averted_pre = total_significant_connections(path_dir_averted_pre)
+direct_post = total_significant_connections(path_dir_direct_post)
+direct_pre = total_significant_connections(path_dir_direct_pre)
+natural_post = total_significant_connections(path_dir_natural_post)
+natural_pre = total_significant_connections(path_dir_natural_pre)
+
+print(averted_post[9])
+print(averted_pre[9])
+print("")
+print(direct_post[9])
+print(direct_pre[9])
+print("")
+print(natural_post[9])
+print(natural_pre[9])
+
+# %% [markdown]
+# ## Find difference of number of connections between pre and post (Averted)
+
+# %%
+# Difference between PLV theta connections (post - pre) - averted eye condition
+
+diff_averted_plv_theta = [x -y for x,y in zip(averted_post[9], averted_pre[9])]
+print(F"Difference averted plv theta : {diff_averted_plv_theta}")
+
+# Difference between PLV theta connections (post - pre) - direct eye condition
+
+diff_direct_plv_theta = [x -y for x,y in zip(direct_post[9], direct_pre[9])]
+print(F"Difference direct plv theta : {diff_direct_plv_theta}")
+
+# Difference between PLV theta connections (post - pre) - natural eye condition
+
+diff_natural_plv_theta = [x -y for x,y in zip(natural_post[9], natural_pre[9])]
+print(F"Difference natural plv theta : {diff_natural_plv_theta}")
+
+
+# %% [markdown]
+# ## Calculate statistical difference using friedman's test (non-parametric)
+
+# %%
+
+# Combine the above lists and turn them into dataframe
+combine_plv_theta = []
+combine_plv_theta.append(diff_averted_plv_theta)
+combine_plv_theta.append(diff_direct_plv_theta)
+combine_plv_theta.append(diff_natural_plv_theta)
+
+df_averted_plv_theta = pd.DataFrame(combine_plv_theta).transpose()
+df_averted_plv_theta.columns = ["averted_plv_theta", "direct_plv_theta", "natural_plv_theta"]
+
+print("PLV theta (averted vs direct vs natural)")
+pg.friedman(df_averted_plv_theta)
+   
+# df
+
+# %% [markdown]
+# ### Calculate significant differences for all eye conditions, algorithms, and frequency - Still error
+# Because the value of ccorr connections is zero
+
+# %%
+# for i in range(len(averted_pre)):
+
+#     # Difference between PLV connections (post - pre) - averted eye condition
+#     diff_averted = [x -y for x,y in zip(averted_post[i], averted_pre[i])]
+
+#     # Difference between PLV connections (post - pre) - direct eye condition
+#     diff_direct = [x -y for x,y in zip(direct_post[i], direct_pre[i])]
+
+#     # Difference between PLV connections (post - pre) - natural eye condition
+#     diff_natural = [x -y for x,y in zip(natural_post[i], natural_pre[i])]
+
+#     # Combine the above lists and turn them into dataframe
+#     combine_data = []
+#     combine_data.append(diff_averted)
+#     combine_data.append(diff_direct)
+#     combine_data.append(diff_natural)
+
+#     df_combine = pd.DataFrame(combine_data).transpose()
+#     df_combine.columns = ["averted", "direct", "natural"]
+
+#     print(F"Condition - {i}")
+#     pg.friedman(combine_data)
+#     print("")
+
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Average of Actual score %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
