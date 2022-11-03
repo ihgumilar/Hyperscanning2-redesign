@@ -34,7 +34,7 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20; **``**`  ``/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/`` `**``   ** &#x20;
 
-2\. **Combine** pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/6848b536e7d79ddc2a99b0eff795e20f86fd1790) (**EEG-pre-processing** branch) (**Don't forget to change** end for loop from 24 (total number of files) to something (in case there is an incrincrease in the number of files). The result will be saved in the following folder
+2\. **Combine** pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/432da5e7e21b0bad02b49ab5be59533bfa77aa72) (**EEG-pre-processing** branch). The result will be saved in the following folder
 
 &#x20;  **Baseline**
 
