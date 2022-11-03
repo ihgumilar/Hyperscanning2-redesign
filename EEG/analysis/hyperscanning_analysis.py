@@ -58,6 +58,17 @@ def convert(seconds):
     return "%d:%02d:%02d" % (hour, minutes, seconds)
 
 
+# %% [markdown]
+# ### Count how many available raw csv files
+# This will be used as an input for end in the loop
+
+# %%
+# Number of raw csv files
+path_2_raw_csv_files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/"
+number_of_files = os.listdir(path_2_raw_csv_files)
+number_of_files = [csv_file for csv_file in number_of_files if "csv" in csv_file]
+number_of_files = len((number_of_files))
+
 # %% markdown [markdown]
 # ## Direct eye(Pre - training)
 # %%
@@ -158,9 +169,8 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
@@ -551,9 +561,9 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
+
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
@@ -943,9 +953,9 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
+
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
@@ -1333,9 +1343,9 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
+
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
@@ -1727,9 +1737,9 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
+
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
@@ -2118,9 +2128,9 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
+
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
@@ -2509,9 +2519,9 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
+
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
@@ -2896,9 +2906,9 @@ original_bad_channels_all = [
 # To loop subject number.
 # Every loop there are two files that are taken (odd-even subject)
 
-# TODO : Adjust the loop number. Now it is only up to 16 files (so far)
+
 begin = 0
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(
