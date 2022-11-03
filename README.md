@@ -66,9 +66,7 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20;      ```       `**`For experimental data is located here`**
 
-/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed\_eeg\_data/raw\_preproc\_experiment\_epoched\_data/
-
-&#x20;**NOTE** : This still needs to be moved manually to separated folder that is listed below accordingly so that the file that runs permutation can refer to the files that are stored in the following folder. The following path are only for **EXPERIMENTAL** data
+&#x20;**NOTE** : The following paths are only for **EXPERIMENTAL** data
 
 &#x20;       **averted\_**_**pre** :_ `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_pre/`
 
