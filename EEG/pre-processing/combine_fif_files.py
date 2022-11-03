@@ -33,6 +33,14 @@ import os
 raw_experimental_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/"
 # Directory where to save combined fif files
 combined_experimental_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+# Number of raw csv files
+path_2_raw_csv_files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG"
+# [y for y in a if y not in b]
+
+number_of_files = os.listdir(path_2_raw_csv_files)
+number_of_files = [csv_file for csv_file in number_of_files if "csv" in csv_file]
+number_of_files = len((number_of_files))
+
 # Change working directory
 os.chdir(raw_experimental_dir)
 
@@ -165,7 +173,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -279,7 +287,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -411,7 +419,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -459,7 +467,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 26
+end = number_of_files
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
