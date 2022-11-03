@@ -22,7 +22,7 @@ In this experiment, there are three main data that will be analyzed :
 
 **Note** : The storage refers to HPC of ABI
 
-1.  **Separate** EEG between baseline & experimetal data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/2e2b86ec25220141520bf86ab7d5dcbc472b8ea4)&#x20;
+1.  **Separate** EEG between baseline & experimetal data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/2e2b86ec25220141520bf86ab7d5dcbc472b8ea4) (**main** branch)
 
     This will extract EEG for both baseline and experimental data and save into
 
@@ -34,7 +34,7 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20; **``**`  ``/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/`` `**``   ** &#x20;
 
-2\. **Combine** pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/bc3abb01d7ad8db988703aaafc3721aae1018e4c) (**Don't forget to change** end for loop from 24 (total number of files) to something (in case there is an increae in the number of files). The result will be saved in the following folder
+2\. **Combine** pre and post data (for each baseline and experimental), for all eye conditions, using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/6848b536e7d79ddc2a99b0eff795e20f86fd1790) (**EEG-pre-processing** branch) (**Don't forget to change** end for loop from 24 (total number of files) to something (in case there is an incrincrease in the number of files). The result will be saved in the following folder
 
 &#x20;  **Baseline**
 
