@@ -1,3 +1,20 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
+#     language: python
+#     name: python3
+# ---
+
+# %%
 import mne
 import pandas as pd
 from tqdm import tqdm
@@ -5,9 +22,11 @@ import warnings
 import os
 import re
 
+# %%
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 
+# %%
 def extract_baseline_eeg_data(
     path_2_csv_files, path_2_save_baseline_file, labelsequence=1, bad_files=[]
 ):
@@ -267,6 +286,7 @@ def extract_baseline_eeg_data(
     )
 
 
+# %%
 def extract_experimental_eeg_data(
     path_2_csv_files,
     path_2_save_experimental_file,
@@ -747,3 +767,22 @@ def extract_experimental_eeg_data(
     print(
         f"All experimental files have been saved in fif format in this path {path_2_save_experimental_file}"
     )
+
+
+# %% [markdown]
+# ### Extract baseline data (26 files of csv)
+
+# %%
+# Extract baseline
+path_raw_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/"
+path_2_save_baseline = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_baseline_data/"
+extract_baseline_eeg_data(path_raw_data, path_2_save_baseline)
+
+# %% [markdown]
+# ### Extract experimental data (26 files of csv)
+
+# %%
+# Extract experimental
+path_2_save_experimental_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/"
+label_sequence = [1,2,1,2,1,2,3,4,3,4,3,4,5,6,5,6,5,6,7,8,7,8,7,8,9,10]
+extract_experimental_eeg_data(path_raw_data, path_2_save_experimental_data,label_sequence)
