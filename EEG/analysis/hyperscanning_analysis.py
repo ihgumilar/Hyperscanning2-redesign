@@ -62,7 +62,7 @@ def convert(seconds):
 # ## Direct eye(Pre - training)
 # %%
 # Container for no. of connections of ALL participants
-path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/"
+path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data/direct_pre/"
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
@@ -458,7 +458,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/direct_post/"
 odd_subject_direct_post_suffix = "-direct_post_left_right_point_combined_raw.fif"
 even_subject_direct_post_suffix = "-direct_post_right_left_point_combined_raw.fif"
 
@@ -850,7 +850,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_pre/"
 odd_subject_averted_pre_suffix = "-averted_pre_right_left_point_combined_raw.fif"
 even_subject_averted_pre_suffix = "-averted_pre_left_right_point_combined_raw.fif"
 
@@ -1240,7 +1240,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/averted_post/"
 odd_subject_averted_post_suffix = "-averted_post_left_right_point_combined_raw.fif"
 even_subject_averted_post_suffix = "-averted_post_right_left_point_combined_raw.fif"
 
@@ -1634,7 +1634,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_pre/"
 odd_subject_natural_pre_suffix = "-natural_pre_right_left_point_combined_raw.fif"
 even_subject_natural_pre_suffix = "-natural_pre_left_right_point_combined_raw.fif"
 
@@ -2025,7 +2025,7 @@ path_2_experimental_data_dir = "/hpc/igum002/codes/Hyperscanning2-redesign/data/
 path_2_dir_2_save_preprocessed_data = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/"
 )
-path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/"
+path_2_dir_2_save_raw_preprocessed_epoched_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/raw_preproc_experiment_epoched_data/natural_post/"
 odd_subject_natural_post_suffix = "-natural_post_left_right_point_combined_raw.fif"
 even_subject_natural_post_suffix = "-natural_post_right_left_point_combined_raw.fif"
 
