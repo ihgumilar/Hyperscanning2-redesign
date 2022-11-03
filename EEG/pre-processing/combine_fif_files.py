@@ -165,7 +165,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -279,7 +279,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -411,7 +411,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
@@ -459,7 +459,7 @@ print("You files have combined, sir !. Just continue your coffee :)")
 
 # %%
 begin = 10
-end = 24
+end = 26
 step = 2
 
 for i in tqdm(range(begin,end,step), desc="Just relax and drink your coffee.."):
