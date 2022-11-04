@@ -22,10 +22,12 @@ import os
 import re
 import pathlib
 import pandas as pd
+import numpy as np
 import pingouin as pg
 from pandas.io.api import read_pickle
 from collections import namedtuple
-
+from scipy.special import logsumexp
+from statistics import mean
 
 
 # %% [markdown]
@@ -305,6 +307,183 @@ list_temp = list_a[0]
 # list_temp.append(list_a[1])
 # list_temp.append(list_a[2])
 # print(list_a[0])
+
+# %%
+a = [0,0,0,0]
+np.mean(a)
+
+
+# %% [markdown]
+# ## Function to calculate average actual score
+
+# %%
+
+def average_actual_score(path: str):
+
+    """Count a number of significant connections for a certain eye condition, eg. averted_pre.
+       Divided into different algorithms (ccorr, coh, and plv) and frequencies (theta, alpha, beta, and gamma)
+
+    Parameters :
+        path (str) : A folder that contains *pkl file which contains actual scores of connections.
+                     Each *.pkl file will have a lenght of 4 (the order is theta, alpha, beta, and gamma)
+        
+    Returns:
+        all_connections (namedtuple): it returns multiple values. The order is described below:
+
+        total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+        total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+        total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections,
+
+    """
+    
+    results = namedtuple("results",
+    ["total_sig_ccorr_theta_connections", "total_sig_ccorr_alpha_connections", "total_sig_ccorr_beta_connections", "total_sig_ccorr_gamma_connections",
+    "total_sig_coh_theta_connections", "total_sig_coh_alpha_connections", "total_sig_coh_beta_connections", "total_sig_coh_gamma_connections",
+    "total_sig_plv_theta_connections", "total_sig_plv_alpha_connections", "total_sig_plv_beta_connections", "total_sig_plv_gamma_connections"])
+
+    files = os.listdir(path)
+    # Create new list to count the number of significant connection (eg. list_at, list_aa, list_ab, list_ag)
+    ccorr_sig_connections = []
+    coh_sig_connections = []
+    plv_sig_connections = []
+
+    # Separate files into different container according to algorithm
+    for file in files:
+        # ccorr
+        if ("actual_score_data" in file and "ccorr" in file):
+            ccorr_sig_connections.append(file)
+            # Sort the list
+            ccorr_sig_connections.sort()
+        # coh
+        elif ("actual_score_data" in file and "coh" in file) :
+            coh_sig_connections.append(file)
+            # Sort the list
+            coh_sig_connections.sort()
+        # plv
+        elif ("actual_score_data" in file and "plv" in file) :
+            plv_sig_connections.append(file)
+            # Sort the list
+            plv_sig_connections.sort()
+
+    # Define list for ccorr per frequency
+    total_sig_ccorr_theta_connections = []
+    total_sig_ccorr_alpha_connections = []
+    total_sig_ccorr_beta_connections = []
+    total_sig_ccorr_gamma_connections = []
+
+    # Define list for coh per frequency
+    total_sig_coh_theta_connections = []
+    total_sig_coh_alpha_connections = []
+    total_sig_coh_beta_connections = []
+    total_sig_coh_gamma_connections = []
+
+    # Define list for plv per frequency
+    total_sig_plv_theta_connections = []
+    total_sig_plv_alpha_connections = []
+    total_sig_plv_beta_connections = []
+    total_sig_plv_gamma_connections = []
+
+
+    # Count significant connection for ccorr algorithm and separate into 4 frequencies:
+    # theta, alpha, beta, and gamma
+    for file in ccorr_sig_connections:
+        ccorr_file_2_read = os.path.join(path, file)
+        ccorr_file = read_pickle(ccorr_file_2_read)
+        
+        # Theta = 0th index in the list
+        sig_ccorr_theta_connections = ccorr_file[0]
+        total_sig_ccorr_theta_connections.append(mean(sig_ccorr_theta_connections))
+
+        # Alpha = 1st index in the list
+        sig_ccorr_alpha_connections = ccorr_file[1]
+        total_sig_ccorr_alpha_connections.append(mean(sig_ccorr_alpha_connections))
+
+        # Beta = 2nd index in the list
+        sig_ccorr_beta_connections = ccorr_file[2]
+        total_sig_ccorr_beta_connections.append(mean(sig_ccorr_beta_connections))
+
+        # Gamma = 3rd index in the list
+        sig_ccorr_gamma_connections = ccorr_file[3]
+        total_sig_ccorr_gamma_connections.append(mean(sig_ccorr_gamma_connections))
+
+
+    # Count significant connection for coh algorithm and separate into 4 frequencies:
+    # theta, alpha, beta, and gamma
+    for file in coh_sig_connections:
+        coh_file_2_read = os.path.join(path, file)
+        coh_file = read_pickle(coh_file_2_read)
+        
+        # Theta = 0th index in the list
+        sig_coh_theta_connections = coh_file[0]
+        total_sig_coh_theta_connections.append(mean(sig_coh_theta_connections))
+
+        # Alpha = 1st index in the list
+        sig_coh_alpha_connections = coh_file[1]
+        total_sig_coh_alpha_connections.append(mean(sig_coh_alpha_connections))
+
+        # Beta = 2nd index in the list
+        sig_coh_beta_connections = coh_file[2]
+        total_sig_coh_beta_connections.append(mean(sig_coh_beta_connections))
+
+        # Gamma = 3rd index in the list
+        sig_coh_gamma_connections = coh_file[3]
+        total_sig_coh_gamma_connections.append(mean(sig_coh_gamma_connections))
+
+
+    # Count significant connection for plv algorithm and separate into 4 frequencies:
+    # theta, alpha, beta, and gamma
+    for file in plv_sig_connections:
+        plv_file_2_read = os.path.join(path, file)
+        plv_file = read_pickle(plv_file_2_read)
+        
+        # Theta = 0th index in the list
+        sig_plv_theta_connections = plv_file[0]
+        total_sig_plv_theta_connections.append(mean(sig_plv_theta_connections))
+
+        # Alpha = 1st index in the list
+        sig_plv_alpha_connections = plv_file[1]
+        total_sig_plv_alpha_connections.append(mean(sig_plv_alpha_connections))
+
+        # Beta = 2nd index in the list
+        sig_plv_beta_connections = plv_file[2]
+        total_sig_plv_beta_connections.append(mean(sig_plv_beta_connections))
+
+        # Gamma = 3rd index in the list
+        sig_plv_gamma_connections = plv_file[3]
+        total_sig_plv_gamma_connections.append(mean(sig_plv_gamma_connections))
+
+    all_connections = results(total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+    total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+    total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections)
+    
+    return all_connections
+
+# %% [markdown]
+# ## Running get average actual score function
+
+# %%
+path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
+path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post/"
+path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre/"
+path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post/"
+path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/"
+path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/"
+
+averted_post = average_actual_score(path_dir_averted_post)
+averted_pre = average_actual_score(path_dir_averted_pre)
+direct_post = average_actual_score(path_dir_direct_post)
+direct_pre = average_actual_score(path_dir_direct_pre)
+natural_post = average_actual_score(path_dir_natural_post)
+natural_pre = average_actual_score(path_dir_natural_pre)
+
+# print(averted_post[9])
+# print(averted_pre[9])
+# print("")
+# print(direct_post[9])
+# print(direct_pre[9])
+# print("")
+# print(natural_post[9])
+# print(natural_pre[9])
 
 # %% [markdown]
 # ## Testing to get average actual score
