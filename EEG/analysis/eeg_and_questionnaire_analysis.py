@@ -203,7 +203,10 @@ print(natural_post[9])
 print(natural_pre[9])
 
 # %% [markdown]
-# ## Find difference of number of connections between pre and post (Averted)
+# ## 1.1. Find difference of number of connections between pre and post (Averted)
+# NOTE : The variable name is exactly the same with section 2.1 . Make sure you run the function of total_significant_connections first !!. 
+#
+# IMPORTANT : Change no. 9 to whatever condition that you want to test. See the multiple output of total_significant_connections function
 
 # %%
 # Difference between PLV theta connections (post - pre) - averted eye condition
@@ -223,7 +226,8 @@ print(F"Difference natural plv theta : {diff_natural_plv_theta}")
 
 
 # %% [markdown]
-# ## Calculate statistical difference using friedman's test (non-parametric)
+# ## 1.2. Calculate statistical difference using friedman's test (non-parametric)
+# NOTE : The variable name is exactly the same with section 2.2. Make sure you run the function of total_significant_connection first !!
 
 # %%
 
@@ -392,19 +396,55 @@ def average_actual_score(path: str):
         
         # Theta = 0th index in the list
         sig_ccorr_theta_connections = ccorr_file[0]
-        total_sig_ccorr_theta_connections.append(mean(sig_ccorr_theta_connections))
+        list_temp =[]
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_ccorr_theta_connections:
+            pass
+        else:
+            for d in sig_ccorr_theta_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_ccorr_theta_connections.append(mean(list_temp))
 
         # Alpha = 1st index in the list
         sig_ccorr_alpha_connections = ccorr_file[1]
-        total_sig_ccorr_alpha_connections.append(mean(sig_ccorr_alpha_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_ccorr_alpha_connections:
+            pass
+        else:
+            for d in sig_ccorr_alpha_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_ccorr_alpha_connections.append(mean(list_temp))
 
         # Beta = 2nd index in the list
         sig_ccorr_beta_connections = ccorr_file[2]
-        total_sig_ccorr_beta_connections.append(mean(sig_ccorr_beta_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_ccorr_beta_connections:
+            pass
+        else:
+            for d in sig_ccorr_beta_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_ccorr_beta_connections.append(mean(list_temp))
 
         # Gamma = 3rd index in the list
         sig_ccorr_gamma_connections = ccorr_file[3]
-        total_sig_ccorr_gamma_connections.append(mean(sig_ccorr_gamma_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_ccorr_gamma_connections:
+            pass
+        else:
+            for d in sig_ccorr_gamma_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_ccorr_gamma_connections.append(mean(list_temp))
 
 
     # Count significant connection for coh algorithm and separate into 4 frequencies:
@@ -415,20 +455,57 @@ def average_actual_score(path: str):
         
         # Theta = 0th index in the list
         sig_coh_theta_connections = coh_file[0]
-        total_sig_coh_theta_connections.append(mean(sig_coh_theta_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_coh_theta_connections:
+            pass
+        else:
+            for d in sig_coh_theta_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_coh_theta_connections.append(mean(list_temp))
 
         # Alpha = 1st index in the list
         sig_coh_alpha_connections = coh_file[1]
-        total_sig_coh_alpha_connections.append(mean(sig_coh_alpha_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_coh_alpha_connections:
+            pass
+        else:
+            for d in sig_coh_alpha_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_coh_alpha_connections.append(mean(list_temp))
 
         # Beta = 2nd index in the list
         sig_coh_beta_connections = coh_file[2]
-        total_sig_coh_beta_connections.append(mean(sig_coh_beta_connections))
-
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_coh_beta_connections:
+            pass
+        else:
+            for d in sig_coh_beta_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_coh_beta_connections.append(mean(list_temp))
+        
+        
         # Gamma = 3rd index in the list
         sig_coh_gamma_connections = coh_file[3]
-        total_sig_coh_gamma_connections.append(mean(sig_coh_gamma_connections))
-
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_coh_gamma_connections:
+            pass
+        else:
+            for d in sig_coh_gamma_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_coh_gamma_connections.append(mean(list_temp))
+        
 
     # Count significant connection for plv algorithm and separate into 4 frequencies:
     # theta, alpha, beta, and gamma
@@ -438,19 +515,57 @@ def average_actual_score(path: str):
         
         # Theta = 0th index in the list
         sig_plv_theta_connections = plv_file[0]
-        total_sig_plv_theta_connections.append(mean(sig_plv_theta_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_plv_theta_connections:
+            pass
+        else:
+            for d in sig_plv_theta_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_plv_theta_connections.append(mean(list_temp))
+        
 
         # Alpha = 1st index in the list
         sig_plv_alpha_connections = plv_file[1]
-        total_sig_plv_alpha_connections.append(mean(sig_plv_alpha_connections))
+        list_temp =[]
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_plv_alpha_connections:
+            pass
+        else:
+            for d in sig_plv_alpha_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_plv_alpha_connections.append(mean(list_temp))
 
         # Beta = 2nd index in the list
         sig_plv_beta_connections = plv_file[2]
-        total_sig_plv_beta_connections.append(mean(sig_plv_beta_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_plv_beta_connections:
+            pass
+        else:
+            for d in sig_plv_beta_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_plv_beta_connections.append(mean(list_temp))
 
         # Gamma = 3rd index in the list
         sig_plv_gamma_connections = plv_file[3]
-        total_sig_plv_gamma_connections.append(mean(sig_plv_gamma_connections))
+        list_temp = []
+        # Check if the list is empty (there is no significant connection), then skip
+        if not sig_plv_gamma_connections:
+            pass
+        else:
+            for d in sig_plv_gamma_connections:
+                for key, value in d.items():
+                    list_temp.append(value)
+            # Average score values        
+            total_sig_plv_gamma_connections.append(mean(list_temp))
+        
 
     all_connections = results(total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
     total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
@@ -484,6 +599,47 @@ natural_pre = average_actual_score(path_dir_natural_pre)
 # print("")
 # print(natural_post[9])
 # print(natural_pre[9])
+
+# %% [markdown]
+# ### 2.1. Find difference of average score (ccorr, coh, & plv),Pre VS Post
+# NOTE : The variable name is exactly the same with section 1.1 . Make sure you run the function of get_average_score first !!. 
+#
+# IMPORTANT : Change no. 9 to whatever condition that you want to test. See the multiple output of get_average_score function
+
+# %%
+# Difference between PLV theta connections (post - pre) - averted eye condition
+
+diff_averted_plv_theta = [x -y for x,y in zip(averted_post[9], averted_pre[9])]
+print(F"Difference averted plv theta : {diff_averted_plv_theta}")
+
+# Difference between PLV theta connections (post - pre) - direct eye condition
+
+diff_direct_plv_theta = [x -y for x,y in zip(direct_post[9], direct_pre[9])]
+print(F"Difference direct plv theta : {diff_direct_plv_theta}")
+
+# Difference between PLV theta connections (post - pre) - natural eye condition
+
+diff_natural_plv_theta = [x -y for x,y in zip(natural_post[9], natural_pre[9])]
+print(F"Difference natural plv theta : {diff_natural_plv_theta}")
+
+# %% [markdown]
+# ### 2.2. Calculate statistical difference using friedman's test (non-parametric)
+# NOTE : The variable name is exactly the same with section 1.2. Make sure you run the function of get_average_score first !!
+
+# %%
+# Combine the above lists and turn them into dataframe
+combine_plv_theta = []
+combine_plv_theta.append(diff_averted_plv_theta)
+combine_plv_theta.append(diff_direct_plv_theta)
+combine_plv_theta.append(diff_natural_plv_theta)
+
+df_averted_plv_theta = pd.DataFrame(combine_plv_theta).transpose()
+df_averted_plv_theta.columns = ["averted_plv_theta", "direct_plv_theta", "natural_plv_theta"]
+
+print("PLV theta (averted vs direct vs natural)")
+pg.friedman(df_averted_plv_theta)
+   
+# df
 
 # %% [markdown]
 # ## Testing to get average actual score
