@@ -1237,6 +1237,48 @@ print(f"Correlation SPGQ & CoPresence natural post{corr_spgq_copresence_natural_
 
 
 # %% [markdown]
+# ### Combine SPGQ Total score of subject1 & 2, etc..
+
+# %%
+# NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
+# later on remove -2, all data of EEG has been processed
+df_averted_pre_list = list(df_averted_pre["SPGQ Total"][:-2])
+df_averted_post_list = list(df_averted_post["SPGQ Total"][:-2])
+df_direct_pre_list = list(df_direct_pre["SPGQ Total"][:-2])
+df_direct_post_list = list(df_direct_post["SPGQ Total"][:-2])
+df_natural_pre_list = list(df_natural_pre["SPGQ Total"][:-2])
+df_natural_post_list = list(df_natural_post["SPGQ Total"][:-2])
+
+
+df_averted_pre_combined = []
+df_direct_pre_combined = []
+df_natural_pre_combined = []
+
+df_averted_post_combined = []
+df_direct_post_combined = []
+df_natural_post_combined = []
+
+begin = 0
+end = len(df_averted_pre_list)
+step = 2
+for idx in range(begin, end, step):
+    # Pre conditions
+    df_averted_pre_combined.append((df_averted_pre_list[idx] + df_averted_pre_list[idx+1]) / 2)
+    df_direct_pre_combined.append((df_direct_pre_list[idx] + df_direct_pre_list[idx+1]) / 2)
+    df_natural_pre_combined.append((df_natural_pre_list[idx] + df_natural_pre_list[idx+1]) / 2)
+
+    # Post conditions
+    df_averted_post_combined.append((df_averted_post_list[idx] + df_averted_post_list[idx+1]) / 2)
+    df_direct_post_combined.append((df_direct_post_list[idx] + df_direct_post_list[idx+1]) / 2)
+    df_natural_post_combined.append((df_natural_post_list[idx] + df_natural_post_list[idx+1]) / 2)
+
+# Substract post and pre score of SPGQ Total
+substracted_averted = [averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_combined, df_averted_pre_combined)]
+substracted_direct = [direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_combined, df_direct_pre_combined)]
+substracted_natural = [natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_combined, df_natural_pre_combined)]
+
+
+# %% [markdown]
 # ### Correlation SPGQ and Averted
 
 # %%
