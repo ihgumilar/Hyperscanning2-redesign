@@ -1282,14 +1282,36 @@ substracted_natural = [natural_post - natural_pre for natural_post, natural_pre 
 # ### Correlation SPGQ and Averted
 
 # %%
-df_diff_averted = df_averted_post["SPGQ Total"][:-2] - df_averted_pre["SPGQ Total"][:-2]
+print("Averted")
+for i in range(len(diff_averted)):
+    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted)}")
 
-#TODO : Still has an issue because it does not have the same length
-print(diff_averted[8]) 
-print(list(df_diff_averted))
+# %% [markdown]
+# ### Sig. Correlation SPGQ and Direct *
 
+# %%
+""" NOTE :
+Significant correlation between SPGQ and Direct eye conditions (EEG) in : 
+ 
+ Coherence
+  - total_sig_coh_theta_connections
+  - total_sig_coh_beta_connections
+  - total_sig_coh_gamma_connections
+  PLV
+  - total_sig_plv_gamma_connections
+"""
 
-pearsonr(df_diff_averted,list(diff_averted[8]))
+print("Direct")
+for i in range(len(diff_direct)):
+    print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
+
+# %% [markdown]
+# ### Correlation SPGQ and Natural
+
+# %%
+print("Natural")
+for i in range(len(diff_natural)):
+    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
 
 # %% [markdown]
 # ## Statistical Summary
