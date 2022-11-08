@@ -24,9 +24,10 @@ import numpy as np
 import pandas as pd
 import scikit_posthocs as sp
 import pingouin as pg
+import matplotlib.pyplot as plt
 
 from scipy import stats
-from scipy.stats import ttest_rel, f_oneway, pearsonr
+from scipy.stats import ttest_rel, f_oneway, pearsonr, spearmanr
 from statsmodels.stats.anova import AnovaRM
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from collections import namedtuple
@@ -609,14 +610,17 @@ for idx in range(len(negative_feelings_averted_pre)):
     copresence_post_all.append(copresence_natural_post[idx])
 
 # Create subject number
-subject_no = list(range(1,25))
+# NOTE : Adjust the number according total files of questionnaire
+# Remember that index starts from 0
+subject_no = list(range(1,27))
 subject = np.repeat(subject_no, 3)
 
 # Create eye gaze number
 # 1 = averted post
 # 2 = direct post
 # 3 = natural post
-eye_gaze = np.tile([1, 2, 3], 24)
+# NOTE : Adjust no.26 according total files of questionnaire
+eye_gaze = np.tile([1, 2, 3], 26)
 
 df_all_eyes = pd.DataFrame({"Subject" : subject,
                             "EyeGaze" : eye_gaze,
@@ -1284,7 +1288,7 @@ substracted_natural = [natural_post - natural_pre for natural_post, natural_pre 
 # %%
 print("Averted")
 for i in range(len(diff_averted)):
-    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted)}")
+    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted_empathy)}")
 
 # %% [markdown]
 # ### Sig. Correlation SPGQ and Direct *
@@ -1306,12 +1310,85 @@ for i in range(len(diff_direct)):
     print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
 
 # %% [markdown]
+# #### Plot
+
+# %%
+# adds the title
+plt.title('Correlation')
+
+# plot the data
+plt.scatter(diff_direct[11], substracted_direct_empathy)
+
+# fits the best fitting line to the data
+plt.plot(np.unique(diff_direct[11]),
+		np.poly1d(np.polyfit(diff_direct[11], substracted_direct_empathy, 1))
+		(np.unique(diff_direct[11])), color='red')
+
+# Labelling axes
+plt.xlabel('x axis')
+plt.ylabel('y axis')
+
+
+# %% [markdown]
 # ### Correlation SPGQ and Natural
 
 # %%
 print("Natural")
 for i in range(len(diff_natural)):
-    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
+    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural_empathy)}")
+
+# %% [markdown]
+# ### Combine Empathy SPGQ
+
+# %%
+# NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
+# later on remove -2, all data of EEG has been processed
+df_averted_pre_empathy_list = list(df_averted_pre["Empathy SPGQ"][:-2])
+df_averted_post_empathy_list = list(df_averted_post["Empathy SPGQ"][:-2])
+df_direct_pre_empathy_list = list(df_direct_pre["Empathy SPGQ"][:-2])
+df_direct_post_empathy_list = list(df_direct_post["Empathy SPGQ"][:-2])
+df_natural_pre_empathy_list = list(df_natural_pre["Empathy SPGQ"][:-2])
+df_natural_post_empathy_list = list(df_natural_post["Empathy SPGQ"][:-2])
+
+
+df_averted_pre_empathy_combined = []
+df_direct_pre_empathy_combined = []
+df_natural_pre_empathy_combined = []
+
+df_averted_post_empathy_combined = []
+df_direct_post_empathy_combined = []
+df_natural_post_empathy_combined = []
+
+begin = 0
+end = len(df_averted_pre_empathy_list)
+step = 2
+for idx in range(begin, end, step):
+    # Pre conditions
+    df_averted_pre_empathy_combined.append((df_averted_pre_empathy_list[idx] + df_averted_pre_empathy_list[idx+1]) / 2)
+    df_direct_pre_empathy_combined.append((df_direct_pre_empathy_list[idx] + df_direct_pre_empathy_list[idx+1]) / 2)
+    df_natural_pre_empathy_combined.append((df_natural_pre_empathy_list[idx] + df_natural_pre_empathy_list[idx+1]) / 2)
+
+    # Post conditions
+    df_averted_post_empathy_combined.append((df_averted_post_empathy_list[idx] + df_averted_post_empathy_list[idx+1]) / 2)
+    df_direct_post_empathy_combined.append((df_direct_post_empathy_list[idx] + df_direct_post_empathy_list[idx+1]) / 2)
+    df_natural_post_empathy_combined.append((df_natural_post_empathy_list[idx] + df_natural_post_empathy_list[idx+1]) / 2)
+
+# Substract post and pre score of Empathy SPGQ
+substracted_averted_empathy = [averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_empathy_combined, df_averted_pre_empathy_combined)]
+substracted_direct_empathy = [direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_empathy_combined, df_direct_pre_empathy_combined)]
+substracted_natural_empathy = [natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_empathy_combined, df_natural_pre_empathy_combined)]
+
+
+# %% [markdown]
+# ### Correlation empathy and averted
+
+# %%
+print("Averted")
+for i in range(len(diff_averted)):
+    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted_empathy)}")
+
+# %%
+df_averted_pre.columns
 
 # %% [markdown]
 # ## Statistical Summary
