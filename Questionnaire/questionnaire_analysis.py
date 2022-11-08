@@ -121,13 +121,13 @@ for idx, file in enumerate(averted_pre_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
+    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
+    df["Behavioural"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
+    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -168,13 +168,13 @@ for idx, file in enumerate(averted_post_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
+    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
+    df["Behavioural"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
+    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -213,13 +213,13 @@ for idx, file in enumerate(direct_pre_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
+    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
+    df["Behavioural"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
+    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -258,13 +258,13 @@ for idx, file in enumerate(direct_post_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
+    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
+    df["Behavioural"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
+    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -303,13 +303,13 @@ for idx, file in enumerate(natural_pre_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
+    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
+    df["Behavioural"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
+    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -348,13 +348,13 @@ for idx, file in enumerate(natural_post_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
+    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
+    df["Behavioural"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
+    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -529,20 +529,20 @@ empathy_natural_pre =  df_natural_pre["Empathy SPGQ"]
 empathy_natural_post =  df_natural_post["Empathy SPGQ"]
 
 # Negative feelings
-negative_feelings_averted_pre =  df_averted_pre["NegativeFeelings SPGQ"]
-negative_feelings_averted_post =  df_averted_post["NegativeFeelings SPGQ"]
-negative_feelings_direct_pre =  df_direct_pre["NegativeFeelings SPGQ"]
-negative_feelings_direct_post =  df_direct_post["NegativeFeelings SPGQ"]
-negative_feelings_natural_pre =  df_natural_pre["NegativeFeelings SPGQ"]
-negative_feelings_natural_post =  df_natural_post["NegativeFeelings SPGQ"]
+negative_feelings_averted_pre =  df_averted_pre["Behavioural SPGQ"]
+negative_feelings_averted_post =  df_averted_post["Behavioural SPGQ"]
+negative_feelings_direct_pre =  df_direct_pre["Behavioural SPGQ"]
+negative_feelings_direct_post =  df_direct_post["Behavioural SPGQ"]
+negative_feelings_natural_pre =  df_natural_pre["Behavioural SPGQ"]
+negative_feelings_natural_post =  df_natural_post["Behavioural SPGQ"]
 
 # Behavioural engagement
-behavioural_averted_pre =  df_averted_pre["Behavioural SPGQ"]
-behavioural_averted_post =  df_averted_post["Behavioural SPGQ"]
-behavioural_direct_pre =  df_direct_pre["Behavioural SPGQ"]
-behavioural_direct_post =  df_direct_post["Behavioural SPGQ"]
-behavioural_natural_pre =  df_natural_pre["Behavioural SPGQ"]
-behavioural_natural_post =  df_natural_post["Behavioural SPGQ"]
+behavioural_averted_pre =  df_averted_pre["Behavioural"]
+behavioural_averted_post =  df_averted_post["Behavioural"]
+behavioural_direct_pre =  df_direct_pre["Behavioural"]
+behavioural_direct_post =  df_direct_post["Behavioural"]
+behavioural_natural_pre =  df_natural_pre["Behavioural"]
+behavioural_natural_post =  df_natural_post["Behavioural"]
 
 
 # Define all lists
@@ -936,7 +936,7 @@ print(natural_post[4])
 print(natural_pre[4])
 
 # %% [markdown]
-# ### Find difference of number of connections between pre and post (Averted)
+# ### Find difference of number of connections between pre and post 
 # NOTE : The variable name is exactly the same with section 2.1 . Make sure you run the function of total_significant_connections first !!. 
 #
 # IMPORTANT : Change no. 9 to whatever condition that you want to test. See the multiple output of total_significant_connections function
@@ -969,259 +969,6 @@ for i in range(12): # NOTE : 12 means there are 12 outputs that are resulted
 
 # %% [markdown]
 # ### Find average actual scores of each pair (ccorr, coh, and plv)
-
-# %%
-
-def average_actual_score(path: str):
-
-    """Count a number of significant connections for a certain eye condition, eg. averted_pre.
-       Divided into different algorithms (ccorr, coh, and plv) and frequencies (theta, alpha, beta, and gamma)
-
-    Parameters :
-        path (str) : A folder that contains *pkl file which contains actual scores of connections.
-                     Each *.pkl file will have a lenght of 4 (the order is theta, alpha, beta, and gamma)
-        
-    Returns:
-        all_connections (namedtuple): it returns multiple values. The order is described below:
-
-        total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
-        total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
-        total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections,
-
-    """
-    
-    results = namedtuple("results",
-    ["total_sig_ccorr_theta_connections", "total_sig_ccorr_alpha_connections", "total_sig_ccorr_beta_connections", "total_sig_ccorr_gamma_connections",
-    "total_sig_coh_theta_connections", "total_sig_coh_alpha_connections", "total_sig_coh_beta_connections", "total_sig_coh_gamma_connections",
-    "total_sig_plv_theta_connections", "total_sig_plv_alpha_connections", "total_sig_plv_beta_connections", "total_sig_plv_gamma_connections"])
-
-    files = os.listdir(path)
-    # Create new list to count the number of significant connection (eg. list_at, list_aa, list_ab, list_ag)
-    ccorr_sig_connections = []
-    coh_sig_connections = []
-    plv_sig_connections = []
-
-    # Separate files into different container according to algorithm
-    for file in files:
-        # ccorr
-        if ("actual_score_data" in file and "ccorr" in file):
-            ccorr_sig_connections.append(file)
-            # Sort the list
-            ccorr_sig_connections.sort()
-        # coh
-        elif ("actual_score_data" in file and "coh" in file) :
-            coh_sig_connections.append(file)
-            # Sort the list
-            coh_sig_connections.sort()
-        # plv
-        elif ("actual_score_data" in file and "plv" in file) :
-            plv_sig_connections.append(file)
-            # Sort the list
-            plv_sig_connections.sort()
-
-    # Define list for ccorr per frequency
-    total_sig_ccorr_theta_connections = []
-    total_sig_ccorr_alpha_connections = []
-    total_sig_ccorr_beta_connections = []
-    total_sig_ccorr_gamma_connections = []
-
-    # Define list for coh per frequency
-    total_sig_coh_theta_connections = []
-    total_sig_coh_alpha_connections = []
-    total_sig_coh_beta_connections = []
-    total_sig_coh_gamma_connections = []
-
-    # Define list for plv per frequency
-    total_sig_plv_theta_connections = []
-    total_sig_plv_alpha_connections = []
-    total_sig_plv_beta_connections = []
-    total_sig_plv_gamma_connections = []
-
-
-    # Count significant connection for ccorr algorithm and separate into 4 frequencies:
-    # theta, alpha, beta, and gamma
-    for file in ccorr_sig_connections:
-        ccorr_file_2_read = os.path.join(path, file)
-        ccorr_file = read_pickle(ccorr_file_2_read)
-        
-        # Theta = 0th index in the list
-        sig_ccorr_theta_connections = ccorr_file[0]
-        list_temp =[]
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_ccorr_theta_connections:
-            pass
-        else:
-            for d in sig_ccorr_theta_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_ccorr_theta_connections.append(mean(list_temp))
-
-        # Alpha = 1st index in the list
-        sig_ccorr_alpha_connections = ccorr_file[1]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_ccorr_alpha_connections:
-            pass
-        else:
-            for d in sig_ccorr_alpha_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_ccorr_alpha_connections.append(mean(list_temp))
-
-        # Beta = 2nd index in the list
-        sig_ccorr_beta_connections = ccorr_file[2]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_ccorr_beta_connections:
-            pass
-        else:
-            for d in sig_ccorr_beta_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_ccorr_beta_connections.append(mean(list_temp))
-
-        # Gamma = 3rd index in the list
-        sig_ccorr_gamma_connections = ccorr_file[3]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_ccorr_gamma_connections:
-            pass
-        else:
-            for d in sig_ccorr_gamma_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_ccorr_gamma_connections.append(mean(list_temp))
-
-
-    # Count significant connection for coh algorithm and separate into 4 frequencies:
-    # theta, alpha, beta, and gamma
-    for file in coh_sig_connections:
-        coh_file_2_read = os.path.join(path, file)
-        coh_file = read_pickle(coh_file_2_read)
-        
-        # Theta = 0th index in the list
-        sig_coh_theta_connections = coh_file[0]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_coh_theta_connections:
-            pass
-        else:
-            for d in sig_coh_theta_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_coh_theta_connections.append(mean(list_temp))
-
-        # Alpha = 1st index in the list
-        sig_coh_alpha_connections = coh_file[1]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_coh_alpha_connections:
-            pass
-        else:
-            for d in sig_coh_alpha_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_coh_alpha_connections.append(mean(list_temp))
-
-        # Beta = 2nd index in the list
-        sig_coh_beta_connections = coh_file[2]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_coh_beta_connections:
-            pass
-        else:
-            for d in sig_coh_beta_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_coh_beta_connections.append(mean(list_temp))
-        
-        
-        # Gamma = 3rd index in the list
-        sig_coh_gamma_connections = coh_file[3]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_coh_gamma_connections:
-            pass
-        else:
-            for d in sig_coh_gamma_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_coh_gamma_connections.append(mean(list_temp))
-        
-
-    # Count significant connection for plv algorithm and separate into 4 frequencies:
-    # theta, alpha, beta, and gamma
-    for file in plv_sig_connections:
-        plv_file_2_read = os.path.join(path, file)
-        plv_file = read_pickle(plv_file_2_read)
-        
-        # Theta = 0th index in the list
-        sig_plv_theta_connections = plv_file[0]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_plv_theta_connections:
-            pass
-        else:
-            for d in sig_plv_theta_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_plv_theta_connections.append(mean(list_temp))
-        
-
-        # Alpha = 1st index in the list
-        sig_plv_alpha_connections = plv_file[1]
-        list_temp =[]
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_plv_alpha_connections:
-            pass
-        else:
-            for d in sig_plv_alpha_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_plv_alpha_connections.append(mean(list_temp))
-
-        # Beta = 2nd index in the list
-        sig_plv_beta_connections = plv_file[2]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_plv_beta_connections:
-            pass
-        else:
-            for d in sig_plv_beta_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_plv_beta_connections.append(mean(list_temp))
-
-        # Gamma = 3rd index in the list
-        sig_plv_gamma_connections = plv_file[3]
-        list_temp = []
-        # Check if the list is empty (there is no significant connection), then skip
-        if not sig_plv_gamma_connections:
-            pass
-        else:
-            for d in sig_plv_gamma_connections:
-                for key, value in d.items():
-                    list_temp.append(value)
-            # Average score values        
-            total_sig_plv_gamma_connections.append(mean(list_temp))
-        
-
-    all_connections = results(total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
-    total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
-    total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections)
-    
-    return all_connections
 
 # %% [markdown]
 # ## Correlation
@@ -1288,7 +1035,7 @@ substracted_natural = [natural_post - natural_pre for natural_post, natural_pre 
 # %%
 print("Averted")
 for i in range(len(diff_averted)):
-    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted_empathy)}")
+    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted)}")
 
 # %% [markdown]
 # ### Sig. Correlation SPGQ and Direct *
@@ -1310,23 +1057,23 @@ for i in range(len(diff_direct)):
     print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
 
 # %% [markdown]
-# #### Plot
+# #### Plot PLV gamma & SPGQ Total
 
 # %%
 # adds the title
-plt.title('Correlation')
+plt.title('Correlation of inter-brain connections and SPGQ')
 
 # plot the data
-plt.scatter(diff_direct[11], substracted_direct_empathy)
+plt.scatter(diff_direct[11], substracted_direct)
 
 # fits the best fitting line to the data
 plt.plot(np.unique(diff_direct[11]),
-		np.poly1d(np.polyfit(diff_direct[11], substracted_direct_empathy, 1))
+		np.poly1d(np.polyfit(diff_direct[11], substracted_direct, 1))
 		(np.unique(diff_direct[11])), color='red')
 
 # Labelling axes
-plt.xlabel('x axis')
-plt.ylabel('y axis')
+plt.xlabel('Number of connections (Gamma - PLV)')
+plt.ylabel('SPGQ')
 
 
 # %% [markdown]
@@ -1335,60 +1082,107 @@ plt.ylabel('y axis')
 # %%
 print("Natural")
 for i in range(len(diff_natural)):
-    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural_empathy)}")
+    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
 
 # %% [markdown]
-# ### Combine Empathy SPGQ
+# ### Combine Empathy SPGQ/NegativeFeelings SPGQ/Behavioural SPGQ/CoPresence Total
+# You can change accordingly the keyword below \n
+#
+# NOTE : Becareful when we run the code below and so on. Because it has the same variable names with the above section (SPGQ Total and Eye conditions : Averted, direct, and natural)
 
 # %%
 # NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
 # later on remove -2, all data of EEG has been processed
-df_averted_pre_empathy_list = list(df_averted_pre["Empathy SPGQ"][:-2])
-df_averted_post_empathy_list = list(df_averted_post["Empathy SPGQ"][:-2])
-df_direct_pre_empathy_list = list(df_direct_pre["Empathy SPGQ"][:-2])
-df_direct_post_empathy_list = list(df_direct_post["Empathy SPGQ"][:-2])
-df_natural_pre_empathy_list = list(df_natural_pre["Empathy SPGQ"][:-2])
-df_natural_post_empathy_list = list(df_natural_post["Empathy SPGQ"][:-2])
+df_averted_pre_list = list(df_averted_pre["Behavioural SPGQ"][:-2])
+df_averted_post_list = list(df_averted_post["Behavioural SPGQ"][:-2])
+df_direct_pre_list = list(df_direct_pre["Behavioural SPGQ"][:-2])
+df_direct_post_list = list(df_direct_post["Behavioural SPGQ"][:-2])
+df_natural_pre_list = list(df_natural_pre["Behavioural SPGQ"][:-2])
+df_natural_post_list = list(df_natural_post["Behavioural SPGQ"][:-2])
 
 
-df_averted_pre_empathy_combined = []
-df_direct_pre_empathy_combined = []
-df_natural_pre_empathy_combined = []
+df_averted_pre_combined = []
+df_direct_pre_combined = []
+df_natural_pre_combined = []
 
-df_averted_post_empathy_combined = []
-df_direct_post_empathy_combined = []
-df_natural_post_empathy_combined = []
+df_averted_post_combined = []
+df_direct_post_combined = []
+df_natural_post_combined = []
 
 begin = 0
-end = len(df_averted_pre_empathy_list)
+end = len(df_averted_pre_list)
 step = 2
 for idx in range(begin, end, step):
     # Pre conditions
-    df_averted_pre_empathy_combined.append((df_averted_pre_empathy_list[idx] + df_averted_pre_empathy_list[idx+1]) / 2)
-    df_direct_pre_empathy_combined.append((df_direct_pre_empathy_list[idx] + df_direct_pre_empathy_list[idx+1]) / 2)
-    df_natural_pre_empathy_combined.append((df_natural_pre_empathy_list[idx] + df_natural_pre_empathy_list[idx+1]) / 2)
+    df_averted_pre_combined.append((df_averted_pre_list[idx] + df_averted_pre_list[idx+1]) / 2)
+    df_direct_pre_combined.append((df_direct_pre_list[idx] + df_direct_pre_list[idx+1]) / 2)
+    df_natural_pre_combined.append((df_natural_pre_list[idx] + df_natural_pre_list[idx+1]) / 2)
 
     # Post conditions
-    df_averted_post_empathy_combined.append((df_averted_post_empathy_list[idx] + df_averted_post_empathy_list[idx+1]) / 2)
-    df_direct_post_empathy_combined.append((df_direct_post_empathy_list[idx] + df_direct_post_empathy_list[idx+1]) / 2)
-    df_natural_post_empathy_combined.append((df_natural_post_empathy_list[idx] + df_natural_post_empathy_list[idx+1]) / 2)
+    df_averted_post_combined.append((df_averted_post_list[idx] + df_averted_post_list[idx+1]) / 2)
+    df_direct_post_combined.append((df_direct_post_list[idx] + df_direct_post_list[idx+1]) / 2)
+    df_natural_post_combined.append((df_natural_post_list[idx] + df_natural_post_list[idx+1]) / 2)
 
-# Substract post and pre score of Empathy SPGQ
-substracted_averted_empathy = [averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_empathy_combined, df_averted_pre_empathy_combined)]
-substracted_direct_empathy = [direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_empathy_combined, df_direct_pre_empathy_combined)]
-substracted_natural_empathy = [natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_empathy_combined, df_natural_pre_empathy_combined)]
+# Substract post and pre score of Behavioural SPGQ
+substracted_averted = [averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_combined, df_averted_pre_combined)]
+substracted_direct = [direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_combined, df_direct_pre_combined)]
+substracted_natural = [natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_combined, df_natural_pre_combined)]
 
 
 # %% [markdown]
-# ### Correlation empathy and averted
+# ### Correlation xxx and averted
 
 # %%
 print("Averted")
 for i in range(len(diff_averted)):
-    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted_empathy)}")
+    print(F"{i}, {pearsonr(diff_averted[i], substracted_averted)}")
+
+# %% [markdown]
+# ### Correlation xxx and direct
 
 # %%
-df_averted_pre.columns
+""" NOTE :
+Significant correlation between SPGQ and Direct eye conditions (EEG) in : 
+ 
+ Coherence
+  - total_sig_coh_theta_connections
+  - total_sig_coh_beta_connections
+  - total_sig_coh_gamma_connections
+  PLV
+  - total_sig_plv_gamma_connections
+"""
+
+print("Direct")
+for i in range(len(diff_direct)):
+    print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
+
+# %% [markdown]
+# #### Plot PLV gamma & Behavioral SPGQ
+
+# %%
+# adds the title
+plt.title('Correlation of Inter-brain connection & Behavioral SPGQ')
+
+# plot the data
+plt.scatter(diff_direct[11], substracted_direct)
+
+# fits the best fitting line to the data
+plt.plot(np.unique(diff_direct[11]),
+		np.poly1d(np.polyfit(diff_direct[11], substracted_direct, 1))
+		(np.unique(diff_direct[11])), color='red')
+
+# Labelling axes
+plt.xlabel('Number of connections (Gamma - PLV)')
+plt.ylabel('Behavioral SPGQ')
+
+
+# %% [markdown]
+# ### Correlation xxx and natural
+
+# %%
+print("Natural")
+for i in range(len(diff_natural)):
+    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
 
 # %% [markdown]
 # ## Statistical Summary
