@@ -912,12 +912,12 @@ def total_significant_connections(path: str):
 # ### Run function of total significant connections
 
 # %%
-path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
-path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post/"
-path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre/"
-path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post/"
-path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/"
-path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/"
+path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre_24/"
+path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post_24/"
+path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre_24/"
+path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post_24/"
+path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre_24/"
+path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post_24/"
 
 averted_post = total_significant_connections(path_dir_averted_post)
 averted_pre = total_significant_connections(path_dir_averted_pre)
@@ -926,14 +926,14 @@ direct_pre = total_significant_connections(path_dir_direct_pre)
 natural_post = total_significant_connections(path_dir_natural_post)
 natural_pre = total_significant_connections(path_dir_natural_pre)
 
-print(averted_post[4])
-print(averted_pre[4])
-print("")
-print(direct_post[4])
-print(direct_pre[4])
-print("")
-print(natural_post[4])
-print(natural_pre[4])
+# print(averted_post[8])
+# print(averted_pre[8])
+# print("")
+# print(direct_post[8])
+# print(direct_pre[8])
+# print("")
+# print(natural_post[8])
+# print(natural_pre[8])
 
 # %% [markdown]
 # ### Find difference of number of connections between pre and post 
@@ -960,35 +960,140 @@ diff_natural = []
 for i in range(12): # NOTE : 12 means there are 12 outputs that are resulted 
                               # from the function significant connection
                               # as well as get average score
-    diff_averted.append([x -y for x,y in zip(averted_post[i], averted_pre[i])])
+    diff_averted.append([np.abs(x -y) for x,y in zip(averted_post[i], averted_pre[i])])
 
-    diff_direct.append([x -y for x,y in zip(direct_post[i], direct_pre[i])])
+    diff_direct.append([np.abs(x -y) for x,y in zip(direct_post[i], direct_pre[i])])
 
-    diff_natural.append([x -y for x,y in zip(natural_post[i], natural_pre[i])])
+    diff_natural.append([np.abs(x -y) for x,y in zip(natural_post[i], natural_pre[i])])
 
 
 # %% [markdown]
-# ### Find average actual scores of each pair (ccorr, coh, and plv)
+# ### Find average of number of connections between pre and post 
+# NOTE : The variable name is exactly the same with section 2.1 . Make sure you run the function of total_significant_connections first !!. 
+#
+# IMPORTANT : Change no. 9 to whatever condition that you want to test. See the multiple output of total_significant_connections function
+
+# %%
+# Average of connections between pre and post for each eye condition, combination algorithm and frequency
+""" 
+NOTE : Read the notes below to understand the structure of the three variables below
+
+These are the order of list for each eye condition (diff_averted, diff_direct, diff_natural)
+total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections 
+
+"""
+
+averted_avg = []
+direct_avg = []
+natural_avg = []
+
+for i in range(12): # NOTE : 12 means there are 12 outputs that are resulted 
+                              # from the function significant connection
+                              # as well as get average score
+    averted_avg.append([(x+y)/2 for x,y in zip(averted_post[i], averted_pre[i])])
+
+    direct_avg.append([(x+y)/2 for x,y in zip(direct_post[i], direct_pre[i])])
+
+    natural_avg.append([(x+y)/2 for x,y in zip(natural_post[i], natural_pre[i])])
 
 # %% [markdown]
 # ## Correlation
 
 # %% [markdown]
-# #### SPGQ & CoPresence Correlation
+# ### Combine SPGQ Total score of subject1 & 2, etc..
+#
 
 # %%
-corr_spgq_copresence_averted_post = pearsonr(averted_post_spgq, copresence_averted_post)
-print(f"Correlation SPGQ & CoPresence averted post {corr_spgq_copresence_averted_post}")
-print(" ")
-corr_spgq_copresence_direct_post = pearsonr(direct_post_spgq, copresence_direct_post)
-print(f"Correlation SPGQ & CoPresence direct post{corr_spgq_copresence_direct_post}")
-print(" ")
-corr_spgq_copresence_natural_post = pearsonr(natural_post_spgq, copresence_natural_post)
-print(f"Correlation SPGQ & CoPresence natural post{corr_spgq_copresence_natural_post}")
+# NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
+# later on remove -2, all data of EEG has been processed
+df_averted_pre_list = list(df_averted_pre["SPGQ Total"][:-2])
+df_averted_post_list = list(df_averted_post["SPGQ Total"][:-2])
+df_direct_pre_list = list(df_direct_pre["SPGQ Total"][:-2])
+df_direct_post_list = list(df_direct_post["SPGQ Total"][:-2])
+df_natural_pre_list = list(df_natural_pre["SPGQ Total"][:-2])
+df_natural_post_list = list(df_natural_post["SPGQ Total"][:-2])
+
+
+df_averted_pre_combined = []
+df_direct_pre_combined = []
+df_natural_pre_combined = []
+
+df_averted_post_combined = []
+df_direct_post_combined = []
+df_natural_post_combined = []
+
+begin = 0
+end = len(df_averted_pre_list)
+step = 2
+for idx in range(begin, end, step):
+    # Pre conditions
+    df_averted_pre_combined.append((df_averted_pre_list[idx] + df_averted_pre_list[idx+1]) / 2)
+    df_direct_pre_combined.append((df_direct_pre_list[idx] + df_direct_pre_list[idx+1]) / 2)
+    df_natural_pre_combined.append((df_natural_pre_list[idx] + df_natural_pre_list[idx+1]) / 2)
+
+    # Post conditions
+    df_averted_post_combined.append((df_averted_post_list[idx] + df_averted_post_list[idx+1]) / 2)
+    df_direct_post_combined.append((df_direct_post_list[idx] + df_direct_post_list[idx+1]) / 2)
+    df_natural_post_combined.append((df_natural_post_list[idx] + df_natural_post_list[idx+1]) / 2)
 
 
 # %% [markdown]
+# ### Create dataframe for the number of connections (post training only)
+
+# %%
+
+zipped_averted = list(zip(averted_post[-4], averted_post[-3], averted_post[-2], averted_post[-1], df_averted_post_combined ))
+df_averted_post = pd.DataFrame(zipped_averted, columns=["theta_averted", "alpha_averted",
+                                "beta_averted", "gamma_averted", "SPGQ_Total"])
+
+print("Averted Post Only")
+print(df_averted_post)
+print("")
+
+zipped_direct = list(zip(direct_post[-4], direct_post[-3], direct_post[-2], direct_post[-1], df_direct_post_combined ))
+df_direct_post = pd.DataFrame(zipped_direct, columns=["theta_direct", "alpha_direct",
+                                "beta_direct", "gamma_direct", "SPGQ_Total"])
+
+print("Direct Post Only")
+print(df_direct_post)
+print("")
+
+zipped_natural = list(zip(natural_post[-4], natural_post[-3], natural_post[-2], natural_post[-1], df_natural_post_combined ))
+df_natural_post = pd.DataFrame(zipped_natural, columns=["theta_natural", "alpha_natural",
+                                "beta_natural", "gamma_natural", "SPGQ_Total"])
+
+print("Natural Post Only")
+print(df_natural_post)
+
+# %% [markdown]
+# #### Correlation SPGQ and Averted Post
+
+# %%
+print("Averted")
+for i in range(len(averted_post)):
+    print(F"{i}, {pearsonr(averted_post[i], df_averted_post_combined)}")
+
+# %% [markdown]
+# #### Correlation SPGQ and Direct Post
+
+# %%
+print("direct")
+for i in range(len(direct_post)):
+    print(F"{i}, {pearsonr(direct_post[i], df_direct_post_combined)}")
+
+# %% [markdown]
+# #### Correlation SPGQ and Natural Post
+
+# %%
+print("natural")
+for i in range(len(natural_post)):
+    print(F"{i}, {pearsonr(natural_post[i], df_natural_post_combined)}")
+
+# %% [markdown]
 # ### Combine SPGQ Total score of subject1 & 2, etc..
+# NOTE : With subtraction of post and pre
 
 # %%
 # NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
@@ -1024,18 +1129,69 @@ for idx in range(begin, end, step):
     df_natural_post_combined.append((df_natural_post_list[idx] + df_natural_post_list[idx+1]) / 2)
 
 # Substract post and pre score of SPGQ Total
-substracted_averted = [averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_combined, df_averted_pre_combined)]
-substracted_direct = [direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_combined, df_direct_pre_combined)]
-substracted_natural = [natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_combined, df_natural_pre_combined)]
+substracted_averted = np.abs([averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_combined, df_averted_pre_combined)])
+substracted_direct = np.abs([direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_combined, df_direct_pre_combined)])
+substracted_natural = np.abs([natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_combined, df_natural_pre_combined)])
 
 
 # %% [markdown]
-# ### Correlation SPGQ and Averted
+# ### Create dataframe for the number of connections and SPGQ questionnaire (taking into account pre-training connections and SPGQ score as well)
+# By substracting post - pre for both number of connections as well as SPGQ questionnaire
+
+# %%
+
+zipped_averted_diff = list(zip(diff_averted[-4], diff_averted[-3], diff_averted[-2], diff_averted[-1], substracted_averted ))
+df_averted_post_diff = pd.DataFrame(zipped_averted_diff, columns=["theta_averted", "alpha_averted",
+                                "beta_averted", "gamma_averted", "SPGQ_Total"])
+
+print("Averted Post normalized")
+print(df_averted_post_diff)
+print("")
+
+zipped_direct_diff = list(zip(diff_direct[-4], diff_direct[-3], diff_direct[-2], diff_direct[-1], substracted_direct ))
+df_direct_post_diff = pd.DataFrame(zipped_direct_diff, columns=["theta_direct", "alpha_direct",
+                                "beta_direct", "gamma_direct", "SPGQ_Total"])
+
+print("direct Post normalized")
+print(df_direct_post_diff)
+print("")
+
+zipped_natural_diff = list(zip(diff_natural[-4], diff_natural[-3], diff_natural[-2], diff_natural[-1], substracted_natural ))
+df_natural_post_diff = pd.DataFrame(zipped_natural_diff, columns=["theta_natural", "alpha_natural",
+                                "beta_natural", "gamma_natural", "SPGQ_Total"])
+
+print("natural Post normalized")
+print(df_natural_post_diff)
+print("")
+
+
+
+# %% [markdown]
+# ### Correlation SPGQ and Averted *
 
 # %%
 print("Averted")
 for i in range(len(diff_averted)):
     print(F"{i}, {pearsonr(diff_averted[i], substracted_averted)}")
+
+# %% [markdown]
+# #### Plot PLV beta & SPGQ Total
+
+# %%
+# adds the title
+plt.title('Correlation of Averted eye and SPGQ')
+
+# plot the data
+plt.scatter(diff_averted[10], substracted_averted)
+
+# fits the best fitting line to the data
+plt.plot(np.unique(diff_averted[10]),
+		np.poly1d(np.polyfit(diff_averted[10], substracted_averted, 1))
+		(np.unique(diff_averted[10])), color='red')
+
+# Labelling axes
+plt.xlabel('Number of connections (Beta - PLV)')
+plt.ylabel('SPGQ')
 
 # %% [markdown]
 # ### Sig. Correlation SPGQ and Direct *
@@ -1057,11 +1213,30 @@ for i in range(len(diff_direct)):
     print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
 
 # %% [markdown]
+# #### Plot PLV beta & SPGQ Total
+
+# %%
+# adds the title
+plt.title('Correlation of Direct eye and SPGQ')
+
+# plot the data
+plt.scatter(diff_direct[10], substracted_direct)
+
+# fits the best fitting line to the data
+plt.plot(np.unique(diff_direct[10]),
+		np.poly1d(np.polyfit(diff_direct[10], substracted_direct, 1))
+		(np.unique(diff_direct[10])), color='red')
+
+# Labelling axes
+plt.xlabel('Number of connections (Beta - PLV)')
+plt.ylabel('SPGQ')
+
+# %% [markdown]
 # #### Plot PLV gamma & SPGQ Total
 
 # %%
 # adds the title
-plt.title('Correlation of inter-brain connections and SPGQ')
+plt.title('Correlation of Direct eye and SPGQ')
 
 # plot the data
 plt.scatter(diff_direct[11], substracted_direct)
@@ -1183,6 +1358,11 @@ plt.ylabel('Behavioral SPGQ')
 print("Natural")
 for i in range(len(diff_natural)):
     print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
+
+# %% [markdown]
+# ## Count average significant actual score of each connection (Direct eye)
+
+# %%
 
 # %% [markdown]
 # ## Statistical Summary
