@@ -121,13 +121,13 @@ for idx, file in enumerate(averted_pre_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
+    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural"] = df["Answer"][13:21].sum()
+    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
+    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -168,13 +168,13 @@ for idx, file in enumerate(averted_post_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
+    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural"] = df["Answer"][13:21].sum()
+    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
+    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -213,13 +213,13 @@ for idx, file in enumerate(direct_pre_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
+    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural"] = df["Answer"][13:21].sum()
+    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
+    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -258,13 +258,13 @@ for idx, file in enumerate(direct_post_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
+    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural"] = df["Answer"][13:21].sum()
+    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
+    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -303,13 +303,13 @@ for idx, file in enumerate(natural_pre_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
+    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural"] = df["Answer"][13:21].sum()
+    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
+    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -348,13 +348,13 @@ for idx, file in enumerate(natural_post_questions):
     df["Empathy SPGQ"] = df["Answer"][:7].sum()
 
     # Sum subscore of negative feeling
-    df["Behavioural SPGQ"] = df["Answer"][7:13].sum()
+    df["NegativeFeelings SPGQ"] = df["Answer"][7:13].sum()
 
     # Sum subscore of behavioral
-    df["Behavioural"] = df["Answer"][13:21].sum()
+    df["Behavioural SPGQ"] = df["Answer"][13:21].sum()
 
     # Total score of SPGQ
-    subscales_spgq = ["Empathy SPGQ", "Behavioural SPGQ", "Behavioural"]
+    subscales_spgq = ["Empathy SPGQ", "NegativeFeelings SPGQ", "Behavioural SPGQ"]
     df["SPGQ Total"] = df[subscales_spgq].sum(axis=1)
 
     # Total score of copresence
@@ -373,145 +373,6 @@ df_natural_post = pd.concat(natural_post_all_data_list, ignore_index=True)
 df_natural_post.head()
 
     
-
-# %% [markdown]
-# ## Checking normal distribution
-
-# %% [markdown]
-# ### Averted pre & Averted post
-
-# %%
-# averted pre
-print("averted pre")
-print(stats.normaltest(df_averted_pre["SPGQ Total"]))
-# averted post
-print("averted post")
-print(stats.normaltest(df_averted_post["SPGQ Total"]))
-# direct pre
-print("direct pre")
-print(stats.normaltest(df_direct_pre["SPGQ Total"]))
-# direct post - not normally distributed
-print("direct post - not normally distributed")
-print(stats.normaltest(df_direct_post["SPGQ Total"]))
-# natural pre
-print("natural pre")
-print(stats.normaltest(df_natural_pre["SPGQ Total"]))
-# natural post - not normally distributed
-print("natural post - not normally distributed")
-print(stats.normaltest(df_natural_post["SPGQ Total"]))
-
-# %% [markdown]
-# ## T-test
-
-# %% [markdown]
-# ### SPGQ T-test averted pre vs averted post (Sig*)
-
-# %%
-spgq_averted_pre = df_averted_pre["SPGQ Total"]
-spgq_averted_post = df_averted_post["SPGQ Total"]
-result_averted_spgq_pre_vs_spgq_post = ttest_rel(spgq_averted_pre, spgq_averted_post)
-
-print(f"means of SPGQ averted_pre : {np.mean(spgq_averted_pre)}")
-print(f"means of SPGQ averted_post : {np.mean(spgq_averted_post)}")
-print(result_averted_spgq_pre_vs_spgq_post)
-
-# %% [markdown]
-# ### SPGQ T-test direct pre vs direct post (Sig*)
-
-# %%
-spgq_direct_pre = df_direct_pre["SPGQ Total"]
-spgq_direct_post = df_direct_post["SPGQ Total"]
-result_direct_spgq_pre_vs_spgq_post = ttest_rel(spgq_direct_pre, spgq_direct_post)
-
-print(f"means of SPGQ direct_pre : {np.mean(spgq_direct_pre)}")
-print(f"means of SPGQ direct_post : {np.mean(spgq_direct_post)}")
-print(result_direct_spgq_pre_vs_spgq_post)
-
-# %% [markdown]
-# ### SPGQ T-test natural pre vs natural post (Sig*)
-
-# %%
-spgq_natural_pre = df_natural_pre["SPGQ Total"]
-spgq_natural_post = df_natural_post["SPGQ Total"]
-result_direct_spgq_pre_vs_spgq_post = ttest_rel(spgq_natural_pre, spgq_natural_post)
-std_natural_pre = df_natural_pre["SPGQ Total"].std()
-std_natural_post = df_natural_post["SPGQ Total"].std()
-
-print(f"means of SPGQ natural_pre : {np.mean(spgq_natural_pre)}, SD = {std_natural_pre}")
-print(f"means of SPGQ natural_post : {np.mean(spgq_natural_post)}, SD = {std_natural_post}")
-print(result_direct_spgq_pre_vs_spgq_post)
-
-# %% [markdown]
-# ### CoPresence T-test averted pre vs averted post
-
-# %%
-copresence_averted_pre = df_averted_pre["CoPresence Total"]
-copresence_averted_post = df_averted_post["CoPresence Total"]
-result_averted_copresence_pre_vs_copresence_post = ttest_rel(copresence_averted_pre, copresence_averted_post)
-
-print(f"means of CoPresence averted_pre : {np.mean(copresence_averted_pre)}")
-print(f"means of CoPresence averted_post : {np.mean(copresence_averted_post)}")
-print(result_averted_copresence_pre_vs_copresence_post)
-
-# %% [markdown]
-# ### CoPresence T-test direct pre vs direct post
-
-# %%
-copresence_direct_pre = df_direct_pre["CoPresence Total"]
-copresence_direct_post = df_direct_post["CoPresence Total"]
-result_direct_copresence_pre_vs_copresence_post = ttest_rel(copresence_direct_pre, copresence_direct_post)
-
-print(f"means of CoPresence direct_pre : {np.mean(copresence_direct_pre)}")
-print(f"means of CoPresence direct_post : {np.mean(copresence_direct_post)}")
-print(result_direct_copresence_pre_vs_copresence_post)
-
-# %% [markdown]
-# ### CoPresence T-test natural pre vs natural post (Sig*)
-
-# %%
-copresence_natural_pre = df_natural_pre["CoPresence Total"]
-copresence_natural_post = df_natural_post["CoPresence Total"]
-result_natural_copresence_pre_vs_copresence_post = ttest_rel(copresence_natural_pre, copresence_natural_post)
-
-print(f"means of CoPresence natural_pre : {np.mean(copresence_natural_pre)}")
-print(f"means of CoPresence natural_post : {np.mean(copresence_natural_post)}")
-print(result_natural_copresence_pre_vs_copresence_post)
-
-# %% [markdown]
-# ### Empathy T-test averted pre vs averted post
-
-# %%
-empathy_averted_pre = df_averted_pre["Empathy SPGQ"]
-empathy_averted_post = df_averted_post["Empathy SPGQ"]
-result_averted_empathy_pre_vs_empathy_post = ttest_rel(empathy_averted_pre, empathy_averted_post)
-
-print(f"means of empathy  averted_pre : {np.mean(empathy_averted_pre)}")
-print(f"means of empathy  averted_post : {np.mean(empathy_averted_post)}")
-print(result_averted_empathy_pre_vs_empathy_post)
-
-# %% [markdown]
-# ### Empathy T-test direct pre vs direct post (Sig*)
-
-# %%
-empathy_direct_pre = df_direct_pre["Empathy SPGQ"]
-empathy_direct_post = df_direct_post["Empathy SPGQ"]
-result_direct_empathy_pre_vs_empathy_post = ttest_rel(empathy_direct_pre, empathy_direct_post)
-
-print(f"means of empathy  direct_pre : {np.mean(empathy_direct_pre)}")
-print(f"means of empathy  direct_post : {np.mean(empathy_direct_post)}")
-print(result_direct_empathy_pre_vs_empathy_post)
-
-# %% [markdown]
-# ### Empathy T-test natural pre vs natural post (Sig*)
-
-# %%
-empathy_natural_pre = df_natural_pre["Empathy SPGQ"]
-empathy_natural_post = df_natural_post["Empathy SPGQ"]
-result_natural_empathy_pre_vs_empathy_post = ttest_rel(empathy_natural_pre, empathy_natural_post)
-
-print(f"means of empathy  natural_pre : {np.mean(empathy_natural_pre)}")
-print(f"means of empathy  natural_post : {np.mean(empathy_natural_post)}")
-print(result_natural_empathy_pre_vs_empathy_post)
 
 # %% [markdown]
 # ## Combine all dataframes and put in different combinations so that it is ready for ANCOVA
@@ -638,128 +499,13 @@ df_all_eyes = pd.DataFrame({"Subject" : subject,
 
 df_all_eyes.head()
 
+
 # %% [markdown]
 # ## ANOVA
 
 # %% [markdown]
 # ### ANOVA Eye Gaze post test (Averted, Direct, & Natural)
 # Parametric test.
-
-# %%
-# Get some data of SPGQ from each post test of eye condition
-averted_post_spgq = df_averted_post["SPGQ Total"]
-direct_post_spgq = df_direct_post["SPGQ Total"]
-natural_post_spgq = df_natural_post["SPGQ Total"]
-
-# Conduct the one-way ANOVA
-print(f"means of averted post SPGQ : {np.mean(averted_post_spgq)}")
-print(f"means of direct post SPGQ : {np.mean(direct_post_spgq)}")
-print(f"means of natural post SPGQ :{np.mean(natural_post_spgq)}")
-
-f_oneway(averted_post_spgq, direct_post_spgq, natural_post_spgq)
-
-# %% [markdown]
-# ### Friedman test Eye Gaze post test (Averted, Direct, & Natural)
-# Non-parametric test. This test is alternative to repeated measures ANOVA
-
-# %%
-# Get some data of SPGQ from each post test of eye condition
-averted_post_spgq = df_averted_post["SPGQ Total"]
-direct_post_spgq = df_direct_post["SPGQ Total"]
-natural_post_spgq = df_natural_post["SPGQ Total"]
-
-# Conduct the one-way ANOVA
-print(f"means of averted post SPGQ : {np.mean(averted_post_spgq)}")
-print(f"means of direct post SPGQ : {np.mean(direct_post_spgq)}")
-print(f"means of natural post SPGQ :{np.mean(natural_post_spgq)}")
-
-stats.friedmanchisquare(averted_post_spgq, direct_post_spgq, natural_post_spgq)
-
-# %% [markdown]
-# ### SPGQ Total score using pingouin package
-
-# %%
-res_spgq = pg.rm_anova(dv="SPGQTotal_Post", within="EyeGaze", subject="Subject", data=df_all_eyes,
-                   detailed=True)
-print(res_spgq)                   
-
-# %% [markdown]
-# ### Repeated measure ANOVA CoPresence using pingouin (Sig*)
-
-# %%
-res_copresence = pg.rm_anova(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
-                   detailed=True)
-print(res_copresence)                   
-
-# %% [markdown]
-# ## ANCOVA
-
-# %% [markdown]
-# ### SPGQ Total
-
-# %%
-#perform ANCOVA
-pg.ancova(data=df_all_eyes, dv='SPGQTotal_Post', covar='SPGQTotal_Pre', between='EyeGaze')
-
-
-# %% [markdown]
-# ### CoPResence Total
-
-# %%
-#perform ANCOVA
-pg.ancova(data=df_all_eyes, dv='CoPresence_Post', covar='CoPresence_Pre', between='EyeGaze')
-
-
-# %% [markdown]
-# ### Empathy SPGQ
-
-# %%
-#perform ANCOVA
-pg.ancova(data=df_all_eyes, dv='Empathy_Post', covar='Empathy_Pre', between='EyeGaze')
-
-# %% [markdown]
-# ### Negative feelings SPGQ
-
-# %%
-#perform ANCOVA
-pg.ancova(data=df_all_eyes, dv='NegativeFeelings_Post', covar='NegativeFeelings_Pre', between='EyeGaze')
-
-# %% [markdown]
-# ### Behavioural engagement SPGQ
-
-# %%
-#perform ANCOVA
-pg.ancova(data=df_all_eyes, dv='Behavioural_Post', covar='Behavioural_Pre', between='EyeGaze')
-
-# %% [markdown]
-# ## Posthoc Tests
-
-# %% [markdown]
-# ### Tukey's test CoPresence
-
-# %%
-# perform Tukey's test
-tukey = pairwise_tukeyhsd(endog=df_all_eyes_post["CoPresence"],
-                          groups=df_all_eyes_post['EyeGaze'],)
-
-print(tukey)
-
-# %% [markdown]
-# ### Benjamini/Hochberg FDR correction CoPresence using pingouin (Sig*)
-#
-
-# %%
-post_hoc_pingouin = pg.pairwise_tests(dv="CoPresence", within="EyeGaze", subject="Subject", data=df_all_eyes_post,
-                                        padjust="fdr_bh")
-
-print(post_hoc_pingouin)                                        
-
-# %% [markdown]
-# ### Scheffe test
-
-# %%
-sp.posthoc_scheffe(df_all_eyes_post, val_col='CoPresence', group_col='EyeGaze')
-
 
 # %% [markdown]
 # ## Functions
@@ -912,12 +658,12 @@ def total_significant_connections(path: str):
 # ### Run function of total significant connections
 
 # %%
-path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre_24/"
-path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post_24/"
-path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre_24/"
-path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post_24/"
-path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre_24/"
-path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post_24/"
+path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
+path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post/"
+path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre/"
+path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post/"
+path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre/"
+path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post/"
 
 averted_post = total_significant_connections(path_dir_averted_post)
 averted_pre = total_significant_connections(path_dir_averted_pre)
@@ -928,12 +674,111 @@ natural_pre = total_significant_connections(path_dir_natural_pre)
 
 # print(averted_post[8])
 # print(averted_pre[8])
+print(len(natural_pre[8]))
+print(len(natural_post[8]))
 # print("")
 # print(direct_post[8])
 # print(direct_pre[8])
 # print("")
 # print(natural_post[8])
 # print(natural_pre[8])
+
+# %% [markdown]
+# ### Combine all connections regardless of frequency
+
+# %%
+# Averted pre
+for idx, val in enumerate(averted_pre):
+    if idx == 8:
+        averted_pre_theta = averted_pre[idx]
+    elif idx == 9:
+        averted_pre_alpha = averted_pre[idx]
+    elif idx == 10:
+        averted_pre_beta = averted_pre[idx]
+    elif idx == 11:
+        averted_pre_gamma = averted_pre[idx]
+
+averted_pre_no_freq =  []
+for idx, val in enumerate(averted_pre_theta):
+    averted_pre_no_freq.append((averted_pre_theta[idx] + averted_pre_alpha[idx] + averted_pre_beta[idx] + averted_pre_gamma[idx]) / 4)
+    
+# Averted post
+for idx, val in enumerate(averted_post):
+    if idx == 8:
+        averted_post_theta = averted_post[idx]
+    elif idx == 9:
+        averted_post_alpha = averted_post[idx]
+    elif idx == 10:
+        averted_post_beta = averted_post[idx]
+    elif idx == 11:
+        averted_post_gamma = averted_post[idx]
+
+averted_post_no_freq =  []
+for idx, val in enumerate(averted_post_theta):
+    averted_post_no_freq.append((averted_post_theta[idx] + averted_post_alpha[idx] + averted_post_beta[idx] + averted_post_gamma[idx]) / 4)
+    
+
+# direct pre
+for idx, val in enumerate(direct_pre):
+    if idx == 8:
+        direct_pre_theta = direct_pre[idx]
+    elif idx == 9:
+        direct_pre_alpha = direct_pre[idx]
+    elif idx == 10:
+        direct_pre_beta = direct_pre[idx]
+    elif idx == 11:
+        direct_pre_gamma = direct_pre[idx]
+
+direct_pre_no_freq =  []
+for idx, val in enumerate(direct_pre_theta):
+    direct_pre_no_freq.append((direct_pre_theta[idx] + direct_pre_alpha[idx] + direct_pre_beta[idx] + direct_pre_gamma[idx]) / 4)
+    
+# direct post
+for idx, val in enumerate(direct_post):
+    if idx == 8:
+        direct_post_theta = direct_post[idx]
+    elif idx == 9:
+        direct_post_alpha = direct_post[idx]
+    elif idx == 10:
+        direct_post_beta = direct_post[idx]
+    elif idx == 11:
+        direct_post_gamma = direct_post[idx]
+
+direct_post_no_freq =  []
+for idx, val in enumerate(direct_post_theta):
+    direct_post_no_freq.append((direct_post_theta[idx] + direct_post_alpha[idx] + direct_post_beta[idx] + direct_post_gamma[idx]) / 4)
+    
+
+# natural pre
+for idx, val in enumerate(natural_pre):
+    if idx == 8:
+        natural_pre_theta = natural_pre[idx]
+    elif idx == 9:
+        natural_pre_alpha = natural_pre[idx]
+    elif idx == 10:
+        natural_pre_beta = natural_pre[idx]
+    elif idx == 11:
+        natural_pre_gamma = natural_pre[idx]
+
+natural_pre_no_freq =  []
+for idx, val in enumerate(natural_pre_theta):
+    natural_pre_no_freq.append((natural_pre_theta[idx] + natural_pre_alpha[idx] + natural_pre_beta[idx] + natural_pre_gamma[idx]) / 4)
+    
+# natural post
+for idx, val in enumerate(natural_post):
+    if idx == 8:
+        natural_post_theta = natural_post[idx]
+    elif idx == 9:
+        natural_post_alpha = natural_post[idx]
+    elif idx == 10:
+        natural_post_beta = natural_post[idx]
+    elif idx == 11:
+        natural_post_gamma = natural_post[idx]
+
+natural_post_no_freq =  []
+for idx, val in enumerate(natural_post_theta):
+    natural_post_no_freq.append((natural_post_theta[idx] + natural_post_alpha[idx] + natural_post_beta[idx] + natural_post_gamma[idx]) / 4)
+    
 
 # %% [markdown]
 # ### Find difference of number of connections between pre and post 
@@ -957,46 +802,22 @@ diff_averted = []
 diff_direct = []
 diff_natural = []
 
-for i in range(12): # NOTE : 12 means there are 12 outputs that are resulted 
-                              # from the function significant connection
-                              # as well as get average score
+for i in range(len(averted_pre)): # NOTE : The length is 12 means there are 12 outputs 
+                                  # that are resulted from the function significant connection
+                                  # as well as get average score. Just pick up averted_pre variable
     diff_averted.append([np.abs(x -y) for x,y in zip(averted_post[i], averted_pre[i])])
 
     diff_direct.append([np.abs(x -y) for x,y in zip(direct_post[i], direct_pre[i])])
 
     diff_natural.append([np.abs(x -y) for x,y in zip(natural_post[i], natural_pre[i])])
 
+    # Without abs
+    # diff_averted.append([x -y for x,y in zip(averted_post[i], averted_pre[i])])
 
-# %% [markdown]
-# ### Find average of number of connections between pre and post 
-# NOTE : The variable name is exactly the same with section 2.1 . Make sure you run the function of total_significant_connections first !!. 
-#
-# IMPORTANT : Change no. 9 to whatever condition that you want to test. See the multiple output of total_significant_connections function
+    # diff_direct.append([x -y for x,y in zip(direct_post[i], direct_pre[i])])
 
-# %%
-# Average of connections between pre and post for each eye condition, combination algorithm and frequency
-""" 
-NOTE : Read the notes below to understand the structure of the three variables below
+    # diff_natural.append([x -y for x,y in zip(natural_post[i], natural_pre[i])])
 
-These are the order of list for each eye condition (diff_averted, diff_direct, diff_natural)
-total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
-total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
-total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections 
-
-"""
-
-averted_avg = []
-direct_avg = []
-natural_avg = []
-
-for i in range(12): # NOTE : 12 means there are 12 outputs that are resulted 
-                              # from the function significant connection
-                              # as well as get average score
-    averted_avg.append([(x+y)/2 for x,y in zip(averted_post[i], averted_pre[i])])
-
-    direct_avg.append([(x+y)/2 for x,y in zip(direct_post[i], direct_pre[i])])
-
-    natural_avg.append([(x+y)/2 for x,y in zip(natural_post[i], natural_pre[i])])
 
 # %% [markdown]
 # ## Correlation
@@ -1098,12 +919,19 @@ for i in range(len(natural_post)):
 # %%
 # NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
 # later on remove -2, all data of EEG has been processed
-df_averted_pre_list = list(df_averted_pre["SPGQ Total"][:-2])
-df_averted_post_list = list(df_averted_post["SPGQ Total"][:-2])
-df_direct_pre_list = list(df_direct_pre["SPGQ Total"][:-2])
-df_direct_post_list = list(df_direct_post["SPGQ Total"][:-2])
-df_natural_pre_list = list(df_natural_pre["SPGQ Total"][:-2])
-df_natural_post_list = list(df_natural_post["SPGQ Total"][:-2])
+# df_averted_pre_list = list(df_averted_pre["SPGQ Total"][:-2])
+# df_averted_post_list = list(df_averted_post["SPGQ Total"][:-2])
+# df_direct_pre_list = list(df_direct_pre["SPGQ Total"][:-2])
+# df_direct_post_list = list(df_direct_post["SPGQ Total"][:-2])
+# df_natural_pre_list = list(df_natural_pre["SPGQ Total"][:-2])
+# df_natural_post_list = list(df_natural_post["SPGQ Total"][:-2])
+
+df_averted_pre_list = df_averted_pre["SPGQ Total"].tolist()
+df_averted_post_list = df_averted_post["SPGQ Total"].tolist()
+df_direct_pre_list = df_direct_pre["SPGQ Total"].tolist()
+df_direct_post_list = df_direct_post["SPGQ Total"].tolist()
+df_natural_pre_list = df_natural_pre["SPGQ Total"].tolist()
+df_natural_post_list = df_natural_post["SPGQ Total"].tolist()
 
 
 df_averted_pre_combined = []
@@ -1133,6 +961,11 @@ substracted_averted = np.abs([averted_post - averted_pre for averted_post, avert
 substracted_direct = np.abs([direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_combined, df_direct_pre_combined)])
 substracted_natural = np.abs([natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_combined, df_natural_pre_combined)])
 
+# No absolute value
+# substracted_averted = [averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_combined, df_averted_pre_combined)]
+# substracted_direct = [direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_combined, df_direct_pre_combined)]
+# substracted_natural = [natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_combined, df_natural_pre_combined)]
+
 
 # %% [markdown]
 # ### Create dataframe for the number of connections and SPGQ questionnaire (taking into account pre-training connections and SPGQ score as well)
@@ -1140,7 +973,7 @@ substracted_natural = np.abs([natural_post - natural_pre for natural_post, natur
 
 # %%
 
-zipped_averted_diff = list(zip(diff_averted[-4], diff_averted[-3], diff_averted[-2], diff_averted[-1], substracted_averted ))
+zipped_averted_diff = list(zip(diff_averted[-4], diff_averted[-3], diff_averted[-2], diff_averted[-1], substracted_averted) )
 df_averted_post_diff = pd.DataFrame(zipped_averted_diff, columns=["theta_averted", "alpha_averted",
                                 "beta_averted", "gamma_averted", "SPGQ_Total"])
 
@@ -1148,7 +981,7 @@ print("Averted Post normalized")
 print(df_averted_post_diff)
 print("")
 
-zipped_direct_diff = list(zip(diff_direct[-4], diff_direct[-3], diff_direct[-2], diff_direct[-1], substracted_direct ))
+zipped_direct_diff = list(zip(diff_direct[-4], diff_direct[-3], diff_direct[-2], diff_direct[-1], substracted_direct)) 
 df_direct_post_diff = pd.DataFrame(zipped_direct_diff, columns=["theta_direct", "alpha_direct",
                                 "beta_direct", "gamma_direct", "SPGQ_Total"])
 
@@ -1156,7 +989,7 @@ print("direct Post normalized")
 print(df_direct_post_diff)
 print("")
 
-zipped_natural_diff = list(zip(diff_natural[-4], diff_natural[-3], diff_natural[-2], diff_natural[-1], substracted_natural ))
+zipped_natural_diff = list(zip(diff_natural[-4], diff_natural[-3], diff_natural[-2], diff_natural[-1], substracted_natural))
 df_natural_post_diff = pd.DataFrame(zipped_natural_diff, columns=["theta_natural", "alpha_natural",
                                 "beta_natural", "gamma_natural", "SPGQ_Total"])
 
@@ -1195,6 +1028,22 @@ plt.ylabel('SPGQ')
 
 # %% [markdown]
 # ### Sig. Correlation SPGQ and Direct *
+
+# %%
+""" NOTE :
+Significant correlation between SPGQ and Direct eye conditions (EEG) in : 
+ 
+ Coherence
+  - total_sig_coh_theta_connections
+  - total_sig_coh_beta_connections
+  - total_sig_coh_gamma_connections
+  PLV
+  - total_sig_plv_gamma_connections
+"""
+
+print("Direct")
+for i in range(len(diff_direct)):
+    print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
 
 # %%
 """ NOTE :
@@ -1259,6 +1108,11 @@ print("Natural")
 for i in range(len(diff_natural)):
     print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
 
+# %%
+print("Natural")
+for i in range(len(diff_natural)):
+    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
+
 # %% [markdown]
 # ### Combine Empathy SPGQ/NegativeFeelings SPGQ/Behavioural SPGQ/CoPresence Total
 # You can change accordingly the keyword below \n
@@ -1268,13 +1122,19 @@ for i in range(len(diff_natural)):
 # %%
 # NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
 # later on remove -2, all data of EEG has been processed
-df_averted_pre_list = list(df_averted_pre["Behavioural SPGQ"][:-2])
-df_averted_post_list = list(df_averted_post["Behavioural SPGQ"][:-2])
-df_direct_pre_list = list(df_direct_pre["Behavioural SPGQ"][:-2])
-df_direct_post_list = list(df_direct_post["Behavioural SPGQ"][:-2])
-df_natural_pre_list = list(df_natural_pre["Behavioural SPGQ"][:-2])
-df_natural_post_list = list(df_natural_post["Behavioural SPGQ"][:-2])
+# df_averted_pre_list = list(df_averted_pre["NegativeFeelings SPGQ"][:-2])
+# df_averted_post_list = list(df_averted_post["NegativeFeelings SPGQ"][:-2])
+# df_direct_pre_list = list(df_direct_pre["NegativeFeelings SPGQ"][:-2])
+# df_direct_post_list = list(df_direct_post["NegativeFeelings SPGQ"][:-2])
+# df_natural_pre_list = list(df_natural_pre["NegativeFeelings SPGQ"][:-2])
+# df_natural_post_list = list(df_natural_post["NegativeFeelings SPGQ"][:-2])
 
+df_averted_pre_list = list(df_averted_pre["NegativeFeelings SPGQ"])
+df_averted_post_list = list(df_averted_post["NegativeFeelings SPGQ"])
+df_direct_pre_list = list(df_direct_pre["NegativeFeelings SPGQ"])
+df_direct_post_list = list(df_direct_post["NegativeFeelings SPGQ"])
+df_natural_pre_list = list(df_natural_pre["NegativeFeelings SPGQ"])
+df_natural_post_list = list(df_natural_post["NegativeFeelings SPGQ"])
 
 df_averted_pre_combined = []
 df_direct_pre_combined = []
@@ -1298,11 +1158,14 @@ for idx in range(begin, end, step):
     df_direct_post_combined.append((df_direct_post_list[idx] + df_direct_post_list[idx+1]) / 2)
     df_natural_post_combined.append((df_natural_post_list[idx] + df_natural_post_list[idx+1]) / 2)
 
-# Substract post and pre score of Behavioural SPGQ
+# Substract post and pre score of NegativeFeelings SPGQ
 substracted_averted = [averted_post - averted_pre for averted_post, averted_pre in zip(df_averted_post_combined, df_averted_pre_combined)]
 substracted_direct = [direct_post - direct_pre for direct_post, direct_pre in zip(df_direct_post_combined, df_direct_pre_combined)]
 substracted_natural = [natural_post - natural_pre for natural_post, natural_pre in zip(df_natural_post_combined, df_natural_pre_combined)]
 
+
+# %%
+df_averted_post.columns
 
 # %% [markdown]
 # ### Correlation xxx and averted
