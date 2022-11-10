@@ -375,139 +375,6 @@ df_natural_post.head()
     
 
 # %% [markdown]
-# ## Combine all dataframes and put in different combinations so that it is ready for ANCOVA
-
-# %%
-# Since empathy, negative feelings and behavioral engagement are not yet extracted
-# into series from dataframe, then we do it here
-
-# Empathy pre
-empathy_averted_pre =  df_averted_pre["Empathy SPGQ"]
-empathy_averted_post =  df_averted_post["Empathy SPGQ"]
-empathy_direct_pre =  df_direct_pre["Empathy SPGQ"]
-empathy_direct_post =  df_direct_post["Empathy SPGQ"]
-empathy_natural_pre =  df_natural_pre["Empathy SPGQ"]
-empathy_natural_post =  df_natural_post["Empathy SPGQ"]
-
-# Negative feelings
-negative_feelings_averted_pre =  df_averted_pre["Behavioural SPGQ"]
-negative_feelings_averted_post =  df_averted_post["Behavioural SPGQ"]
-negative_feelings_direct_pre =  df_direct_pre["Behavioural SPGQ"]
-negative_feelings_direct_post =  df_direct_post["Behavioural SPGQ"]
-negative_feelings_natural_pre =  df_natural_pre["Behavioural SPGQ"]
-negative_feelings_natural_post =  df_natural_post["Behavioural SPGQ"]
-
-# Behavioural engagement
-behavioural_averted_pre =  df_averted_pre["Behavioural"]
-behavioural_averted_post =  df_averted_post["Behavioural"]
-behavioural_direct_pre =  df_direct_pre["Behavioural"]
-behavioural_direct_post =  df_direct_post["Behavioural"]
-behavioural_natural_pre =  df_natural_pre["Behavioural"]
-behavioural_natural_post =  df_natural_post["Behavioural"]
-
-
-# Define all lists
-empathy_pre_spgq_all = []
-empathy_post_spgq_all = []
-negative_feelings_pre_spgq_all = []
-negative_feelings_post_spgq_all = []
-behavioural_pre_spgq_all = []
-behavioural_post_spgq_all = []
-spgq_pre_all = []
-spgq_post_all = []
-copresence_pre_all = []
-copresence_post_all = []
-
-for idx in range(len(negative_feelings_averted_pre)):
-
-    # Empathy Pre
-    empathy_pre_spgq_all.append(empathy_averted_pre[idx])
-    empathy_pre_spgq_all.append(empathy_direct_pre[idx])
-    empathy_pre_spgq_all.append(empathy_natural_pre[idx])
-
-    # Empathy Post
-    empathy_post_spgq_all.append(empathy_averted_post[idx])
-    empathy_post_spgq_all.append(empathy_direct_post[idx])
-    empathy_post_spgq_all.append(empathy_natural_post[idx])
-
-    # Negative feelings Pre
-    negative_feelings_pre_spgq_all.append(negative_feelings_averted_pre[idx])
-    negative_feelings_pre_spgq_all.append(negative_feelings_direct_pre[idx])
-    negative_feelings_pre_spgq_all.append(negative_feelings_natural_pre[idx])
-
-    # Negative feelings Post
-    negative_feelings_post_spgq_all.append(negative_feelings_averted_post[idx])
-    negative_feelings_post_spgq_all.append(negative_feelings_direct_post[idx])
-    negative_feelings_post_spgq_all.append(negative_feelings_natural_post[idx])
-
-    # Behavioural engagement Pre
-    behavioural_pre_spgq_all.append(behavioural_averted_pre[idx])
-    behavioural_pre_spgq_all.append(behavioural_direct_pre[idx])
-    behavioural_pre_spgq_all.append(behavioural_natural_pre[idx])
-
-    # Behavioural engagement Post
-    behavioural_post_spgq_all.append(behavioural_averted_post[idx])
-    behavioural_post_spgq_all.append(behavioural_direct_post[idx])
-    behavioural_post_spgq_all.append(behavioural_natural_post[idx])
-    
-    # SPGQ Pre
-    spgq_pre_all.append(spgq_averted_pre[idx])
-    spgq_pre_all.append(spgq_direct_pre[idx])
-    spgq_pre_all.append(spgq_natural_pre[idx])
-
-    # SPGQ Post
-    spgq_post_all.append(spgq_averted_post[idx])
-    spgq_post_all.append(spgq_direct_post[idx])
-    spgq_post_all.append(spgq_natural_post[idx])
-
-    # CoPresence
-    copresence_pre_all.append(copresence_averted_pre[idx])
-    copresence_pre_all.append(copresence_direct_pre[idx])
-    copresence_pre_all.append(copresence_natural_pre[idx])
-
-    # CoPresence Post
-    copresence_post_all.append(copresence_averted_post[idx])
-    copresence_post_all.append(copresence_direct_post[idx])
-    copresence_post_all.append(copresence_natural_post[idx])
-
-# Create subject number
-# NOTE : Adjust the number according total files of questionnaire
-# Remember that index starts from 0
-subject_no = list(range(1,27))
-subject = np.repeat(subject_no, 3)
-
-# Create eye gaze number
-# 1 = averted post
-# 2 = direct post
-# 3 = natural post
-# NOTE : Adjust no.26 according total files of questionnaire
-eye_gaze = np.tile([1, 2, 3], 26)
-
-df_all_eyes = pd.DataFrame({"Subject" : subject,
-                            "EyeGaze" : eye_gaze,
-                            "Empathy_Pre" : empathy_pre_spgq_all,
-                            "Empathy_Post" : empathy_post_spgq_all,
-                            "NegativeFeelings_Pre" : negative_feelings_pre_spgq_all,
-                            "NegativeFeelings_Post" : negative_feelings_post_spgq_all,
-                            "Behavioural_Pre" : behavioural_pre_spgq_all,
-                            "Behavioural_Post" : behavioural_post_spgq_all,
-                            "SPGQTotal_Pre" : spgq_pre_all,
-                            "SPGQTotal_Post" : spgq_post_all,
-                            "CoPresence_Pre" : copresence_pre_all,
-                            "CoPresence_Post" : copresence_post_all})
-
-
-df_all_eyes.head()
-
-
-# %% [markdown]
-# ## ANOVA
-
-# %% [markdown]
-# ### ANOVA Eye Gaze post test (Averted, Direct, & Natural)
-# Parametric test.
-
-# %% [markdown]
 # ## Functions
 
 # %% [markdown]
@@ -655,7 +522,65 @@ def total_significant_connections(path: str):
     return all_connections
 
 # %% [markdown]
-# ### Run function of total significant connections
+# ### Run function of total significant connections - 24 files *
+
+# %%
+path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre_24/"
+path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post_24/"
+path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre_24/"
+path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post_24/"
+path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre_24/"
+path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post_24/"
+
+averted_post = total_significant_connections(path_dir_averted_post)
+averted_pre = total_significant_connections(path_dir_averted_pre)
+direct_post = total_significant_connections(path_dir_direct_post)
+direct_pre = total_significant_connections(path_dir_direct_pre)
+natural_post = total_significant_connections(path_dir_natural_post)
+natural_pre = total_significant_connections(path_dir_natural_pre)
+
+print(averted_post[8])
+print(averted_pre[8])
+print(len(natural_pre[8]))
+print(len(natural_post[8]))
+# print("")
+# print(direct_post[8])
+# print(direct_pre[8])
+# print("")
+# print(natural_post[8])
+# print(natural_pre[8])
+
+# %% [markdown]
+# ### Run function of total significant connections - 24 original files
+
+# %%
+path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre_original/"
+path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post_original/"
+path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre_original/"
+path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post_original/"
+path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre_original/"
+path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post_original/"
+
+averted_post = total_significant_connections(path_dir_averted_post)
+averted_pre = total_significant_connections(path_dir_averted_pre)
+direct_post = total_significant_connections(path_dir_direct_post)
+direct_pre = total_significant_connections(path_dir_direct_pre)
+natural_post = total_significant_connections(path_dir_natural_post)
+natural_pre = total_significant_connections(path_dir_natural_pre)
+
+print(averted_post[8])
+print(averted_pre[8])
+print(len(natural_pre[8]))
+print(len(natural_post[8]))
+# print("")
+# print(direct_post[8])
+# print(direct_pre[8])
+# print("")
+# print(natural_post[8])
+# print(natural_pre[8])
+
+# %% [markdown]
+# ### Run function of total significant connections - 26 files
 
 # %%
 path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
@@ -672,8 +597,8 @@ direct_pre = total_significant_connections(path_dir_direct_pre)
 natural_post = total_significant_connections(path_dir_natural_post)
 natural_pre = total_significant_connections(path_dir_natural_pre)
 
-# print(averted_post[8])
-# print(averted_pre[8])
+print(averted_post[8])
+print(averted_pre[8])
 print(len(natural_pre[8]))
 print(len(natural_post[8]))
 # print("")
@@ -682,103 +607,6 @@ print(len(natural_post[8]))
 # print("")
 # print(natural_post[8])
 # print(natural_pre[8])
-
-# %% [markdown]
-# ### Combine all connections regardless of frequency
-
-# %%
-# Averted pre
-for idx, val in enumerate(averted_pre):
-    if idx == 8:
-        averted_pre_theta = averted_pre[idx]
-    elif idx == 9:
-        averted_pre_alpha = averted_pre[idx]
-    elif idx == 10:
-        averted_pre_beta = averted_pre[idx]
-    elif idx == 11:
-        averted_pre_gamma = averted_pre[idx]
-
-averted_pre_no_freq =  []
-for idx, val in enumerate(averted_pre_theta):
-    averted_pre_no_freq.append((averted_pre_theta[idx] + averted_pre_alpha[idx] + averted_pre_beta[idx] + averted_pre_gamma[idx]) / 4)
-    
-# Averted post
-for idx, val in enumerate(averted_post):
-    if idx == 8:
-        averted_post_theta = averted_post[idx]
-    elif idx == 9:
-        averted_post_alpha = averted_post[idx]
-    elif idx == 10:
-        averted_post_beta = averted_post[idx]
-    elif idx == 11:
-        averted_post_gamma = averted_post[idx]
-
-averted_post_no_freq =  []
-for idx, val in enumerate(averted_post_theta):
-    averted_post_no_freq.append((averted_post_theta[idx] + averted_post_alpha[idx] + averted_post_beta[idx] + averted_post_gamma[idx]) / 4)
-    
-
-# direct pre
-for idx, val in enumerate(direct_pre):
-    if idx == 8:
-        direct_pre_theta = direct_pre[idx]
-    elif idx == 9:
-        direct_pre_alpha = direct_pre[idx]
-    elif idx == 10:
-        direct_pre_beta = direct_pre[idx]
-    elif idx == 11:
-        direct_pre_gamma = direct_pre[idx]
-
-direct_pre_no_freq =  []
-for idx, val in enumerate(direct_pre_theta):
-    direct_pre_no_freq.append((direct_pre_theta[idx] + direct_pre_alpha[idx] + direct_pre_beta[idx] + direct_pre_gamma[idx]) / 4)
-    
-# direct post
-for idx, val in enumerate(direct_post):
-    if idx == 8:
-        direct_post_theta = direct_post[idx]
-    elif idx == 9:
-        direct_post_alpha = direct_post[idx]
-    elif idx == 10:
-        direct_post_beta = direct_post[idx]
-    elif idx == 11:
-        direct_post_gamma = direct_post[idx]
-
-direct_post_no_freq =  []
-for idx, val in enumerate(direct_post_theta):
-    direct_post_no_freq.append((direct_post_theta[idx] + direct_post_alpha[idx] + direct_post_beta[idx] + direct_post_gamma[idx]) / 4)
-    
-
-# natural pre
-for idx, val in enumerate(natural_pre):
-    if idx == 8:
-        natural_pre_theta = natural_pre[idx]
-    elif idx == 9:
-        natural_pre_alpha = natural_pre[idx]
-    elif idx == 10:
-        natural_pre_beta = natural_pre[idx]
-    elif idx == 11:
-        natural_pre_gamma = natural_pre[idx]
-
-natural_pre_no_freq =  []
-for idx, val in enumerate(natural_pre_theta):
-    natural_pre_no_freq.append((natural_pre_theta[idx] + natural_pre_alpha[idx] + natural_pre_beta[idx] + natural_pre_gamma[idx]) / 4)
-    
-# natural post
-for idx, val in enumerate(natural_post):
-    if idx == 8:
-        natural_post_theta = natural_post[idx]
-    elif idx == 9:
-        natural_post_alpha = natural_post[idx]
-    elif idx == 10:
-        natural_post_beta = natural_post[idx]
-    elif idx == 11:
-        natural_post_gamma = natural_post[idx]
-
-natural_post_no_freq =  []
-for idx, val in enumerate(natural_post_theta):
-    natural_post_no_freq.append((natural_post_theta[idx] + natural_post_alpha[idx] + natural_post_beta[idx] + natural_post_gamma[idx]) / 4)
-    
 
 # %% [markdown]
 # ### Find difference of number of connections between pre and post 
@@ -824,11 +652,12 @@ for i in range(len(averted_pre)): # NOTE : The length is 12 means there are 12 o
 
 # %% [markdown]
 # ### Combine SPGQ Total score of subject1 & 2, etc..
-#
+# NOTE : With subtraction of post and pre
 
 # %%
 # NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
 # later on remove -2, all data of EEG has been processed
+
 df_averted_pre_list = list(df_averted_pre["SPGQ Total"][:-2])
 df_averted_post_list = list(df_averted_post["SPGQ Total"][:-2])
 df_direct_pre_list = list(df_direct_pre["SPGQ Total"][:-2])
@@ -836,102 +665,12 @@ df_direct_post_list = list(df_direct_post["SPGQ Total"][:-2])
 df_natural_pre_list = list(df_natural_pre["SPGQ Total"][:-2])
 df_natural_post_list = list(df_natural_post["SPGQ Total"][:-2])
 
-
-df_averted_pre_combined = []
-df_direct_pre_combined = []
-df_natural_pre_combined = []
-
-df_averted_post_combined = []
-df_direct_post_combined = []
-df_natural_post_combined = []
-
-begin = 0
-end = len(df_averted_pre_list)
-step = 2
-for idx in range(begin, end, step):
-    # Pre conditions
-    df_averted_pre_combined.append((df_averted_pre_list[idx] + df_averted_pre_list[idx+1]) / 2)
-    df_direct_pre_combined.append((df_direct_pre_list[idx] + df_direct_pre_list[idx+1]) / 2)
-    df_natural_pre_combined.append((df_natural_pre_list[idx] + df_natural_pre_list[idx+1]) / 2)
-
-    # Post conditions
-    df_averted_post_combined.append((df_averted_post_list[idx] + df_averted_post_list[idx+1]) / 2)
-    df_direct_post_combined.append((df_direct_post_list[idx] + df_direct_post_list[idx+1]) / 2)
-    df_natural_post_combined.append((df_natural_post_list[idx] + df_natural_post_list[idx+1]) / 2)
-
-
-# %% [markdown]
-# ### Create dataframe for the number of connections (post training only)
-
-# %%
-
-zipped_averted = list(zip(averted_post[-4], averted_post[-3], averted_post[-2], averted_post[-1], df_averted_post_combined ))
-df_averted_post = pd.DataFrame(zipped_averted, columns=["theta_averted", "alpha_averted",
-                                "beta_averted", "gamma_averted", "SPGQ_Total"])
-
-print("Averted Post Only")
-print(df_averted_post)
-print("")
-
-zipped_direct = list(zip(direct_post[-4], direct_post[-3], direct_post[-2], direct_post[-1], df_direct_post_combined ))
-df_direct_post = pd.DataFrame(zipped_direct, columns=["theta_direct", "alpha_direct",
-                                "beta_direct", "gamma_direct", "SPGQ_Total"])
-
-print("Direct Post Only")
-print(df_direct_post)
-print("")
-
-zipped_natural = list(zip(natural_post[-4], natural_post[-3], natural_post[-2], natural_post[-1], df_natural_post_combined ))
-df_natural_post = pd.DataFrame(zipped_natural, columns=["theta_natural", "alpha_natural",
-                                "beta_natural", "gamma_natural", "SPGQ_Total"])
-
-print("Natural Post Only")
-print(df_natural_post)
-
-# %% [markdown]
-# #### Correlation SPGQ and Averted Post
-
-# %%
-print("Averted")
-for i in range(len(averted_post)):
-    print(F"{i}, {pearsonr(averted_post[i], df_averted_post_combined)}")
-
-# %% [markdown]
-# #### Correlation SPGQ and Direct Post
-
-# %%
-print("direct")
-for i in range(len(direct_post)):
-    print(F"{i}, {pearsonr(direct_post[i], df_direct_post_combined)}")
-
-# %% [markdown]
-# #### Correlation SPGQ and Natural Post
-
-# %%
-print("natural")
-for i in range(len(natural_post)):
-    print(F"{i}, {pearsonr(natural_post[i], df_natural_post_combined)}")
-
-# %% [markdown]
-# ### Combine SPGQ Total score of subject1 & 2, etc..
-# NOTE : With subtraction of post and pre
-
-# %%
-# NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
-# later on remove -2, all data of EEG has been processed
-# df_averted_pre_list = list(df_averted_pre["SPGQ Total"][:-2])
-# df_averted_post_list = list(df_averted_post["SPGQ Total"][:-2])
-# df_direct_pre_list = list(df_direct_pre["SPGQ Total"][:-2])
-# df_direct_post_list = list(df_direct_post["SPGQ Total"][:-2])
-# df_natural_pre_list = list(df_natural_pre["SPGQ Total"][:-2])
-# df_natural_post_list = list(df_natural_post["SPGQ Total"][:-2])
-
-df_averted_pre_list = df_averted_pre["SPGQ Total"].tolist()
-df_averted_post_list = df_averted_post["SPGQ Total"].tolist()
-df_direct_pre_list = df_direct_pre["SPGQ Total"].tolist()
-df_direct_post_list = df_direct_post["SPGQ Total"].tolist()
-df_natural_pre_list = df_natural_pre["SPGQ Total"].tolist()
-df_natural_post_list = df_natural_post["SPGQ Total"].tolist()
+# df_averted_pre_list = df_averted_pre["SPGQ Total"].tolist()
+# df_averted_post_list = df_averted_post["SPGQ Total"].tolist()
+# df_direct_pre_list = df_direct_pre["SPGQ Total"].tolist()
+# df_direct_post_list = df_direct_post["SPGQ Total"].tolist()
+# df_natural_pre_list = df_natural_pre["SPGQ Total"].tolist()
+# df_natural_post_list = df_natural_post["SPGQ Total"].tolist()
 
 
 df_averted_pre_combined = []
@@ -1045,22 +784,6 @@ print("Direct")
 for i in range(len(diff_direct)):
     print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
 
-# %%
-""" NOTE :
-Significant correlation between SPGQ and Direct eye conditions (EEG) in : 
- 
- Coherence
-  - total_sig_coh_theta_connections
-  - total_sig_coh_beta_connections
-  - total_sig_coh_gamma_connections
-  PLV
-  - total_sig_plv_gamma_connections
-"""
-
-print("Direct")
-for i in range(len(diff_direct)):
-    print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
-
 # %% [markdown]
 # #### Plot PLV beta & SPGQ Total
 
@@ -1102,11 +825,6 @@ plt.ylabel('SPGQ')
 
 # %% [markdown]
 # ### Correlation SPGQ and Natural
-
-# %%
-print("Natural")
-for i in range(len(diff_natural)):
-    print(F"{i}, {pearsonr(diff_natural[i], substracted_natural)}")
 
 # %%
 print("Natural")
