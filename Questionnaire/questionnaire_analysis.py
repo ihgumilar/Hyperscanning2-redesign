@@ -522,65 +522,7 @@ def total_significant_connections(path: str):
     return all_connections
 
 # %% [markdown]
-# ### Run function of total significant connections - 24 files *
-
-# %%
-path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre_24/"
-path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post_24/"
-path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre_24/"
-path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post_24/"
-path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre_24/"
-path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post_24/"
-
-averted_post = total_significant_connections(path_dir_averted_post)
-averted_pre = total_significant_connections(path_dir_averted_pre)
-direct_post = total_significant_connections(path_dir_direct_post)
-direct_pre = total_significant_connections(path_dir_direct_pre)
-natural_post = total_significant_connections(path_dir_natural_post)
-natural_pre = total_significant_connections(path_dir_natural_pre)
-
-print(averted_post[8])
-print(averted_pre[8])
-print(len(natural_pre[8]))
-print(len(natural_post[8]))
-# print("")
-# print(direct_post[8])
-# print(direct_pre[8])
-# print("")
-# print(natural_post[8])
-# print(natural_pre[8])
-
-# %% [markdown]
-# ### Run function of total significant connections - 24 original files
-
-# %%
-path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre_original/"
-path_dir_averted_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post_original/"
-path_dir_direct_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre_original/"
-path_dir_direct_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post_original/"
-path_dir_natural_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre_original/"
-path_dir_natural_post = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post_original/"
-
-averted_post = total_significant_connections(path_dir_averted_post)
-averted_pre = total_significant_connections(path_dir_averted_pre)
-direct_post = total_significant_connections(path_dir_direct_post)
-direct_pre = total_significant_connections(path_dir_direct_pre)
-natural_post = total_significant_connections(path_dir_natural_post)
-natural_pre = total_significant_connections(path_dir_natural_pre)
-
-print(averted_post[8])
-print(averted_pre[8])
-print(len(natural_pre[8]))
-print(len(natural_post[8]))
-# print("")
-# print(direct_post[8])
-# print(direct_pre[8])
-# print("")
-# print(natural_post[8])
-# print(natural_pre[8])
-
-# %% [markdown]
-# ### Run function of total significant connections - 26 files
+# ### Run function of total significant connections - 26 files - correct permutation
 
 # %%
 path_dir_averted_pre = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre/"
@@ -597,10 +539,10 @@ direct_pre = total_significant_connections(path_dir_direct_pre)
 natural_post = total_significant_connections(path_dir_natural_post)
 natural_pre = total_significant_connections(path_dir_natural_pre)
 
-print(averted_post[8])
-print(averted_pre[8])
-print(len(natural_pre[8]))
-print(len(natural_post[8]))
+print(averted_post[9])
+print(averted_pre[9])
+print(len(natural_pre[9]))
+print(len(natural_post[9]))
 # print("")
 # print(direct_post[8])
 # print(direct_pre[8])
@@ -658,19 +600,12 @@ for i in range(len(averted_pre)): # NOTE : The length is 12 means there are 12 o
 # NOTE IMPORTANT: -2 means up to subject 26 (pair 13th) so that it will be similar to current EEG data
 # later on remove -2, all data of EEG has been processed
 
-df_averted_pre_list = list(df_averted_pre["SPGQ Total"][:-2])
-df_averted_post_list = list(df_averted_post["SPGQ Total"][:-2])
-df_direct_pre_list = list(df_direct_pre["SPGQ Total"][:-2])
-df_direct_post_list = list(df_direct_post["SPGQ Total"][:-2])
-df_natural_pre_list = list(df_natural_pre["SPGQ Total"][:-2])
-df_natural_post_list = list(df_natural_post["SPGQ Total"][:-2])
-
-# df_averted_pre_list = df_averted_pre["SPGQ Total"].tolist()
-# df_averted_post_list = df_averted_post["SPGQ Total"].tolist()
-# df_direct_pre_list = df_direct_pre["SPGQ Total"].tolist()
-# df_direct_post_list = df_direct_post["SPGQ Total"].tolist()
-# df_natural_pre_list = df_natural_pre["SPGQ Total"].tolist()
-# df_natural_post_list = df_natural_post["SPGQ Total"].tolist()
+df_averted_pre_list = df_averted_pre["SPGQ Total"].tolist()
+df_averted_post_list = df_averted_post["SPGQ Total"].tolist()
+df_direct_pre_list = df_direct_pre["SPGQ Total"].tolist()
+df_direct_post_list = df_direct_post["SPGQ Total"].tolist()
+df_natural_pre_list = df_natural_pre["SPGQ Total"].tolist()
+df_natural_post_list = df_natural_post["SPGQ Total"].tolist()
 
 
 df_averted_pre_combined = []
@@ -747,25 +682,6 @@ for i in range(len(diff_averted)):
     print(F"{i}, {pearsonr(diff_averted[i], substracted_averted)}")
 
 # %% [markdown]
-# #### Plot PLV beta & SPGQ Total
-
-# %%
-# adds the title
-plt.title('Correlation of Averted eye and SPGQ')
-
-# plot the data
-plt.scatter(diff_averted[10], substracted_averted)
-
-# fits the best fitting line to the data
-plt.plot(np.unique(diff_averted[10]),
-		np.poly1d(np.polyfit(diff_averted[10], substracted_averted, 1))
-		(np.unique(diff_averted[10])), color='red')
-
-# Labelling axes
-plt.xlabel('Number of connections (Beta - PLV)')
-plt.ylabel('SPGQ')
-
-# %% [markdown]
 # ### Sig. Correlation SPGQ and Direct *
 
 # %%
@@ -785,22 +701,22 @@ for i in range(len(diff_direct)):
     print(F"{i}, {pearsonr(diff_direct[i], substracted_direct)}")
 
 # %% [markdown]
-# #### Plot PLV beta & SPGQ Total
+# #### Plot ccorr theta & SPGQ Total
 
 # %%
 # adds the title
 plt.title('Correlation of Direct eye and SPGQ')
 
 # plot the data
-plt.scatter(diff_direct[10], substracted_direct)
+plt.scatter(diff_direct[0], substracted_direct)
 
 # fits the best fitting line to the data
-plt.plot(np.unique(diff_direct[10]),
-		np.poly1d(np.polyfit(diff_direct[10], substracted_direct, 1))
-		(np.unique(diff_direct[10])), color='red')
+plt.plot(np.unique(diff_direct[0]),
+		np.poly1d(np.polyfit(diff_direct[0], substracted_direct, 1))
+		(np.unique(diff_direct[0])), color='red')
 
 # Labelling axes
-plt.xlabel('Number of connections (Beta - PLV)')
+plt.xlabel('Number of connections (Theta - ccorr)')
 plt.ylabel('SPGQ')
 
 # %% [markdown]
