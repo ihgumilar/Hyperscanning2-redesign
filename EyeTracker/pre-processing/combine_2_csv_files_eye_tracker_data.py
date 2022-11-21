@@ -9,7 +9,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.11.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
 #     language: python
 #     name: python3
 # ---
@@ -50,7 +50,8 @@ os.chdir(raw_dir_baseline)
 # #### Combine pre averted baseline
 
 # %%
-for i in tqdm(range(15), desc="Combining pre averted..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining pre averted..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # Pre-averted (for processing subject 1 - 9)
     if i < 9:
 
@@ -173,7 +174,8 @@ for i in tqdm(range(15), desc="Combining pre averted..."):  # type: ignore
 # #### Combine post averted baseline
 
 # %%
-for i in tqdm(range(15), desc="Combining post averted..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining post averted..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # Pre-averted (for processing subject 1 - 9)
     if i < 9:
 
@@ -320,7 +322,8 @@ os.listdir("./raw_combined_experimental_data_directory")
 # #### Combine pre averted experimental
 
 # %%
-for i in tqdm(range(15), desc="Combining pre averted..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining pre averted..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # Pre-averted (for processing subject 1 - 9)
     if i < 9:
 
@@ -446,7 +449,8 @@ os.getcwd()
 # #### Combine post averted experimental
 
 # %%
-for i in tqdm(range(15), desc="Combining post averted..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining post averted..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # post-averted (for processing subject 1 - 9)
     if i < 9:
 
@@ -569,7 +573,8 @@ for i in tqdm(range(15), desc="Combining post averted..."):  # type: ignore
 # #### Combine pre direct experimental
 
 # %%
-for i in tqdm(range(15), desc="Combining pre direct..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining pre direct..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # Pre-direct (for processing subject 1 - 9)
     if i < 9:
 
@@ -688,7 +693,8 @@ for i in tqdm(range(15), desc="Combining pre direct..."):  # type: ignore
 # #### Combine post direct experimental
 
 # %%
-for i in tqdm(range(15), desc="Combining post direct..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining post direct..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # post-direct (for processing subject 1 - 9)
     if i < 9:
 
@@ -811,7 +817,8 @@ for i in tqdm(range(15), desc="Combining post direct..."):  # type: ignore
 # #### Combine pre natural experimental
 
 # %%
-for i in tqdm(range(15), desc="Combining pre natural..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining pre natural..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # Pre-natural (for processing subject 1 - 9)
     if i < 9:
 
@@ -934,7 +941,8 @@ for i in tqdm(range(15), desc="Combining pre natural..."):  # type: ignore
 # #### Combine post natural experimental
 
 # %%
-for i in tqdm(range(15), desc="Combining post natural..."):  # type: ignore
+for i in tqdm(range(26), desc="Combining post natural..."):  # type: ignore
+    # NOTE : 26 = A number of raw files
     # post-natural (for processing subject 1 - 9)
     if i < 9:
 
