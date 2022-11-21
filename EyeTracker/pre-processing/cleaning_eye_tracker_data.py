@@ -9,7 +9,7 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.11.2
 #   kernelspec:
-#     display_name: Python 3 (ipykernel)
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
 #     language: python
 #     name: python3
 # ---
@@ -22,27 +22,24 @@ to delete some part of eye tracker data accordingly
 """
 import os
 import pickle
-from os import listdir
 
 import numpy as np
 import pandas as pd
 
-# %%
+from os import listdir
 from pandas.api.types import is_numeric_dtype
 from scipy import signal
 from tqdm import tqdm
+from typing import List
 
 
 # %%
+
+# %%
 def delete_epoch_eye_tracker(
-    eyetracker_data_path, path2save_cleaned_data, file_tag, indices
+    eyetracker_data_path: str, path2save_cleaned_data: str, file_tag: str, indices: List[List[int]]
 ):
-    # eyetracker_data_path = '/hpc/igum002/codes/frontiers_hyperscanning2/eye_tracker_data_combined/'
-    # file_tag = "averted_pre"
-
-    # Go to a folder where combined eye tracker data has been stored
-    # os.chdir(eyetracker_data_path)
-
+    
     # List specified files based on file_tag parameter that has been defined
     files = [file for file in os.listdir(eyetracker_data_path) if file_tag in file]
     files = sorted(files, key=lambda x: int(x.partition("S")[2].partition("-")[0]))
@@ -88,10 +85,7 @@ def delete_epoch_eye_tracker(
         if idx >= 1:
             counter += 1
 
-        # TODO  Understand what this code does. Error when processing subject 11
-        # NOTE Indices of deleted epochs of EEG, there are only 8 lists for now. Since there are 8 pairs.
-        # Those indices are used for each pair of eye tracker data
-
+        
         for individual_indices in indices[counter]:
             labels_indices_2_delete.append(labels_indices[individual_indices])
 
@@ -126,12 +120,11 @@ def delete_epoch_eye_tracker(
 
     print("The eye tracker files have been cleaned and you are good to go, Bro !")
 
-
 # %% [markdown]
 # ## Load deleted epochs indices (all eye conditions)
 
 # %% Load the deleted indices of epochs of eeg data
-# Change to a directory where combined eye tracker data are located
+# Change to a directory where deleted epoch indices are located
 os.chdir(
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/pre-processed_eeg_data/deleted_epochs_indices/"
 )
@@ -169,33 +162,18 @@ with open("list_deleted_epoch_indices_natural_post.pkl", "rb") as handle:
 
 eyetracker_data_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/"
 path2save_cleaned_data = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/raw_cleaned_combined_experimental_eye_data/"
-averted_pre_tag = "averted_pre"
+# averted_pre_tag = "averted_pre"
 # averted_post_tag = "averted_post"
 # direct_pre_tag = "direct_pre"
 # direct_post_tag = "direct_post"
 # natural_pre_tag = "natural_pre"
-# natural_post_tag = "natural_post"
+natural_post_tag = "natural_post"
 
 # Clean eye tracker data
 delete_epoch_eye_tracker(
     eyetracker_data_path,
     path2save_cleaned_data,
-    averted_pre_tag,
+    natural_post_tag,
     deleted_epochs_indices_averted_pre,
 )
 
-
-# %% Delete the same epochs (data) that has been deleted in EEG in eye tracker data files
-
-# averted pre
-delete_epoch_eye_tracker("averted_pre", deleted_epochs_indices_averted_pre)
-# averted post
-delete_epoch_eye_tracker("averted_post", deleted_epochs_indices_averted_post)
-# direct pre
-delete_epoch_eye_tracker("direct_pre", deleted_epochs_indices_direct_pre)
-# direct post
-delete_epoch_eye_tracker("direct_post", deleted_epochs_indices_direct_post)
-# natural pre
-delete_epoch_eye_tracker("natural_pre", deleted_epochs_indices_natural_pre)
-# natural post
-delete_epoch_eye_tracker("natural_post", deleted_epochs_indices_natural_post)
