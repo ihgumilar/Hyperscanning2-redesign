@@ -128,7 +128,7 @@ In this experiment, there are three main data that will be analyzed :
 
 ### Pre-processing
 
-Code construction in progress  :tada:
+Extract (separate data of baseline and experimental) using file of using `extract_eye_tracker_new.py,` combine raw files using `combine_2_csv_files_eye_tracker_data.py,` and clean up the raw eye tracker files using file `cleaning_eye_tracker.py` All of those codes are available in this [repo](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/44d89f1d316d31b5a30896dfdd12d604c8501b71). **NOTE** : Ignore file of `extract_eye_tracker.py`
 
 ### Analysis
 
