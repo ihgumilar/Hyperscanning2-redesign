@@ -1,3 +1,22 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: title,-all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
+#     language: python
+#     name: python3
+# ---
+
+# %% [markdown]
+# ## Relevant packages
+
 # %%
 from math import atan, degrees
 import re
@@ -11,59 +30,104 @@ from time import time
 from datetime import timedelta
 from sklearn.feature_selection import VarianceThreshold
 
-# %%
-path = r'C:/Users/sanji/Downloads/eye_tracker_data_clean_new/'
-averted_pre_files = glob.glob(path + "/*averted_pre*.csv")
-pattern = re.compile(r"[S]+(\d+)\-")
-averted_files_pre_odd = []
-averted_files_pre_even = []
 
-for file in averted_pre_files:
-    if int(re.search(pattern, file).group(1)) % 2 != 0:
-        averted_files_pre_odd.append(file)
-    else:
-        averted_files_pre_even.append(file)
-
-li_averted_pre_odd = []
-li_averted_pre_even = []
-
-# ###############################################
-# Combine all averted pre odd files
-for filename in averted_files_pre_odd:
-    df_averted_pre_odd = pd.read_csv(filename, index_col=None, header=0)
-    li_averted_pre_odd.append(df_averted_pre_odd)
-# Populate all dataframes into one dataframe
-df_averted_pre_odd = pd.concat(li_averted_pre_odd, axis=0, ignore_index=True)
-# Remove row where there is NaN value
-df_averted_pre_odd = df_averted_pre_odd.dropna()
-df_averted_pre_odd = df_averted_pre_odd.reset_index(drop=True)
-# Remove space before column names
-df_averted_pre_odd_new_columns = df_averted_pre_odd.columns.str.replace(
-    ' ', '')
-df_averted_pre_odd.columns = df_averted_pre_odd_new_columns
-# df_averted_pre_odd.head()
-
-# ###############################################
-# Combine all averted pre even files
-for filename in averted_files_pre_even:
-    df_averted_pre_even = pd.read_csv(filename, index_col=None, header=0)
-    li_averted_pre_even.append(df_averted_pre_even)
-
-# Populate all dataframes into one dataframe
-df_averted_pre_even = pd.concat(li_averted_pre_even, axis=0, ignore_index=True)
-
-# Remove row where there is NaN value
-df_averted_pre_even = df_averted_pre_even.dropna()
-df_averted_pre_even = df_averted_pre_even.reset_index(drop=True)
-
-# Remove space before column names
-df_averted_pre_even_new_columns = df_averted_pre_even.columns.str.replace(
-    ' ', '')
-df_averted_pre_even.columns = df_averted_pre_even_new_columns
-# df_averted_pre_even.head()
+# %% [markdown]
+# ## Function to populate odd and even subjects into one separate dataFrame (averted_pre) 
 
 # %%
-df_averted_pre_odd.head(4)
+def combine_eye_data_into_dataframe(path2files: str, tag:str):
+    
+    """
+        Combine all cleaned eye tracker data, eg. averted_pre, into one dataframe.
+        It also involves pre-processing (replacing missing values with average value of columns
+        where they are). However, the return value is dataframe of odd and even subject that is separated
+
+    Args:
+        path2files (str): Path to a directory where all cleaned eye tracker files are stored
+        tag (str): eye gaze condition, ie. averted_pre, averted_post, direct_pre, direct_post, natural_pre, natural_post
+
+    Returns:
+        tuple: Consists of two dataframes :
+               1. ODD subject [index = 0]
+               2. and of EVEN [index = 1]
+    """
+
+    gaze_keyword= "/*" + tag + "*.csv"
+    pre_files = glob.glob(path2files + gaze_keyword)
+    pattern = re.compile(r"[S]+(\d+)\-")
+    files_pre_odd = []
+    files_pre_even = []
+
+    for file in pre_files:
+        if int(re.search(pattern, file).group(1)) % 2 != 0:
+            files_pre_odd.append(file)
+        else:
+            files_pre_even.append(file)
+
+    li_pre_odd = []
+    li_pre_even = []
+
+    # ###############################################
+    # Combine all pre odd files
+    for filename in files_pre_odd:
+        df_pre_odd = pd.read_csv(filename, index_col=None, header=0)
+        li_pre_odd.append(df_pre_odd)
+    # Populate all dataframes into one dataframe
+    df_pre_odd = pd.concat(li_pre_odd, axis=0, ignore_index=True)
+
+    # Replace missing values with averages of columns where they are
+    df_pre_odd.fillna(df_pre_odd.mean(), inplace=True)
+
+    df_pre_odd = df_pre_odd.reset_index(drop=True)
+    # Remove space before column names
+    df_pre_odd_new_columns = df_pre_odd.columns.str.replace(
+        ' ', '')
+    df_pre_odd.columns = df_pre_odd_new_columns
+
+    # ###############################################
+    # Combine all pre even files
+    for filename in files_pre_even:
+        df_pre_even = pd.read_csv(filename, index_col=None, header=0)
+        li_pre_even.append(df_pre_even)
+
+    # Populate all dataframes into one dataframe
+    df_pre_even = pd.concat(li_pre_even, axis=0, ignore_index=True)
+
+
+    # Replace missing values with averages of columns where they are
+    df_pre_even.fillna(df_pre_even.mean(), inplace=True)
+
+    df_pre_even = df_pre_even.reset_index(drop=True)
+
+    # Remove space before column names
+    df_pre_even_new_columns = df_pre_even.columns.str.replace(
+        ' ', '')
+    df_pre_even.columns = df_pre_even_new_columns
+    
+    return df_pre_odd, df_pre_even
+
+# %% [markdown]
+# ### Running a function of combine_eye_data_into_dataframe
+
+# %%
+tag = "averted_pre"
+path2files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/raw_cleaned_combined_experimental_eye_data"
+
+df_averted = combine_eye_data_into_dataframe(path2files, tag)
+print("averted_pre ODD subjects")
+df_averted_pre_odd = df_averted[0]
+df_averted_pre_odd.head()
+
+
+# %%
+print("averted_pre EVEN subjects")
+df_averted_pre_even = df_averted[1]
+df_averted_pre_even.head()
+
+
+# %% [markdown]
+# ## Function to convert cartesian to degree
+# Cartesian is a default value that is resulted from HTC Vive pro
 
 # %%
 # Formula to convert cartesian to degree
@@ -98,6 +162,9 @@ def check_degree_within_fovea(gaze_direction):
     else:
         return 0
 
+# %% [markdown]
+# ### Running function to convert cartesian to degree (averted_pre_odd)
+
 # %%
 # Gaze direction (right eye)
 df_averted_pre_odd['GazeDirectionRight(X)Degree'] = df_averted_pre_odd.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionRight(X)'], x['GazeDirectionRight(Y)']), axis=1)
@@ -121,6 +188,9 @@ df_averted_pre_odd['GazeDirectionLeft(Y)inFovea'] = df_averted_pre_odd.apply(lam
 
 # %%
 df_averted_pre_odd.head(10)
+
+# %% [markdown]
+# ### Running function to convert cartesian to degree (averted_pre_even)
 
 # %%
 # Gaze direction (right eye)
