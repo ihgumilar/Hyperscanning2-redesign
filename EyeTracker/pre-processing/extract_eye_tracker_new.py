@@ -1,3 +1,19 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: title,-all
+#     custom_cell_magics: kql
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.11.2
+#   kernelspec:
+#     display_name: Python 3.8.10 ('hyperscanning2_redesign_new')
+#     language: python
+#     name: python3
+# ---
+
 # %% Import packages
 import chunk
 import numbers
@@ -225,11 +241,9 @@ path_2_save_baseline_eyetracker_file = (
     "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_baseline_eye_data"
 )
 
-# Bad files temporary
-bad_files = ["EyeTracker-S16.csv"]
 
 extract_baseline_eye_data(
-    path_2_csv_files, path_2_save_baseline_eyetracker_file, bad_files
+    path_2_csv_files, path_2_save_baseline_eyetracker_file,
 )
 
 
@@ -660,14 +674,10 @@ def extract_experiment_eye_data(
 # ### Running extract_experiment_eye_data function
 
 # %%
-labelsequence = [1, 2, 1, 2, 1, 2, 3, 4, 3, 4, 3, 4, 5, 6, 5, 6]
+labelsequence = [1,2,1,2,1,2,3,4,3,4,3,4,5,6,5,6,5,6,7,8,7,8,7,8,9,10]
 path_2_csv_files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker"
-path_2_save_experimental_eyetracker_file = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data"
-
-# Bad files temporary
-bad_files = ["EyeTracker-S16.csv"]
-
+path_2_save_experimental_eyetracker_file = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/"
 
 extract_experiment_eye_data(
-    path_2_csv_files, path_2_save_experimental_eyetracker_file, labelsequence, bad_files
+    path_2_csv_files, path_2_save_experimental_eyetracker_file, labelsequence
 )
