@@ -14,6 +14,7 @@
 #     name: python3
 # ---
 
+# %%
 import os
 
 # %%
@@ -300,9 +301,6 @@ for i in tqdm(range(15), desc="Combining post averted..."):  # type: ignore
 # *  Where we would like to store combined eye tracker data (Experimental data)
 #
 #
-
-# %% [markdown]
-# #### Combine pre averted experimental
 
 # %%
 # Raw experimental data (csv file) (not combined)
