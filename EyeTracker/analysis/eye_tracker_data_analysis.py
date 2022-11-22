@@ -116,13 +116,30 @@ path2files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_exp
 df_averted = combine_eye_data_into_dataframe(path2files, tag)
 print("averted_pre ODD subjects")
 df_averted_pre_odd = df_averted[0]
-df_averted_pre_odd.head()
+# df_averted_pre_odd.head()
 
-
-# %%
 print("averted_pre EVEN subjects")
 df_averted_pre_even = df_averted[1]
-df_averted_pre_even.head()
+
+
+
+# %% [markdown]
+# ## Cut off the unneccessary columns of averted_pre EVEN subjects
+
+# %%
+# NOTE: No idea, why for some reasons the number of columns for df_averted_pre_even is almost double then df_averted_pre_odd dataframe
+# So we need to cut it off
+
+# This is just to check the number of columns of odd subject
+# odd_cols =  [x for x in df_averted_pre_odd.columns]
+# print(len(odd_cols))
+
+# # This is just to check the number of columns of even subject
+# even_cols =  [x for x in df_averted_pre_even.columns]
+# print(len(even_cols))
+
+df_averted_pre_even = df_averted_pre_even.iloc[:,0:24]
+
 
 
 # %% [markdown]
@@ -131,7 +148,7 @@ df_averted_pre_even.head()
 
 # %%
 # Formula to convert cartesian to degree
-def gaze_direction_in_x_axis_degree(x, y):
+def gaze_direction_in_x_axis_degree(x: float, y: float):
     """Right hand rule coordinate"""
     try:
         degree = degrees(atan(y / x))  # Opposite / adjacent
@@ -139,7 +156,7 @@ def gaze_direction_in_x_axis_degree(x, y):
         degree = 0.0
     return round(degree, 2)
 
-def gaze_direction_in_y_axis_degree(y, z):
+def gaze_direction_in_y_axis_degree(y: float, z: float):
     """Right hand rule coordinate"""
     try:
         degree = degrees(atan(z / y)) # Opposite / adjacent
@@ -187,7 +204,7 @@ df_averted_pre_odd['GazeDirectionLeft(Y)inFovea'] = df_averted_pre_odd.apply(lam
 
 
 # %%
-df_averted_pre_odd.head(10)
+df_averted_pre_odd.head()
 
 # %% [markdown]
 # ### Running function to convert cartesian to degree (averted_pre_even)
@@ -209,7 +226,7 @@ df_averted_pre_even['GazeDirectionLeft(X)inFovea'] = df_averted_pre_even.apply(l
 df_averted_pre_even['GazeDirectionLeft(Y)inFovea'] = df_averted_pre_even.apply(lambda x: check_degree_within_fovea(x['GazeDirectionLeft(Y)Degree']), axis=1)
 
 # %%
-df_averted_pre_odd.head(10)
+df_averted_pre_odd.head()
 
 # %%
 #df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionRight(X)inFovea'] <= 0,'FoveaOdd'] = 0
