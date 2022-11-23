@@ -143,8 +143,9 @@ df_averted_pre_even = df_averted_pre_even.iloc[:,0:24]
 
 
 # %% [markdown]
-# ## Function to convert cartesian to degree
-# Cartesian is a default value that is resulted from HTC Vive pro
+# ## Function to convert cartesian to degree (x and y)
+# ## Function to check degree within fovea
+# NOTE : Cartesian is a default value that is resulted from HTC Vive pro
 
 # %%
 # Formula to convert cartesian to degree
@@ -191,6 +192,9 @@ df_averted_pre_odd['GazeDirectionRight(Y)Degree'] = df_averted_pre_odd.apply(lam
 # Gaze direction (left eye)
 df_averted_pre_odd['GazeDirectionLeft(X)Degree'] = df_averted_pre_odd.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionLeft(X)'], x['GazeDirectionLeft(Y)']), axis=1)
 df_averted_pre_odd['GazeDirectionLeft(Y)Degree'] = df_averted_pre_odd.apply(lambda x: gaze_direction_in_y_axis_degree(x['GazeDirectionLeft(Y)'], x['GazeDirectionLeft(Z)']), axis=1)
+# %% [markdown]
+# ### Running function to check_degree_within_fovea (averted_pre_odd)
+
 # %% Give mark 1 for GazeDirection Y/X Degree that falls under fovea area (30 degrees), otherwise 0
 
 df_averted_pre_odd['GazeDirectionRight(X)inFovea'] = df_averted_pre_odd.apply(lambda x: check_degree_within_fovea(x['GazeDirectionRight(X)Degree']), axis=1)
@@ -204,7 +208,7 @@ df_averted_pre_odd['GazeDirectionLeft(Y)inFovea'] = df_averted_pre_odd.apply(lam
 
 
 # %%
-df_averted_pre_odd.head()
+# df_averted_pre_odd.head()
 
 # %% [markdown]
 # ### Running function to convert cartesian to degree (averted_pre_even)
@@ -218,6 +222,9 @@ df_averted_pre_even['GazeDirectionRight(Y)Degree'] = df_averted_pre_even.apply(l
 # Gaze direction (left eye)
 df_averted_pre_even['GazeDirectionLeft(X)Degree'] = df_averted_pre_even.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionLeft(X)'], x['GazeDirectionLeft(Y)']), axis=1)
 df_averted_pre_even['GazeDirectionLeft(Y)Degree'] = df_averted_pre_even.apply(lambda x: gaze_direction_in_y_axis_degree(x['GazeDirectionLeft(Y)'], x['GazeDirectionLeft(Z)']), axis=1)
+# %% [markdown]
+# ### Running function to check_degree_within_fovea (averted_pre_even)
+
 # %% Give mark 1 for GazeDirection Y/X Degree that falls under fovea area (30 degrees), otherwise 0
 
 df_averted_pre_even['GazeDirectionRight(X)inFovea'] = df_averted_pre_even.apply(lambda x: check_degree_within_fovea(x['GazeDirectionRight(X)Degree']), axis=1)
@@ -226,130 +233,58 @@ df_averted_pre_even['GazeDirectionLeft(X)inFovea'] = df_averted_pre_even.apply(l
 df_averted_pre_even['GazeDirectionLeft(Y)inFovea'] = df_averted_pre_even.apply(lambda x: check_degree_within_fovea(x['GazeDirectionLeft(Y)Degree']), axis=1)
 
 # %%
-df_averted_pre_odd.head()
+# df_averted_pre_odd.columns
+
+# %% [markdown]
+# ## Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (odd subjects)
 
 # %%
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionRight(X)inFovea'] <= 0,'FoveaOdd'] = 0
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionRight(X)inFovea'] >= 1,'FoveaOdd'] = 1 
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionLeft(X)inFovea']  <=0, 'FoveaOdd'] = 0
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionLeft(X)inFovea']  >=1, 'FoveaOdd'] = 1
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionRight(Y)inFovea'] <=0,'FoveaOdd'] = 0
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionRight(Y)inFovea'] >=1,'FoveaOdd'] = 1
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionLeft(Y)inFovea']  <=0, 'FoveaOdd'] = 0
-#df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionLeft(Y)inFovea']  >=1, 'FoveaOdd'] = 1
-
-#df_averted_pre_odd['FoveaOdd'] = df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionRight(X)inFovea'] + df_averted_pre_odd.loc[df_averted_pre_odd['GazeDirectionLeft(X)inFovea']
 
 df_averted_pre_odd["FoveaOdd"] = df_averted_pre_odd["GazeDirectionRight(X)inFovea"] + df_averted_pre_odd["GazeDirectionLeft(X)inFovea"] + df_averted_pre_odd["GazeDirectionRight(Y)inFovea"] + df_averted_pre_odd["GazeDirectionLeft(Y)inFovea"]
-df_averted_pre_odd.loc[df_averted_pre_odd['FoveaOdd'] >= 1,'FoveaOdd'] = 1
-
-df_averted_pre_odd
+df_averted_pre_odd.loc[df_averted_pre_odd['FoveaOdd'] > 1,'FoveaOdd'] = 1
 
 
-# %%
-df_averted_pre_odd.loc[df_averted_pre_odd['FoveaOdd'] >= 1,'looking'] = 'look'
-df_averted_pre_odd.loc[df_averted_pre_odd['FoveaOdd'] <=0,'looking'] = 'not look'
-df_averted_pre_odd
+# %% [markdown]
+# ### Change 1 => look , 0 => not look (odd subjects)
 
 # %%
-#df_averted_pre_even.loc[df_averted_pre_even['GazeDirectionRight(X)inFovea'] <= 0,'FoveaEven'] = 0
-#df_averted_pre_even.loc[df_averted_pre_even['GazeDirectionLeft(X)inFovea']  <=0, 'FoveaEven'] = 0
-#df_averted_pre_even.loc[df_averted_pre_even['GazeDirectionLeft(X)inFovea']  ==1, 'FoveaEven'] = 1
-#df_averted_pre_even.loc[df_averted_pre_even['GazeDirectionRight(Y)inFovea'] <= 0,'FoveaEven'] = 0
-#df_averted_pre_even.loc[df_averted_pre_even['GazeDirectionLeft(Y)inFovea']  ==1, 'FoveaEven'] = 1
+df_averted_pre_odd.loc[df_averted_pre_odd['FoveaOdd'] == 1, 'FoveaOdd'] = 'look'
+df_averted_pre_odd.loc[df_averted_pre_odd['FoveaOdd'] == 0, 'FoveaOdd'] = 'not look'
 
+
+# %% [markdown]
+# ## Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (even subjects)
+
+# %%
 df_averted_pre_even["FoveaEven"] = df_averted_pre_even["GazeDirectionRight(X)inFovea"] + df_averted_pre_even["GazeDirectionLeft(X)inFovea"] + df_averted_pre_even["GazeDirectionRight(Y)inFovea"] + df_averted_pre_even["GazeDirectionLeft(Y)inFovea"]
+df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] > 1,'FoveaEven'] = 1
 
-df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] >= 1,'FoveaEven'] = 1
-
-df_averted_pre_even.head(10)
-#df_averted_pre_even
-
-# %%
-df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] >= 1,'looking'] = 'look'
-df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] <=0,'looking'] = 'not look'
-df_averted_pre_even
+# %% [markdown]
+# ### Change 1 => look , 0 => not look (even subjects)
 
 # %%
-#df_averted_pre_odd['FoveaOdd'].value_counts()
-#df_averted_pre_odd = pd.DataFrame({'a':list('abssbab')})
-#df_averted_pre_odd.groupby('FoveaOdd').count()
-# construct the new column
-#looking_each_other = df_averted_pre_even['FoveaEven'].copy().astype('float32')
+df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] == 1,'FoveaEven'] = 'look'
+df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] ==0,'FoveaEven'] = 'not look'
 
-# run the sliding window
-#for t in range(len(df_averted_pre_odd.index) - 1800):
-#    odd_col = df_averted_pre_odd['FoveaOdd'][t:t+1800].copy()
-#    even_col = df_averted_pre_even['FoveaEven'][t:t+1800].copy()
-#    sum_col = odd_col + even_col
-#    num_of_matches = (sum_col==2).sum()
-#    proportion_of_match = num_of_matches / 1800.0
-#    print(proportion_of_match)
-#    looking_each_other[t] = proportion_of_match
+# %% [markdown]
+# ## Checking if both participants are looking at each other or not
+# If so, then add new column for both odd and even subjects "look_each_other" column. The value must be the same in both dataframes of columns "look_each_other"
 
-# add looking_each_other to the original table
+# %%
+
+# add looking_each_other to the original table for both odd and even subjects
 df_averted_pre_odd['look_each_other'] = np.where(df_averted_pre_odd['FoveaOdd'] == df_averted_pre_even['FoveaEven'], '1', '0') 
-#create new column in df1 to check if prices match
-df_averted_pre_odd
-
-# %%
 df_averted_pre_even['look_each_other'] = np.where(df_averted_pre_even['FoveaEven'] == df_averted_pre_odd['FoveaOdd'], '1', '0') 
 
-df_averted_pre_even
+# %%
+# Checking if the number of look each other is the same or not. Just change odd to even
+df_averted_pre_odd['look_each_other'].value_counts()
+
+# %% [markdown]
+# ## Give label how many "1" that is above threshold for every 125 rows (sampling rate) - This is odd dataframe
+# Just do that for either odd or even dataframe
 
 # %%
-df_averted_pre_odd.loc[df_averted_pre_odd.FoveaOdd <= 0, "look_each_other"] = "0"
-df_averted_pre_odd
-
-# %%
-df_averted_pre_even.loc[df_averted_pre_even.FoveaEven <= 0, "look_each_other"] = "0"
-df_averted_pre_even
-
-# %%
-df_averted_pre_odd['look_each_other'].head(50)
-
-# %%
-df_averted_pre_even['look_each_other'].head(50)
-
-# %%
-df_averted_pre_odd['look_each_other'].head(120).value_counts()
-
-# %%
-#df_averted_pre_odd['look_each_other'].value_counts()
-df_averted_pre_odd_v2 = df_averted_pre_odd[['FoveaOdd']]
-df_averted_pre_odd_v2
-
-# %%
-#df_averted_pre_even['look_each_other'].value_counts()
-df_averted_pre_even_v2 = df_averted_pre_even[['FoveaEven']]
-df_averted_pre_even_v2
-
-# %%
-df_even_odd_join = df_averted_pre_even_v2.merge(df_averted_pre_odd_v2, left_index=True, right_index=True, how='inner')
-df_even_odd_join['look_match'] = [ x & y for x,y in zip(df_even_odd_join['FoveaOdd'], df_even_odd_join['FoveaEven'])]
-df_even_odd_join['look_match'].value_counts()
-
-# %%
-df_even_odd_join
-
-# %%
-df_averted_pre_odd['look_each_other'].iloc[100:120]
-
-# %%
-#Threshold = 13
-#for index in df_averted_pre_odd.index:
-#    print(df_averted_pre_odd['FoveaOdd'][index])
-#def sanjit_algorithm(df_averted_pre_odd, threshold=13, step_size=125, new_column_name="percent"):
-#    df_averted_pre_odd[new_column_name] = np.nan
-#    for i in range(0, len(df_averted_pre_odd), step_size):
-#        condition = (df_averted_pre_odd.iloc[i:i+step_size].index == 1).sum() > threshold
-#        df_averted_pre_odd.iloc[i][new_column_name] = 1 if condition else 0
-#    return df_averted_pre_odd
-
-#df_averted_pre_odd = pd.DataFrame(index=[random.randint(0, 1) for _ in range(208250)])  
-#df_averted_pre_odd = sanjit_algorithm(df_averted_pre_odd)
-#df_averted_pre_odd
-
 threshold = 13
 current_rows = 0 
 
@@ -370,6 +305,10 @@ while current_rows < len(df_averted_pre_odd) + 125:
         
 df_averted_pre_odd.loc[current_rows + 125: len(df_averted_pre_odd), 'PercentOdd'] = 0
 df_averted_pre_odd.shape
+
+# %% [markdown]
+# ## Give label how many "1" that is above threshold for every 125 rows (sampling rate) - This is even dataframe
+# Just do that for either odd or even dataframe. You don't need to run this when you have done the above cell. But it is ok for now
 
 # %%
 threshold = 13
@@ -395,57 +334,47 @@ df_averted_pre_even.loc[current_rows + 125: len(df_averted_pre_even), 'PercentEv
 
 
 
-# %%
-df_averted_pre_even
+# %% [markdown]
+# ## Give value 1 when the value of looking at each other above the threshold (There are 13 of number "1")
 
 # %%
 df_averted_pre_odd['ThresholdPercentage'] = np.where((df_averted_pre_odd['PercentOdd'] == 1) & (df_averted_pre_even['PercentEven'] == 1), '1', '0')
-print (df_averted_pre_odd.iloc[:1875])
+df_averted_pre_even['ThresholdPercentage'] = np.where((df_averted_pre_odd['PercentOdd'] == 1) & (df_averted_pre_even['PercentEven'] == 1), '1', '0')
+
+# %% [markdown]
+# ## Count how many percentage of looking and not looking
+# For averted condition, we could say 100% of participants did not look "scientifically" each other. Because it is zero
 
 # %%
-df_averted_pre_odd['ThresholdPercentage'].value_counts(normalize=True).mul(100).round(1).astype(str) + '%' 
+df_averted_pre_even['ThresholdPercentage'].value_counts(normalize=True).mul(100).round(1).astype(str) + '%' 
 
 # %%
-df_averted_pre_odd['ThresholdPercentage']
+col = df_averted_pre_odd["look_each_other"]
+# The number of elements has to be 15 !!!!
+seconds = [106, 116, 112, 107, 102, 118, 118, 102, 116, 111, 115, 108, 120, 113, 102]
+# Index to extract data based on the above seconds
+# IMPORTANT!! INDEX. Don't get confused. Please do simple addition !!
+rows_each_pair_begin = [0, 106, 222, 334, 441, 543, 661, 779, 895, 1006, 1121, 1229, 1349, 1462, 1564]
+rows_each_pair_end =   [106, 222, 334, 441, 543, 661, 779, 895, 1006, 1121, 1229, 1349, 1462, 1564]
 
-# %%
-# use your path
-path = r'C:/Users/sanji/Downloads/eye_tracker_data_clean_new'
-averted_pre_files = glob.glob(path + "/*averted_pre*.csv")
-pattern = re.compile(r"[S]+(\d+)\-")
-averted_files_pre_odd = []
-averted_files_pre_even = []
+# Create new column for percentage looking and not looking
+df_averted_pre_odd["look_percentage"]=""
+df_averted_pre_odd["not_look_percentage"]=""
 
-for file in averted_pre_files:
-    if int(re.search(pattern, file).group(1)) % 2 != 0:
-        averted_files_pre_odd.append(file)
-    else:
-        averted_files_pre_even.append(file)
+for idx, value in enumerate(rows_each_pair_begin):
+    # df_temp = df_averted_pre_odd.get_loc[np.r_[rows_each_pair_begin[idx]:rows_each_pair_end[idx]], :]
+    df_temp = df_averted_pre_odd[rows_each_pair_begin[idx]:rows_each_pair_end[idx], :]
 
-# Get how many seconds for each pair
-for idx, filename in enumerate(averted_files_pre_odd):
-    df_averted_pre_odd = pd.read_csv(filename, index_col=None, header=0)
-    sec = df_averted_pre_odd.shape[0] / 125
-    print(f"Averted_pre_odd, pair : {idx}, Total Rows : {df_averted_pre_odd.shape[0]}, seconds : {sec}")
+    # one_counter = df_temp.loc[df_temp.look_each_other == 1, "look_each_other" ].count()
+    # zero_counter = df_temp.loc[df_temp.look_each_other == 0, "look_each_other" ].count()
+    # # Calculate average
+    # one_percentage = (one_counter / 125) * 100
+    # zero_percentage = 100 - one_percentage
+    # # Assign percentage on new column
+    # df_averted_pre_odd.loc[idx, ["look_percentage"]] = one_percentage
+    # df_averted_pre_odd.loc[idx, ["not_look_percentage"]] = zero_percentage
+    # # ic(idx, one_counter, zero_counter, one_percentage, zero_percentage)
 
-# %%
-path = r'C:/Users/sanji/Downloads/eye_tracker_data_clean_new'
-averted_pre_files = glob.glob(path + "/*averted_pre*.csv")
-pattern = re.compile(r"[S]+(\d+)\-")
-averted_files_pre_odd = []
-averted_files_pre_even = []
-
-for file in averted_pre_files:
-    if int(re.search(pattern, file).group(1)) % 2== 0:
-        averted_files_pre_even.append(file)
-    else:
-        averted_files_pre_odd.append(file)
-
-# Get how many seconds for each pair
-for idx, filename in enumerate(averted_files_pre_even):
-    df_averted_pre_even = pd.read_csv(filename, index_col=None, header=0)
-    sec = df_averted_pre_even.shape[0] / 125
-    print(f"Averted_pre_even, pair : {idx}, Total Rows : {df_averted_pre_even.shape[0]}, seconds : {sec}")
 
 # %%
 col = df_averted_pre_odd.loc("look_each_other")
