@@ -286,7 +286,7 @@ df_averted_pre_even['look_each_other'] = np.where(df_averted_pre_even['FoveaEven
 df_averted_pre_odd['look_each_other'].value_counts()
 
 # %% [markdown]
-# ## Temporary testing - works
+# ## Counting how many times pair look each other
 
 # %%
 # df_averted_pre_odd.head()
