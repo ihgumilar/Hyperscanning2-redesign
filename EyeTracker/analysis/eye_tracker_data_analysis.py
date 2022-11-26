@@ -116,10 +116,11 @@ path2files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_exp
 df_averted = combine_eye_data_into_dataframe(path2files, tag)
 print("averted_pre ODD subjects")
 df_averted_pre_odd = df_averted[0]
-# df_averted_pre_odd.head()
+
 
 print("averted_pre EVEN subjects")
 df_averted_pre_even = df_averted[1]
+
 
 
 
@@ -128,7 +129,7 @@ df_averted_pre_even = df_averted[1]
 
 # %%
 # NOTE: No idea, why for some reasons the number of columns for df_averted_pre_even is almost double then df_averted_pre_odd dataframe
-# So we need to cut it off
+# So we need to cut it off for all EVEN subjects
 
 # This is just to check the number of columns of odd subject
 # odd_cols =  [x for x in df_averted_pre_odd.columns]
@@ -267,33 +268,64 @@ df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] == 1,'FoveaEven'] = 'lo
 df_averted_pre_even.loc[df_averted_pre_even['FoveaEven'] ==0,'FoveaEven'] = 'not look'
 
 # %% [markdown]
-# ## Checking if both participants are looking at each other or not
+# ## Checking if both participants are looking at each other or not - Not right the label at all
 # If so, then add new column for both odd and even subjects "look_each_other" column. The value must be the same in both dataframes of columns "look_each_other"
 
 # %%
 
 # add looking_each_other to the original table for both odd and even subjects
-df_averted_pre_odd['look_each_other'] = np.where(df_averted_pre_odd['FoveaOdd'] == df_averted_pre_even['FoveaEven'], '1', '0') 
-df_averted_pre_even['look_each_other'] = np.where(df_averted_pre_even['FoveaEven'] == df_averted_pre_odd['FoveaOdd'], '1', '0') 
+# if df_averted_pre_odd['FoveaOdd'] == 'look' and df_averted_pre_even['FoveaEven']=='look':
+#     df_averted_pre_odd['look_each_other'] = 1
+#     df_averted_pre_even['look_each_other'] = `1
+# else:
+df_averted_pre_odd['look_each_other'] = np.where(df_averted_pre_odd['FoveaOdd'] == df_averted_pre_even['FoveaEven'], 1, 0) 
+df_averted_pre_even['look_each_other'] = np.where(df_averted_pre_even['FoveaEven'] == df_averted_pre_odd['FoveaOdd'], 1, 0) 
 
 # %%
 # Checking if the number of look each other is the same or not. Just change odd to even
 df_averted_pre_odd['look_each_other'].value_counts()
 
 # %% [markdown]
+# ## Temporary testing - works
+
+# %%
+# df_averted_pre_odd.head()
+step = 125
+treshold = 10
+list_look = []
+for i in range(0, df_averted_pre_odd.shape[0], step):
+    count = 0
+    for j in range(i, i+step):
+        if df_averted_pre_odd.iloc[j]['FoveaOdd']=='look' and df_averted_pre_even.iloc[j]['FoveaEven']=='look':
+            count += 1
+            # if count == treshold:
+            #     break
+    list_look += [1 if count >= treshold else 0]
+
+# list_look
+
+# %%
+len(list_look)
+sum(list_look)/len(list_look)
+# df_averted_pre_odd.shape[0]/125
+
+# %% [markdown]
 # ## Give label how many "1" that is above threshold for every 125 rows (sampling rate) - This is odd dataframe
 # Just do that for either odd or even dataframe
+#
+# ## This is just checking how many "1"s every 125 sampling rate (every second) - This is odd dataframe
 
 # %%
 threshold = 13
 current_rows = 0 
 
 while current_rows < len(df_averted_pre_odd) + 125:
-    selection = df_averted_pre_odd.loc[current_rows: current_rows + 125, 'FoveaOdd']
+    selection = df_averted_pre_odd.loc[current_rows: current_rows + 125, 'look_each_other']
     
     only_ones = [num for num in list(selection) if num == 1]
     count_of_ones = len(only_ones)
     
+    # Uncomment this to see how many "1"s for every 125 rows (second)
     print(count_of_ones, current_rows)
     
     if count_of_ones >= 13:
@@ -309,18 +341,21 @@ df_averted_pre_odd.shape
 # %% [markdown]
 # ## Give label how many "1" that is above threshold for every 125 rows (sampling rate) - This is even dataframe
 # Just do that for either odd or even dataframe. You don't need to run this when you have done the above cell. But it is ok for now
+#
+# ## This is just checking how many "1"s every 125 sampling rate (every second) - This is even dataframe
 
 # %%
 threshold = 13
 current_rows = 0 
 
 while current_rows < len(df_averted_pre_even) + 125:
-    selection = df_averted_pre_even.loc[current_rows: current_rows + 125, 'FoveaEven']
+    selection = df_averted_pre_even.loc[current_rows: current_rows + 125, 'look_each_other']
     
     only_ones = [num for num in list(selection) if num == 1]
     count_of_ones = len(only_ones)
     
-    print(count_of_ones, current_rows)
+    # Uncomment this to see how many "1"s for every 125 rows (second)
+    # print(count_of_ones, current_rows)
     
     if count_of_ones >= 13:
         df_averted_pre_even.loc[current_rows: current_rows + 125, 'PercentEven'] = 1
@@ -334,19 +369,28 @@ df_averted_pre_even.loc[current_rows + 125: len(df_averted_pre_even), 'PercentEv
 
 
 
-# %% [markdown]
-# ## Give value 1 when the value of looking at each other above the threshold (There are 13 of number "1")
+# %%
+#TODO : Count how many "1" or percentage for every second (125)
+df_averted_pre_odd["look_each_other"].shape
 
 # %%
-df_averted_pre_odd['ThresholdPercentage'] = np.where((df_averted_pre_odd['PercentOdd'] == 1) & (df_averted_pre_even['PercentEven'] == 1), '1', '0')
-df_averted_pre_even['ThresholdPercentage'] = np.where((df_averted_pre_odd['PercentOdd'] == 1) & (df_averted_pre_even['PercentEven'] == 1), '1', '0')
+# df_averted_pre_even.drop(["sig_looking"],axis=1, inplace=True)
+# df_averted_pre_even.columns
+
+# %% [markdown]
+# ## Give value 1 when the value of looking at each other above the threshold, which is 13, area available for both odd and even dataframe 
+# If there are 13 times of "1" or more within one second that that is considered significant looking at each other are matched for both odd and even subjects. It ensures that they looked at each other "significantly"
+
+# %%
+df_averted_pre_odd['sig_looking'] = np.where((df_averted_pre_odd['PercentOdd'] == 1) & (df_averted_pre_even['PercentEven'] == 1), '1', '0')
+df_averted_pre_even['sig_looking'] = np.where((df_averted_pre_odd['PercentOdd'] == 1) & (df_averted_pre_even['PercentEven'] == 1), '1', '0')
 
 # %% [markdown]
 # ## Count how many percentage of looking and not looking
 # For averted condition, we could say 100% of participants did not look "scientifically" each other. Because it is zero
 
 # %%
-df_averted_pre_even['ThresholdPercentage'].value_counts(normalize=True).mul(100).round(1).astype(str) + '%' 
+df_averted_pre_even['sig_looking'].value_counts(normalize=True).mul(100).round(1).astype(str) + '%' 
 
 # %%
 col = df_averted_pre_odd["look_each_other"]
