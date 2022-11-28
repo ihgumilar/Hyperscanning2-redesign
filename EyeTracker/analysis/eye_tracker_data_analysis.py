@@ -29,27 +29,28 @@ from pandas import DataFrame
 from time import time
 from datetime import timedelta
 from sklearn.feature_selection import VarianceThreshold
+from tqdm import tqdm
 
 
 # %% [markdown]
-# ## Function to populate odd and even subjects into one separate dataFrame (averted_pre) 
+# ## Function of eye_data_analysis 
 
 # %%
-def combine_eye_data_into_dataframe(path2files: str, tag:str):
+def eye_data_analysis(path2files: str, tag:str):
     
     """
-        Combine all cleaned eye tracker data, eg. averted_pre, into one dataframe.
+        Analyze all cleaned eye tracker data, eg. averted_pre.
         It also involves pre-processing (replacing missing values with average value of columns
-        where they are). However, the return value is dataframe of odd and even subject that is separated
+        where they are). It calculates how much each pair looks at each other throughout the experiment(each eye condition)
 
     Args:
         path2files (str): Path to a directory where all cleaned eye tracker files are stored
         tag (str): eye gaze condition, ie. averted_pre, averted_post, direct_pre, direct_post, natural_pre, natural_post
 
     Returns:
-        tuple: Consists of two dataframes :
-               1. ODD subject [index = 0]
-               2. and of EVEN [index = 1]
+        looking_percentage_all_pairs (list) : Each element represents the percentage of looking of each pair \n
+                                              throughout the experiment
+               
     """
 
     gaze_keyword= "/*" + tag + "*.csv"
@@ -57,54 +58,218 @@ def combine_eye_data_into_dataframe(path2files: str, tag:str):
     pattern = re.compile(r"[S]+(\d+)\-")
     files_pre_odd = []
     files_pre_even = []
+    looking_percentage_all_pairs = []
 
     for file in pre_files:
         if int(re.search(pattern, file).group(1)) % 2 != 0:
             files_pre_odd.append(file)
         else:
             files_pre_even.append(file)
-
-    li_pre_odd = []
-    li_pre_even = []
-
-    # ###############################################
-    # Combine all pre odd files
-    for filename in files_pre_odd:
-        df_pre_odd = pd.read_csv(filename, index_col=None, header=0)
-        li_pre_odd.append(df_pre_odd)
-    # Populate all dataframes into one dataframe
-    df_pre_odd = pd.concat(li_pre_odd, axis=0, ignore_index=True)
-
-    # Replace missing values with averages of columns where they are
-    df_pre_odd.fillna(df_pre_odd.mean(), inplace=True)
-
-    df_pre_odd = df_pre_odd.reset_index(drop=True)
-    # Remove space before column names
-    df_pre_odd_new_columns = df_pre_odd.columns.str.replace(
-        ' ', '')
-    df_pre_odd.columns = df_pre_odd_new_columns
-
-    # ###############################################
-    # Combine all pre even files
-    for filename in files_pre_even:
-        df_pre_even = pd.read_csv(filename, index_col=None, header=0)
-        li_pre_even.append(df_pre_even)
-
-    # Populate all dataframes into one dataframe
-    df_pre_even = pd.concat(li_pre_even, axis=0, ignore_index=True)
-
-
-    # Replace missing values with averages of columns where they are
-    df_pre_even.fillna(df_pre_even.mean(), inplace=True)
-
-    df_pre_even = df_pre_even.reset_index(drop=True)
-
-    # Remove space before column names
-    df_pre_even_new_columns = df_pre_even.columns.str.replace(
-        ' ', '')
-    df_pre_even.columns = df_pre_even_new_columns
     
-    return df_pre_odd, df_pre_even
+    #TODO : Remove the line below when it is done
+    # li_pre_odd = []
+    # li_pre_even = []
+
+        ############################################### Odd subject ###############################################
+        # Combine all pre odd files
+        for idx, filename in tqdm(enumerate(files_pre_odd), desc="Analyzing eye data in progress.."):
+            df_odd = pd.read_csv(filename, index_col=None, header=0)
+            # li_pre_odd.append(df_odd)
+        
+        #TODO : Remove the line below when it is done
+        # # Populate all dataframes into one dataframe
+        # df_odd = pd.concat(li_pre_odd, axis=0, ignore_index=True)
+
+            # Replace missing values with averages of columns where they are
+            df_odd.fillna(df_odd.mean(), inplace=True)
+
+            #TODO : Remove the line below when it is done
+            # df_odd = df_odd.reset_index(drop=True)
+
+            # Remove space before column names
+            df_odd_new_columns = df_odd.columns.str.replace(
+                ' ', '')
+            df_odd.columns = df_odd_new_columns
+
+            # convert cartesian to degree of eye data
+            
+            # Gaze direction (right eye)
+            df_odd['GazeDirectionRight(X)Degree'] = df_odd.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionRight(X)'], x['GazeDirectionRight(Y)']), axis=1)
+            df_odd['GazeDirectionRight(X)Degree'] = df_odd.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionRight(X)'], x['GazeDirectionRight(Y)']), axis=1)
+            df_odd['GazeDirectionRight(Y)Degree'] = df_odd.apply(lambda x: gaze_direction_in_y_axis_degree(x['GazeDirectionRight(Y)'], x['GazeDirectionRight(Z)']), axis=1)
+
+            # Gaze direction (left eye)
+            df_odd['GazeDirectionLeft(X)Degree'] = df_odd.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionLeft(X)'], x['GazeDirectionLeft(Y)']), axis=1)
+            df_odd['GazeDirectionLeft(Y)Degree'] = df_odd.apply(lambda x: gaze_direction_in_y_axis_degree(x['GazeDirectionLeft(Y)'], x['GazeDirectionLeft(Z)']), axis=1)
+
+            # check degree_within_fovea or not
+            df_odd['GazeDirectionRight(X)inFovea'] = df_odd.apply(lambda x: check_degree_within_fovea(x['GazeDirectionRight(X)Degree']), axis=1)
+            df_odd['GazeDirectionRight(Y)inFovea'] = df_odd.apply(lambda x: check_degree_within_fovea(x['GazeDirectionRight(Y)Degree']), axis=1)
+            df_odd['GazeDirectionLeft(X)inFovea'] = df_odd.apply(lambda x: check_degree_within_fovea(x['GazeDirectionLeft(X)Degree']), axis=1)
+            df_odd['GazeDirectionLeft(Y)inFovea'] = df_odd.apply(lambda x: check_degree_within_fovea(x['GazeDirectionLeft(Y)Degree']), axis=1)
+
+            # Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (odd subjects)
+            df_odd["FoveaOdd"] = df_odd["GazeDirectionRight(X)inFovea"] + df_odd["GazeDirectionLeft(X)inFovea"] + df_odd["GazeDirectionRight(Y)inFovea"] + df_odd["GazeDirectionLeft(Y)inFovea"]
+            df_odd.loc[df_odd['FoveaOdd'] > 1,'FoveaOdd'] = 1
+
+            # Change 1 => look , 0 => not look (odd subjects)
+            df_odd.loc[df_odd['FoveaOdd'] == 1, 'FoveaOdd'] = 'look'
+            df_odd.loc[df_odd['FoveaOdd'] == 0, 'FoveaOdd'] = 'not look'
+
+
+
+        ############################################### Even subject ###############################################
+        # Combine all pre even files
+        # for filename in files_pre_even:
+            # df_even = pd.read_csv(filename, index_col=None, header=0)
+            df_even = pd.read_csv(files_pre_even[idx], index_col=None, header=0)
+            # li_pre_even.append(df_even)
+        
+        #TODO : Remove the line below when it is done
+        # Populate all dataframes into one dataframe
+        # df_even = pd.concat(li_pre_even, axis=0, ignore_index=True)
+
+
+            # Replace missing values with averages of columns where they are
+            df_even.fillna(df_even.mean(), inplace=True)
+
+            #TODO : Remove the line below when it is done
+            # df_even = df_even.reset_index(drop=True)
+
+            # Remove space before column names
+            df_even_new_columns = df_even.columns.str.replace(
+                ' ', '')
+            df_even.columns = df_even_new_columns
+
+            # convert cartesian to degree of eye data
+
+            # Gaze direction (right eye)
+            df_even['GazeDirectionRight(X)Degree'] = df_even.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionRight(X)'], x['GazeDirectionRight(Y)']), axis=1)
+            df_even['GazeDirectionRight(X)Degree'] = df_even.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionRight(X)'], x['GazeDirectionRight(Y)']), axis=1)
+            df_even['GazeDirectionRight(Y)Degree'] = df_even.apply(lambda x: gaze_direction_in_y_axis_degree(x['GazeDirectionRight(Y)'], x['GazeDirectionRight(Z)']), axis=1)
+
+            # Gaze direction (left eye)
+            df_even['GazeDirectionLeft(X)Degree'] = df_even.apply(lambda x: gaze_direction_in_x_axis_degree(x['GazeDirectionLeft(X)'], x['GazeDirectionLeft(Y)']), axis=1)
+            df_even['GazeDirectionLeft(Y)Degree'] = df_even.apply(lambda x: gaze_direction_in_y_axis_degree(x['GazeDirectionLeft(Y)'], x['GazeDirectionLeft(Z)']), axis=1)
+
+            # check degree_within_fovea or not
+            df_even['GazeDirectionRight(X)inFovea'] = df_even.apply(lambda x: check_degree_within_fovea(x['GazeDirectionRight(X)Degree']), axis=1)
+            df_even['GazeDirectionRight(Y)inFovea'] = df_even.apply(lambda x: check_degree_within_fovea(x['GazeDirectionRight(Y)Degree']), axis=1)
+            df_even['GazeDirectionLeft(X)inFovea'] = df_even.apply(lambda x: check_degree_within_fovea(x['GazeDirectionLeft(X)Degree']), axis=1)
+            df_even['GazeDirectionLeft(Y)inFovea'] = df_even.apply(lambda x: check_degree_within_fovea(x['GazeDirectionLeft(Y)Degree']), axis=1)
+
+            # Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (even subjects)
+            df_even["FoveaEven"] = df_even["GazeDirectionRight(X)inFovea"] + df_even["GazeDirectionLeft(X)inFovea"] + df_even["GazeDirectionRight(Y)inFovea"] + df_even["GazeDirectionLeft(Y)inFovea"]
+            df_even.loc[df_even['FoveaEven'] > 1,'FoveaEven'] = 1
+
+            # Change 1 => look , 0 => not look (even subjects)
+            df_even.loc[df_even['FoveaEven'] == 1,'FoveaEven'] = 'look'
+            df_even.loc[df_even['FoveaEven'] ==0,'FoveaEven'] = 'not look'
+
+        
+            # Calculate how many times they "really" look at each other
+            looking_percentage_each_pair = looking_percentage(df_odd, df_even)
+            
+            # Put the percentage of looking each other of each pair into one list
+            looking_percentage_all_pairs.append(looking_percentage_each_pair)
+
+    return looking_percentage_all_pairs
+        
+
+
+
+##################################### Functions to convert to degree and check within fovea or not #################
+### Put into a class of degree
+# Formula to convert cartesian to degree
+def gaze_direction_in_x_axis_degree(x: float, y: float):
+    """Right hand rule coordinate"""
+    try:
+        degree = degrees(atan(y / x))  # Opposite / adjacent
+    except ZeroDivisionError:
+        degree = 0.0
+    return round(degree, 2)
+
+def gaze_direction_in_y_axis_degree(y: float, z: float):
+    """Right hand rule coordinate"""
+    try:
+        degree = degrees(atan(z / y)) # Opposite / adjacent
+    except ZeroDivisionError:
+        degree = 0.0
+    return round(degree, 2)
+
+# Give mark 1 for GazeDirectionYDegree that falls under fovea are (30 degrees), otherwise 0
+def check_degree_within_fovea(gaze_direction):
+    """ In total 30 degrees where human can recognize an object. So we need to
+    divide by 2. Half right and half left
+
+    1 = within fovea
+    0 = not wihtin fovea"""
+
+    if (gaze_direction <= 15) & (gaze_direction >= 0):
+        return 1
+    elif (gaze_direction >= -15) & (gaze_direction <= 0):
+        return 1
+    else:
+        return 0
+
+
+
+###################### Function to check whether pair looks at each other or not ################### 
+## Put into a class of analysis_hyperscanning
+
+def looking_percentage(odd_dataframe:DataFrame, even_dataframe: DataFrame, srate:int =125, threshold:int =13):
+    
+    """ 
+        Objective  : Count how many times each pair "really" looks at each other throughout the experiment
+                     This will look at per second.  "Really" is determined by a previous research which indicates
+                     that humans are conscious look at each other within 100ms, 
+                     which is equal to there are 13 times of "looking" value within column of FoveaOdd or FoveaEven
+        
+        Parameters : - odd_dataframe (pandas dataframe) :  dataframe of odd participant
+                     - even_dataframe (pandas dataframe) :  dataframe of even participant
+                     - srate (int) : which indicates the step / per second that we will check whether
+                                     the pair looking or not
+                     - threshold (int) : threshold to determine whether the pair "really" looks or not
+                                         if there are at least 13 times of "looking" within a second (srate)
+                                         under the column of FoveaOdd or FoveaEven, then it is considered "really" looking
+                        Note : Kindly refer to this research to see the threshold of 30 (100ms)
+                        https://journals.sagepub.com/doi/abs/10.1111/j.1467-9280.2006.01750.x?casa_token=AYU81Dg2DAMAAAAA%3Asy9nVGA6NjQPFuRthQW5eCZl9V06TpqV2OgtYbUFPwVKCV4so2PlVJrBWo01EfiSX-yNHul7mX_DlYk&journalCode=pssa
+
+        Output      : - percent_look (float) : percentage of looking of a pair throughout the experiment
+
+    """
+
+    list_look = []
+    # To chunk the data for every n raws (which indicate per second). Refer to srate
+    for i in range(0, odd_dataframe.shape[0], srate):
+        count = 0
+        # To loop the series or data in a dataframe so that we can check if they are matched or not
+        for j in range(i, i+srate):
+            if odd_dataframe.iloc[j]['FoveaOdd']=='look' and even_dataframe.iloc[j]['FoveaEven']=='look':
+                count += 1
+        
+        # each element of the list represents whether the pair looks at each other or not within a second
+        list_look += [1 if count >= threshold else 0]
+
+    # Percentage of looking
+    percent_look = sum(list_look)/len(list_look) * 100
+    # Get the last two digits only
+    percent_look = float("{:.2f}".format(percent_look))
+
+    return percent_look
+
+
+            
+
+
+# %% [markdown]
+# ## Testing eye_data_analysis function
+#
+
+# %%
+tag = "averted_pre"
+path2files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/raw_cleaned_combined_experimental_eye_data"
+percent_looking_all = eye_data_analysis(path2files, tag)
 
 # %% [markdown]
 # ### Running a function of combine_eye_data_into_dataframe
@@ -149,37 +314,37 @@ df_averted_pre_even = df_averted_pre_even.iloc[:,0:24]
 # NOTE : Cartesian is a default value that is resulted from HTC Vive pro
 
 # %%
-# Formula to convert cartesian to degree
-def gaze_direction_in_x_axis_degree(x: float, y: float):
-    """Right hand rule coordinate"""
-    try:
-        degree = degrees(atan(y / x))  # Opposite / adjacent
-    except ZeroDivisionError:
-        degree = 0.0
-    return round(degree, 2)
+# # Formula to convert cartesian to degree
+# def gaze_direction_in_x_axis_degree(x: float, y: float):
+#     """Right hand rule coordinate"""
+#     try:
+#         degree = degrees(atan(y / x))  # Opposite / adjacent
+#     except ZeroDivisionError:
+#         degree = 0.0
+#     return round(degree, 2)
 
-def gaze_direction_in_y_axis_degree(y: float, z: float):
-    """Right hand rule coordinate"""
-    try:
-        degree = degrees(atan(z / y)) # Opposite / adjacent
-    except ZeroDivisionError:
-        degree = 0.0
-    return round(degree, 2)
+# def gaze_direction_in_y_axis_degree(y: float, z: float):
+#     """Right hand rule coordinate"""
+#     try:
+#         degree = degrees(atan(z / y)) # Opposite / adjacent
+#     except ZeroDivisionError:
+#         degree = 0.0
+#     return round(degree, 2)
 
-# Give mark 1 for GazeDirectionYDegree that falls under fovea are (30 degrees), otherwise 0
-def check_degree_within_fovea(gaze_direction):
-    """ In total 30 degrees where human can recognize an object. So we need to
-    divide by 2. Half right and half left
+# # Give mark 1 for GazeDirectionYDegree that falls under fovea are (30 degrees), otherwise 0
+# def check_degree_within_fovea(gaze_direction):
+#     """ In total 30 degrees where human can recognize an object. So we need to
+#     divide by 2. Half right and half left
 
-    1 = within fovea
-    0 = not wihtin fovea"""
+#     1 = within fovea
+#     0 = not wihtin fovea"""
 
-    if (gaze_direction <= 15) & (gaze_direction >= 0):
-        return 1
-    elif (gaze_direction >= -15) & (gaze_direction <= 0):
-        return 1
-    else:
-        return 0
+#     if (gaze_direction <= 15) & (gaze_direction >= 0):
+#         return 1
+#     elif (gaze_direction >= -15) & (gaze_direction <= 0):
+#         return 1
+#     else:
+#         return 0
 
 # %% [markdown]
 # ### Running function to convert cartesian to degree (averted_pre_odd)
@@ -285,52 +450,50 @@ df_averted_pre_even['look_each_other'] = np.where(df_averted_pre_even['FoveaEven
 # Checking if the number of look each other is the same or not. Just change odd to even
 df_averted_pre_odd['look_each_other'].value_counts()
 
-
 # %% [markdown]
 # ## Counting how many times pair look each other
 
 # %%
-def looking_percentage(odd_dataframe:DataFrame, even_dataframe: DataFrame, srate:int =125, threshold:int =13):
+# def looking_percentage(odd_dataframe:DataFrame, even_dataframe: DataFrame, srate:int =125, threshold:int =13):
     
-    """ 
-        Objective  : Count how many times each pair "really" looks at each other throughout the experiment
-                     This will look at per second.  "Really" is determined by a previous research which indicates
-                     that humans are conscious look at each other within 100ms, 
-                     which is equal to there are 13 times of "looking" value within column of FoveaOdd or FoveaEven
+#     """ 
+#         Objective  : Count how many times each pair "really" looks at each other throughout the experiment
+#                      This will look at per second.  "Really" is determined by a previous research which indicates
+#                      that humans are conscious look at each other within 100ms, 
+#                      which is equal to there are 13 times of "looking" value within column of FoveaOdd or FoveaEven
         
-        Parameters : - odd_dataframe (pandas dataframe) :  dataframe of odd participant
-                     - even_dataframe (pandas dataframe) :  dataframe of even participant
-                     - srate (int) : which indicates the step / per second that we will check whether
-                                     the pair looking or not
-                     - threshold (int) : threshold to determine whether the pair "really" looks or not
-                                         if there are at least 13 times of "looking" within a second (srate)
-                                         under the column of FoveaOdd or FoveaEven, then it is considered "really" looking
-                        Note : Kindly refer to this research to see the threshold of 30 (100ms)
-                        https://journals.sagepub.com/doi/abs/10.1111/j.1467-9280.2006.01750.x?casa_token=AYU81Dg2DAMAAAAA%3Asy9nVGA6NjQPFuRthQW5eCZl9V06TpqV2OgtYbUFPwVKCV4so2PlVJrBWo01EfiSX-yNHul7mX_DlYk&journalCode=pssa
+#         Parameters : - odd_dataframe (pandas dataframe) :  dataframe of odd participant
+#                      - even_dataframe (pandas dataframe) :  dataframe of even participant
+#                      - srate (int) : which indicates the step / per second that we will check whether
+#                                      the pair looking or not
+#                      - threshold (int) : threshold to determine whether the pair "really" looks or not
+#                                          if there are at least 13 times of "looking" within a second (srate)
+#                                          under the column of FoveaOdd or FoveaEven, then it is considered "really" looking
+#                         Note : Kindly refer to this research to see the threshold of 30 (100ms)
+#                         https://journals.sagepub.com/doi/abs/10.1111/j.1467-9280.2006.01750.x?casa_token=AYU81Dg2DAMAAAAA%3Asy9nVGA6NjQPFuRthQW5eCZl9V06TpqV2OgtYbUFPwVKCV4so2PlVJrBWo01EfiSX-yNHul7mX_DlYk&journalCode=pssa
 
-        Output      : - percent_look (float) : percentage of looking of a pair throughout the experiment
+#         Output      : - percent_look (float) : percentage of looking of a pair throughout the experiment
 
-    """
+#     """
 
-    list_look = []
-    # To chunk the data for every n raws (which indicate per second). Refer to srate
-    for i in range(0, odd_dataframe.shape[0], srate):
-        count = 0
-        # To loop the series or data in a dataframe so that we can check if they are matched or not
-        for j in range(i, i+srate):
-            if odd_dataframe.iloc[j]['FoveaOdd']=='look' and even_dataframe.iloc[j]['FoveaEven']=='look':
-                count += 1
+#     list_look = []
+#     # To chunk the data for every n raws (which indicate per second). Refer to srate
+#     for i in range(0, odd_dataframe.shape[0], srate):
+#         count = 0
+#         # To loop the series or data in a dataframe so that we can check if they are matched or not
+#         for j in range(i, i+srate):
+#             if odd_dataframe.iloc[j]['FoveaOdd']=='look' and even_dataframe.iloc[j]['FoveaEven']=='look':
+#                 count += 1
         
-        # each element of the list represents whether the pair looks at each other or not within a second
-        list_look += [1 if count >= threshold else 0]
+#         # each element of the list represents whether the pair looks at each other or not within a second
+#         list_look += [1 if count >= threshold else 0]
 
-    # Percentage of looking
-    percent_look = sum(list_look)/len(list_look) * 100
-    # Get the last two digits only
-    percent_look = float("{:.2f}".format(percent_look))
+#     # Percentage of looking
+#     percent_look = sum(list_look)/len(list_look) * 100
+#     # Get the last two digits only
+#     percent_look = float("{:.2f}".format(percent_look))
 
-    return percent_look
-
+#     return percent_look
 
 
 # %%
