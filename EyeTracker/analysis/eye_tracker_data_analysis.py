@@ -285,29 +285,69 @@ df_averted_pre_even['look_each_other'] = np.where(df_averted_pre_even['FoveaEven
 # Checking if the number of look each other is the same or not. Just change odd to even
 df_averted_pre_odd['look_each_other'].value_counts()
 
+
 # %% [markdown]
 # ## Counting how many times pair look each other
 
 # %%
-# df_averted_pre_odd.head()
-step = 125
-treshold = 10
-list_look = []
-for i in range(0, df_averted_pre_odd.shape[0], step):
-    count = 0
-    for j in range(i, i+step):
-        if df_averted_pre_odd.iloc[j]['FoveaOdd']=='look' and df_averted_pre_even.iloc[j]['FoveaEven']=='look':
-            count += 1
-            # if count == treshold:
-            #     break
-    list_look += [1 if count >= treshold else 0]
+def looking_percentage(odd_dataframe:DataFrame, even_dataframe: DataFrame, srate:int =125, threshold:int =13):
+    
+    """ 
+        Objective  : Count how many times each pair "really" looks at each other throughout the experiment
+                     This will look at per second.  "Really" is determined by a previous research which indicates
+                     that humans are conscious look at each other within 100ms, 
+                     which is equal to there are 13 times of "looking" value within column of FoveaOdd or FoveaEven
+        
+        Parameters : - odd_dataframe (pandas dataframe) :  dataframe of odd participant
+                     - even_dataframe (pandas dataframe) :  dataframe of even participant
+                     - srate (int) : which indicates the step / per second that we will check whether
+                                     the pair looking or not
+                     - threshold (int) : threshold to determine whether the pair "really" looks or not
+                                         if there are at least 13 times of "looking" within a second (srate)
+                                         under the column of FoveaOdd or FoveaEven, then it is considered "really" looking
+                        Note : Kindly refer to this research to see the threshold of 30 (100ms)
+                        https://journals.sagepub.com/doi/abs/10.1111/j.1467-9280.2006.01750.x?casa_token=AYU81Dg2DAMAAAAA%3Asy9nVGA6NjQPFuRthQW5eCZl9V06TpqV2OgtYbUFPwVKCV4so2PlVJrBWo01EfiSX-yNHul7mX_DlYk&journalCode=pssa
 
-# list_look
+        Output      : - percent_look (float) : percentage of looking of a pair throughout the experiment
+
+    """
+
+    list_look = []
+    # To chunk the data for every n raws (which indicate per second). Refer to srate
+    for i in range(0, odd_dataframe.shape[0], srate):
+        count = 0
+        # To loop the series or data in a dataframe so that we can check if they are matched or not
+        for j in range(i, i+srate):
+            if odd_dataframe.iloc[j]['FoveaOdd']=='look' and even_dataframe.iloc[j]['FoveaEven']=='look':
+                count += 1
+        
+        # each element of the list represents whether the pair looks at each other or not within a second
+        list_look += [1 if count >= threshold else 0]
+
+    # Percentage of looking
+    percent_look = sum(list_look)/len(list_look) * 100
+    # Get the last two digits only
+    percent_look = float("{:.2f}".format(percent_look))
+
+    return percent_look
+
+
 
 # %%
-len(list_look)
-sum(list_look)/len(list_look)
-# df_averted_pre_odd.shape[0]/125
+percent_temp = looking_percentage(df_averted_pre_odd, df_averted_pre_even)
+print(percent_temp)
+
+# %%
+percent_looking_all = []
+# Put percentage of looking for each pair into a list so that we can use this later on
+percent_looking_all.append(percent_look)
+
+# Percentage of looking
+percent_look = sum(list_look)/len(list_look) * 100
+# Get the last two digits only
+percent_look = float("{:.2f}".format(percent_look))
+
+
 
 # %% [markdown]
 # ## Give label how many "1" that is above threshold for every 125 rows (sampling rate) - This is odd dataframe
