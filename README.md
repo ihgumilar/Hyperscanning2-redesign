@@ -44,7 +44,7 @@ In this experiment, there are three main data that will be analyzed :
 
 &#x20;  ****   `/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/raw_experimental_data/raw_combined_experimental_data`
 
-* **`TODO`:** Change loop from 24 to whatever length of files that are available
+
 
 &#x20;3\. **Clean** the above-(point no.2)-combined-EEG data for both baseline and experimental data using this [code](https://github.com/ihgumilar/Hyperscanning2-redesign/commit/a619b0b6b903abebabc3541d8067a78873af392d).&#x20;
 
