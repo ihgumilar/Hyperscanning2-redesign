@@ -29,7 +29,9 @@ from pandas import DataFrame
 from time import time
 from datetime import timedelta
 from sklearn.feature_selection import VarianceThreshold
-from tqdm import tqdm
+# from tqdm import tqdm
+from alive_progress import alive_bar
+from alive_progress.styles import showtime
 
 
 # %% [markdown]
@@ -60,9 +62,14 @@ def eye_data_analysis(path2files: str, tag:str):
     files_pre_even = []
     looking_percentage_all_pairs = []
 
-    for file in pre_files:
-        if int(re.search(pattern, file).group(1)) % 2 != 0:
+    for idx, file in enumerate(pre_files):
+        # if int(re.search(pattern, file).group(1)) % 2 != 0:
+        
+        # Put into a list for ODD subjects - Refer to filename
+        if ((idx  % 2 ) == 0):
             files_pre_odd.append(file)
+
+        # Put into different list for EVEN subjects - Refer to filename
         else:
             files_pre_even.append(file)
     
@@ -70,9 +77,17 @@ def eye_data_analysis(path2files: str, tag:str):
     # li_pre_odd = []
     # li_pre_even = []
 
-        ############################################### Odd subject ###############################################
-        # Combine all pre odd files
-        for idx, filename in tqdm(enumerate(files_pre_odd), desc="Analyzing eye data in progress.."):
+    ############################################### Odd subject ###############################################
+    # Combine all pre odd files
+    
+    with alive_bar(len(files_pre_odd)) as bar:
+        
+        for idx, filename in enumerate(files_pre_odd):
+            
+            indicator = str(idx + 1)
+            begin_info = "Pair-" + indicator + " is in progress..."
+            print(begin_info)
+            # bar(begin_info)
             df_odd = pd.read_csv(filename, index_col=None, header=0)
             # li_pre_odd.append(df_odd)
         
@@ -173,7 +188,13 @@ def eye_data_analysis(path2files: str, tag:str):
             # Put the percentage of looking each other of each pair into one list
             looking_percentage_all_pairs.append(looking_percentage_each_pair)
 
-    return looking_percentage_all_pairs
+            end_info = "Pair-" + indicator + " has been processed"
+            
+            # bar(end_info)
+            print(end_info)
+            bar()
+
+        return looking_percentage_all_pairs
         
 
 
