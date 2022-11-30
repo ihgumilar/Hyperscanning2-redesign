@@ -31,8 +31,7 @@ from datetime import timedelta
 from sklearn.feature_selection import VarianceThreshold
 # from tqdm import tqdm
 from alive_progress import alive_bar
-from alive_progress.styles import showtime
-
+# from alive_progress.styles import showtime
 
 # %% [markdown]
 # ## Function of eye_data_analysis 
@@ -63,7 +62,6 @@ def eye_data_analysis(path2files: str, tag:str):
     looking_percentage_all_pairs = []
 
     for idx, file in enumerate(pre_files):
-        # if int(re.search(pattern, file).group(1)) % 2 != 0:
         
         # Put into a list for ODD subjects - Refer to filename
         if ((idx  % 2 ) == 0):
@@ -73,10 +71,6 @@ def eye_data_analysis(path2files: str, tag:str):
         else:
             files_pre_even.append(file)
     
-    #TODO : Remove the line below when it is done
-    # li_pre_odd = []
-    # li_pre_even = []
-
     ############################################### Odd subject ###############################################
     # Combine all pre odd files
     
@@ -85,17 +79,9 @@ def eye_data_analysis(path2files: str, tag:str):
         for idx, filename in enumerate(files_pre_odd):
             
             df_odd = pd.read_csv(filename, index_col=None, header=0)
-            # li_pre_odd.append(df_odd)
-        
-        #TODO : Remove the line below when it is done
-        # # Populate all dataframes into one dataframe
-        # df_odd = pd.concat(li_pre_odd, axis=0, ignore_index=True)
 
             # Replace missing values with averages of columns where they are
             df_odd.fillna(df_odd.mean(), inplace=True)
-
-            #TODO : Remove the line below when it is done
-            # df_odd = df_odd.reset_index(drop=True)
 
             # Remove space before column names
             df_odd_new_columns = df_odd.columns.str.replace(
@@ -131,21 +117,10 @@ def eye_data_analysis(path2files: str, tag:str):
 
         ############################################### Even subject ###############################################
         # Combine all pre even files
-        # for filename in files_pre_even:
-            # df_even = pd.read_csv(filename, index_col=None, header=0)
             df_even = pd.read_csv(files_pre_even[idx], index_col=None, header=0)
-            # li_pre_even.append(df_even)
         
-        #TODO : Remove the line below when it is done
-        # Populate all dataframes into one dataframe
-        # df_even = pd.concat(li_pre_even, axis=0, ignore_index=True)
-
-
             # Replace missing values with averages of columns where they are
             df_even.fillna(df_even.mean(), inplace=True)
-
-            #TODO : Remove the line below when it is done
-            # df_even = df_even.reset_index(drop=True)
 
             # Remove space before column names
             df_even_new_columns = df_even.columns.str.replace(
@@ -190,7 +165,6 @@ def eye_data_analysis(path2files: str, tag:str):
             bar()
 
         return looking_percentage_all_pairs
-        
 
 
 
