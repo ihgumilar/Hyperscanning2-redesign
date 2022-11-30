@@ -84,10 +84,6 @@ def eye_data_analysis(path2files: str, tag:str):
         
         for idx, filename in enumerate(files_pre_odd):
             
-            indicator = str(idx + 1)
-            begin_info = "Pair-" + indicator + " is in progress..."
-            print(begin_info)
-                        
             df_odd = pd.read_csv(filename, index_col=None, header=0)
             # li_pre_odd.append(df_odd)
         
@@ -188,9 +184,9 @@ def eye_data_analysis(path2files: str, tag:str):
             # Put the percentage of looking each other of each pair into one list
             looking_percentage_all_pairs.append(looking_percentage_each_pair)
 
-            end_info = "Pair-" + indicator + " is done"      
+            indicator = str(idx + 1)
+            end_info = "Pair-" + indicator + " " + tag + " is done"      
             print(end_info)
-            
             bar()
 
         return looking_percentage_all_pairs
@@ -287,9 +283,33 @@ def looking_percentage(odd_dataframe:DataFrame, even_dataframe: DataFrame, srate
 #
 
 # %%
-tag = "averted_pre"
-path2files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/raw_cleaned_combined_experimental_eye_data"
-percent_looking_all = eye_data_analysis(path2files, tag)
+all_tags = ["averted_pre", "averted_post", "direct_pre", "direct_post", "natural_pre", "natural_post"]
+path2files = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/raw_cleaned_combined_experimental_eye_data/"
+percent_looking_all  = []
+
+# Loop all tags
+for tag in all_tags:
+    used_tag = tag
+    percent_looking_all.append(eye_data_analysis(path2files, used_tag))
+
+
+# %% [markdown]
+# ## Subtracted post and pre for percentage of looking
+
+# %%
+substracted_percent_list = []
+# averted
+substracted_percent_list.append([np.abs(x - y) for x,y in zip(percent_looking_all[0], percent_looking_all[1])])
+# direct
+substracted_percent_list.append([np.abs(x - y) for x,y in zip(percent_looking_all[2], percent_looking_all[3])])
+# natural
+substracted_percent_list.append([np.abs(x - y) for x,y in zip(percent_looking_all[4], percent_looking_all[5])])
+
+# substracted_percent_list[2]
+# np.average(percent_looking_all[5])
+
+# %%
+percent_looking_all[0]
 
 # %% [markdown]
 # ### Running a function of combine_eye_data_into_dataframe
