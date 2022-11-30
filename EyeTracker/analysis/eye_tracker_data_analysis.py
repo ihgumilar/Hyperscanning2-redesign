@@ -80,14 +80,14 @@ def eye_data_analysis(path2files: str, tag:str):
     ############################################### Odd subject ###############################################
     # Combine all pre odd files
     
-    with alive_bar(len(files_pre_odd)) as bar:
+    with alive_bar(len(files_pre_odd), title="Eye Data(" + tag +")", force_tty=True) as bar:
         
         for idx, filename in enumerate(files_pre_odd):
             
             indicator = str(idx + 1)
             begin_info = "Pair-" + indicator + " is in progress..."
             print(begin_info)
-            # bar(begin_info)
+                        
             df_odd = pd.read_csv(filename, index_col=None, header=0)
             # li_pre_odd.append(df_odd)
         
@@ -188,10 +188,9 @@ def eye_data_analysis(path2files: str, tag:str):
             # Put the percentage of looking each other of each pair into one list
             looking_percentage_all_pairs.append(looking_percentage_each_pair)
 
-            end_info = "Pair-" + indicator + " has been processed"
-            
-            # bar(end_info)
+            end_info = "Pair-" + indicator + " is done"      
             print(end_info)
+            
             bar()
 
         return looking_percentage_all_pairs
