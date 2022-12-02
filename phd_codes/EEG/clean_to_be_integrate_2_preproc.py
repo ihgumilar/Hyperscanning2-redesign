@@ -60,46 +60,11 @@ class Clean_EEG_Exp2_Redesign:
     High-level module (Cleaning up EEG data)
     """
 
-    def __init__(self, n_raw_files: int):
-        """
-        n_raw_files = number of raw EEG files. It must be EVEN number because it always goes
-                       in pair
-        """
-        self.number_raw_files = n_raw_files
-        self.intermediary_clean_eeg = _Intermediary_Clean_EEG()
-
-    def clean_eeg_pre_direct_experiment(
+    def __init__(
         self,
-        path_2_experimental_data_dir: str,
-        path2save_preprocessed_epoched_data: str,
-        path2save_inter_sync_score_N_deleted_epoch_indices: str,
-    ):
-
-        odd_subject_direct_pre_suffix = "-direct_pre_right_left_point_combined_raw.fif"
-        even_subject_direct_pre_suffix = "-direct_pre_left_right_point_combined_raw.fif"
-
-        start = timer()
-
-        all_deleted_epochs_indices_direct_pre = []
-
-        total_n_connections_all_pairs_direct_pre = []
-
-        list_circular_correlation_scores_all_theta = []
-        list_circular_correlation_scores_all_alpha = []
-        list_circular_correlation_scores_all_beta = []
-        list_circular_correlation_scores_all_gamma = []
-        list_circular_correlation_scores_all_direct_pre = []
-
-        total_n_connections_theta = []
-        total_n_connections_alpha = []
-        total_n_connections_beta = []
-        total_n_connections_gamma = []
-        total_n_connections_all_pairs_direct_pre = []
-
-        list_circular_correlation_direct_pre_no_filter_all = []
-
-        # TODO :Define bad channels for each participant
-        original_bad_channels_all = [
+        n_raw_files: int,
+        algorithm: str = "ccorr",
+        bad_channels=[
             # S1
             [],
             # S2
@@ -160,7 +125,82 @@ class Clean_EEG_Exp2_Redesign:
             [],
             # S30
             [],
-        ]
+        ],
+    ):
+        """
+        n_raw_files = number of raw EEG files. It must be EVEN number because it always goes
+                       in pair
+
+        supported connectivity measures (algorithm) : - 'envelope_corr': envelope correlation
+                                                      - 'pow_corr': power correlation
+                                                      - 'plv': phase locking value
+                                                      - 'ccorr': circular correlation coefficient
+                                                      - 'coh': coherence
+                                                      - 'imaginary_coh': imaginary coherence
+                                                      - 'pli': phase lag index
+                                                      - 'wpli': weighted phase lag index
+        """
+        self.number_raw_files = n_raw_files
+        self.__algorithm = algorithm
+        self._bad_channels = bad_channels
+        self.__intermediary_clean_eeg = _Intermediary_Clean_EEG()
+
+    def clean_N_compute_sync_eeg_pre_direct_experiment(
+        self,
+        experimental_data: str,
+        preprocessed_data: str,
+        sync_score_n_del_indices: str,
+    ):
+        """
+        Objective : Pre-process EEG files that have been combined.
+                    It also involves calculating score of inter-brain synchrony and deleting bad epochs
+
+        Parameters:
+                    - experimental_data (str): Folder where the combined files (pre_direct) of experiment that will be cleaned are stored(Subject 1 and 2)
+
+                    - preprocessed_data (str): Folder to which will store the pre-processed epoched data(*.fif)
+
+                    - sync_score_n_del_indices (str): Folder to which will store the indices of deleted epoch of EEG data
+
+        Output    :
+                    1. Pre-processed epoched EEG file of subject 1 (*.fif)
+                    2. Pre-processed epoched EEG file of subject 2 (*.fif)
+                    3. Scores of inter-brain synchrony (*.pkl files)
+
+                        Note : The structure of pkl files is each pair will have 4 lists, which has the following order
+                            * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
+                            * then move the 2nd four lists which belong to pair 2 and so on.
+
+                    4. Indices of deleted epochs of EEG (*.pkl files)
+
+                        Note : Length of list once pkl file is loaded is equal to the number of pairs
+                            If we have 15 pairs, then there will be 15 lists within that pkl file
+        """
+
+        odd_subject_direct_pre_suffix = "-direct_pre_right_left_point_combined_raw.fif"
+        even_subject_direct_pre_suffix = "-direct_pre_left_right_point_combined_raw.fif"
+
+        start = timer()
+
+        all_deleted_epochs_indices_direct_pre = []
+
+        total_n_connections_all_pairs_direct_pre = []
+
+        list_circular_correlation_scores_all_theta = []
+        list_circular_correlation_scores_all_alpha = []
+        list_circular_correlation_scores_all_beta = []
+        list_circular_correlation_scores_all_gamma = []
+        list_circular_correlation_scores_all_direct_pre = []
+
+        total_n_connections_theta = []
+        total_n_connections_alpha = []
+        total_n_connections_beta = []
+        total_n_connections_gamma = []
+        total_n_connections_all_pairs_direct_pre = []
+
+        list_circular_correlation_direct_pre_no_filter_all = []
+
+        original_bad_channels_all = self._bad_channels
 
         # To loop subject number.
         # Every loop there are two files that are taken (odd-even subject)
@@ -173,7 +213,7 @@ class Clean_EEG_Exp2_Redesign:
             range(begin, end, step), desc="Please, listen 2 music & have some coffee..."
         ):
 
-            os.chdir(path_2_experimental_data_dir)
+            os.chdir(experimental_data)
 
             # If we want to exclude pair that wants to be skipped
             # For example, if pair 2 is bad, then files of subject no.3 & 4 (the data is not good) will not be processed
@@ -184,13 +224,13 @@ class Clean_EEG_Exp2_Redesign:
             # Subject no. 1 - 10
             if (i + 1) <= 9:
                 fname1_direct = (
-                    path_2_experimental_data_dir
+                    experimental_data
                     + "S0"
                     + str(i + 1)
                     + odd_subject_direct_pre_suffix
                 )
                 fname2_direct = (
-                    path_2_experimental_data_dir
+                    experimental_data
                     + "S0"
                     + str(i + 2)
                     + even_subject_direct_pre_suffix
@@ -198,7 +238,7 @@ class Clean_EEG_Exp2_Redesign:
                 # Replace fname2_direct variable
                 if (i + 2) == 10:
                     fname2_direct = (
-                        path_2_experimental_data_dir
+                        experimental_data
                         + "S"
                         + str(i + 2)
                         + even_subject_direct_pre_suffix
@@ -210,13 +250,10 @@ class Clean_EEG_Exp2_Redesign:
             # Subject no. 11 - 20
             elif (i + 1) >= 11:
                 fname1_direct = (
-                    path_2_experimental_data_dir
-                    + "S"
-                    + str(i + 1)
-                    + odd_subject_direct_pre_suffix
+                    experimental_data + "S" + str(i + 1) + odd_subject_direct_pre_suffix
                 )
                 fname2_direct = (
-                    path_2_experimental_data_dir
+                    experimental_data
                     + "S"
                     + str(i + 2)
                     + even_subject_direct_pre_suffix
@@ -224,7 +261,7 @@ class Clean_EEG_Exp2_Redesign:
                 # Replace fname2_direct variable
                 if (i + 2) == 20:
                     fname2_direct = (
-                        path_2_experimental_data_dir
+                        experimental_data
                         + "S"
                         + str(i + 2)
                         + even_subject_direct_pre_suffix
@@ -236,13 +273,10 @@ class Clean_EEG_Exp2_Redesign:
             # Subject no. 21 - 30
             elif (i + 1) >= 21:
                 fname1_direct = (
-                    path_2_experimental_data_dir
-                    + "S"
-                    + str(i + 1)
-                    + odd_subject_direct_pre_suffix
+                    experimental_data + "S" + str(i + 1) + odd_subject_direct_pre_suffix
                 )
                 fname2_direct = (
-                    path_2_experimental_data_dir
+                    experimental_data
                     + "S"
                     + str(i + 2)
                     + even_subject_direct_pre_suffix
@@ -250,7 +284,7 @@ class Clean_EEG_Exp2_Redesign:
                 # Replace fname2_direct variable
                 if (i + 2) == 30:
                     fname2_direct = (
-                        path_2_experimental_data_dir
+                        experimental_data
                         + "S"
                         + str(i + 2)
                         + even_subject_direct_pre_suffix
@@ -392,7 +426,7 @@ class Clean_EEG_Exp2_Redesign:
                 data_inter, sampling_rate, freq_bands
             )
             # Computing frequency- and time-frequency-domain connectivity, using circular correlation 'ccorr'
-            result = analyses.compute_sync(complex_signal, mode="ccorr")
+            result = analyses.compute_sync(complex_signal, mode=self.__algorithm)
             #
             # NOTE: Slicing results to get the Inter-brain part of the matrix.
             # Refer to this for slicing or counting no. of connections later on
@@ -428,7 +462,7 @@ class Clean_EEG_Exp2_Redesign:
             epoched_file_name_S2 = epoched_file_name_S2[:-4] + "-epo.fif"
 
             # Change to a directory where we want to save raw pre processed epoched data
-            os.chdir(path2save_preprocessed_epoched_data)
+            os.chdir(preprocessed_data)
 
             # Save pre-processed (epoched) data of subject 1
             preproc_S1.save(epoched_file_name_S1, overwrite=True)
@@ -437,7 +471,7 @@ class Clean_EEG_Exp2_Redesign:
             preproc_S2.save(epoched_file_name_S2, overwrite=True)
 
         # Change to a directory where we want to save the above populated lists (pre-processed data)
-        os.chdir(path2save_inter_sync_score_N_deleted_epoch_indices)
+        os.chdir(sync_score_n_del_indices)
 
         # Save the scores of inter-brain synchrony from each pair into pkl file
         with open(
@@ -450,8 +484,8 @@ class Clean_EEG_Exp2_Redesign:
             )
 
         # NOTE : The structure of files is each pair will have 4 lists, which has the following order
-        #        * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to subject 1,
-        #        * then move the 2nd four lists which belong to subject 2 and so on.
+        #        * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
+        #        * then move the 2nd four lists which belong to pair 2 and so on.
         print(
             "(pre-direct) All inter-brain synchrony scores (theta, alpha, beta, gamma) of all pairs have been saved into a pickle file"
         )
@@ -472,4 +506,4 @@ class Clean_EEG_Exp2_Redesign:
         # Count elapsed time
         end = timer()
         # Calling function to convert seconds to hour minute, second
-        print(f"Processed time : {self.intermediary_clean_eeg.convert(end - start)}")  # type: ignore
+        print(f"Processed time : {self.__intermediary_clean_eeg.convert(end - start)}")  # type: ignore
