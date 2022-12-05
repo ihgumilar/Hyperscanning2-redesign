@@ -1,9 +1,12 @@
 # ### Relevant packages
 import os
 from collections import namedtuple
+from typing import List
 
+import matplotlib.pyplot as plt
 import numpy as np
 from pandas import read_pickle
+from scipy.stats import pearsonr
 
 
 # %%
@@ -228,3 +231,96 @@ class Connections:
             )
 
         return diff_averted, diff_direct, diff_natural
+
+    def corr_eeg_connection_n_question(
+        self, diff_connection: List[list], diff_scale: list, title: str
+    ):
+
+        """
+        Objective  : Analyze pearson correlation between number of connections of EEG
+                    (substracted between post and pre) and subscale of SPGQ or SPGQ total score
+
+        Parameters :
+                    - diff_connection(List[list]) : Substracted number of connections of EEG. Each list will have six order
+                                                    as follow :  Resulted from EEG.Analysis.diff_n_connections_pre_post funct
+
+                                                diff_connect_ccorr_theta_connections, diff_connect_ccorr_alpha_connections, diff_connect_ccorr_beta_connections, diff_connect_ccorr_gamma_connections,
+                                                diff_connect_coh_theta_connections, diff_connect_coh_alpha_connections, diff_connect_coh_beta_connections, diff_connect_coh_gamma_connections,
+                                                diff_connect_plv_theta_connections, diff_connect_plv_alpha_connections, diff_connect_plv_beta_connections, diff_connect_plv_gamma_connections
+
+
+                    - diff_scale(list) :  Substracted subscale / total score of SPGQ between pre and post
+
+                                            - "Empathy SPGQ"
+                                            - "NegativeFeelings SPGQ"
+                                            - "Behavioural SPGQ"
+                                            - "SPGQ Total"
+                                            - "CoPresence Total"
+                                            Resulted from Questionnnaire.questionnaire.diff_score_questionnaire_pre_post funct
+
+                    - title (str)      : Title of correlation between which eye condition and subscale of questionnaire
+
+        Output     :
+                     Print Correlational score between the following connections and subscale of questionnaire (SPGQ)
+
+                     diff_connect_ccorr_theta_connections, diff_connect_ccorr_alpha_connections, diff_connect_ccorr_beta_connections, diff_connect_ccorr_gamma_connections,
+                     diff_connect_coh_theta_connections, diff_connect_coh_alpha_connections, diff_connect_coh_beta_connections, diff_connect_coh_gamma_connections,
+                     diff_connect_plv_theta_connections, diff_connect_plv_alpha_connections, diff_connect_plv_beta_connections, diff_connect_plv_gamma_connections
+
+        """
+
+        print(title)
+        for i in range(len(diff_connection)):
+            print(f"{i}, {pearsonr(diff_connection[i], diff_scale)}")
+
+    def plot_eeg_connection_n_question(
+        self,
+        x_axis_diff_connection: list,
+        y_axis_diff_scale: list,
+        title: str,
+        xlabel: str,
+        ylabel: str,
+    ):
+
+        """
+        Objective : Plot a correlation (scatter plot) between number of connections (EEG) and
+                    score of subscale of SPGQ / Co-Presence
+
+        Parameters :
+                    - x_axis_diff_connection (list) : (data for x axis) Number of connections for a certain eye conditon, algorithm, and frequency
+                    - y_axis_diff_scale (list)      : (data for y axis) Score of subscale for a certain eye conditon
+                                                        - "Empathy SPGQ"
+                                                        - "NegativeFeelings SPGQ"
+                                                        - "Behavioural SPGQ"
+                                                        - "SPGQ Total"
+                                                        - "CoPresence Total"
+                                                        Take ONE of the lists that is resulted from EEG.Analysis.diff_n_connections_pre_post funct
+                                                        as an input
+
+                    - title (str)                   : Title for the plot
+                    - xlabel (str)                  : Xlabel for the plot
+                    - ylabel (str)                  : Ylabel for the plot
+
+        Output     :
+                      Plot
+        """
+
+        # adds the title
+        plt.title(title)
+
+        # plot the data
+        plt.scatter(x_axis_diff_connection, y_axis_diff_scale)
+
+        # fits the best fitting line to the data
+        plt.plot(
+            np.unique(x_axis_diff_connection),
+            np.poly1d(np.polyfit(x_axis_diff_connection, y_axis_diff_scale, 1))(
+                np.unique(x_axis_diff_connection)
+            ),
+            color="red",
+        )
+
+        # Labelling axes
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.show()
