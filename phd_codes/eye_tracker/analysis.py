@@ -171,7 +171,7 @@ class Looking:
 # ## Abstract module / class
 
 # %%
-class __IntermediaryEye:
+class _IntermediaryEye:
     """
     An abstract module
     """
@@ -286,7 +286,7 @@ class EyeAnalysis:
     """
 
     def __init__(self):
-        self.__intermediaryEye = __IntermediaryEye()
+        self.__intermediaryEye = _IntermediaryEye()
 
     def eye_data_analysis(self, path2files: str, tag: str):
 
@@ -502,3 +502,26 @@ class EyeAnalysis:
                 bar()
 
             return looking_percentage_all_pairs
+
+    def diff_look_percent_pre_post(self, looking_percentage_all_pairs: list):
+        """
+            Objective  : Find difference of looking percentage between pre and post for three different eye conditions (averted, direct, and natural)
+   
+            Parameters :
+                         - looking_percentage_all_pairs (list): Percentage of "really" looking at each other for all pairs for all eye conditions (both pre and post)
+                            It is the output of eye_data_analysis function
+
+            Outputs     :
+                          Percentage of looking that has been deducted between pre and post for three different eye conditions:
+
+                          diff_averted_eye,
+                          diff_direct_eye,
+                          diff_natural_eye
+        """
+
+
+        diff_averted_eye = [np.abs(x - y) for x, y in zip(looking_percentage_all_pairs[0], looking_percentage_all_pairs[1])]
+        diff_direct_eye = [np.abs(x - y) for x, y in zip(looking_percentage_all_pairs[2], looking_percentage_all_pairs[3])]
+        diff_natural_eye = [np.abs(x - y) for x, y in zip(looking_percentage_all_pairs[4], looking_percentage_all_pairs[5])]
+
+        return diff_averted_eye, diff_direct_eye, diff_natural_eye
