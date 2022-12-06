@@ -273,6 +273,29 @@ class Connections:
         for i in range(len(diff_connection)):
             print(f"{i}, {pearsonr(diff_connection[i], diff_scale)}")
 
+    
+    def corr_eeg_connection_n_eye(self,diff_eye_cond: list, diff_eeg_connections: List[list]):
+        """
+            Objective : Find correlation between eye gaze percentage of looking and a number of eeg connections
+
+            Parameters:
+                        - diff_eye_cond (list)              : Percentage of looking that has been deducted between pre and post
+                        - diff_eeg_connections (List[list]) : Number of connections of EEG that has been deducted between pre and post. 
+                                                              It is the output of diff_n_connections_pre_pos function
+
+            Output    :
+                        corr_eye_eeg(list): Pearson correlational values. This is the order :
+                                            
+                                            total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+                                            total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+                                            total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections
+        """
+        corr_eye_eeg = []
+        for idx, value in enumerate (diff_eeg_connections):
+            corr_eye_eeg.append(pearsonr(diff_eye_cond, diff_eeg_connections[idx]))
+        return corr_eye_eeg
+
+
     def plot_eeg_connection_n_question(
         self,
         x_axis_diff_connection: list,
