@@ -505,23 +505,260 @@ class EyeAnalysis:
 
     def diff_look_percent_pre_post(self, looking_percentage_all_pairs: list):
         """
-            Objective  : Find difference of looking percentage between pre and post for three different eye conditions (averted, direct, and natural)
-   
-            Parameters :
-                         - looking_percentage_all_pairs (list): Percentage of "really" looking at each other for all pairs for all eye conditions (both pre and post)
-                            It is the output of eye_data_analysis function
+        Objective  : Find difference of looking percentage between pre and post for three different eye conditions (averted, direct, and natural)
 
-            Outputs     :
-                          Percentage of looking that has been deducted between pre and post for three different eye conditions:
+        Parameters :
+                     - looking_percentage_all_pairs (list): Percentage of "really" looking at each other for all pairs for all eye conditions (both pre and post)
+                        It is the output of eye_data_analysis function
 
-                          diff_averted_eye,
-                          diff_direct_eye,
-                          diff_natural_eye
+        Outputs     :
+                      Percentage of looking that has been deducted between pre and post for three different eye conditions:
+
+                      diff_averted_eye,
+                      diff_direct_eye,
+                      diff_natural_eye
         """
 
-
-        diff_averted_eye = [np.abs(x - y) for x, y in zip(looking_percentage_all_pairs[0], looking_percentage_all_pairs[1])]
-        diff_direct_eye = [np.abs(x - y) for x, y in zip(looking_percentage_all_pairs[2], looking_percentage_all_pairs[3])]
-        diff_natural_eye = [np.abs(x - y) for x, y in zip(looking_percentage_all_pairs[4], looking_percentage_all_pairs[5])]
+        diff_averted_eye = [
+            np.abs(x - y)
+            for x, y in zip(
+                looking_percentage_all_pairs[0], looking_percentage_all_pairs[1]
+            )
+        ]
+        diff_direct_eye = [
+            np.abs(x - y)
+            for x, y in zip(
+                looking_percentage_all_pairs[2], looking_percentage_all_pairs[3]
+            )
+        ]
+        diff_natural_eye = [
+            np.abs(x - y)
+            for x, y in zip(
+                looking_percentage_all_pairs[4], looking_percentage_all_pairs[5]
+            )
+        ]
 
         return diff_averted_eye, diff_direct_eye, diff_natural_eye
+
+    def combine_eye_data(self, path2files: str, tag: str):
+
+        """
+        Objective  : Combine all cleaned eye tracker data for each eye condition, eg. averted_pre, into one dataframe.
+                    It also involves pre-processing (replacing missing values with average value of columns
+                    where they are). It calculates how much each pair looks at each other \n
+                    throughout the experiment(each eye condition)
+
+        Parameters : - path2files (str): Path to a directory where all cleaned eye tracker files are stored
+                    - tag (str): eye gaze condition, ie. averted_pre, averted_post, direct_pre, direct_post, natural_pre, natural_post
+
+        Output:
+                    - combined_odd_df (dataframe)  : Combined dataframe of odd subjects (1, 3, 5 ..)
+                    - combined_even_df (dataframe) : Combined dataframe of even subjects (2, 4, 6 ..)
+
+        """
+
+        gaze_keyword = "/*" + tag + "*.csv"
+        pre_files = glob.glob(path2files + gaze_keyword)
+        pattern = re.compile(r"[S]+(\d+)\-")
+        files_pre_odd = []
+        files_pre_even = []
+
+        # Contain all odd dataframes
+        odd_total_list = []
+        # Contain all even dataframes
+        even_total_list = []
+
+        for idx, file in enumerate(pre_files):
+
+            # Put into a list for ODD subjects - Refer to filename
+            if (idx % 2) == 0:
+                files_pre_odd.append(file)
+
+            # Put into different list for EVEN subjects - Refer to filename
+            else:
+                files_pre_even.append(file)
+
+        ############################################### Odd subject ###############################################
+        # Combine all pre odd files
+
+        with alive_bar(
+            len(files_pre_odd), title="Eye Data(" + tag + ")", force_tty=True
+        ) as bar:
+
+            for idx, filename in enumerate(files_pre_odd):
+
+                df_odd = pd.read_csv(filename, index_col=None, header=0)
+
+                # Replace missing values with averages of columns where they are
+                df_odd.fillna(df_odd.mean(), inplace=True)
+
+                # Remove space before column names
+                df_odd_new_columns = df_odd.columns.str.replace(" ", "")
+                df_odd.columns = df_odd_new_columns
+
+                # convert cartesian to degree of eye data
+
+                # Gaze direction (right eye)
+                df_odd["GazeDirectionRight(X)Degree"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_x_axis_to_degree(
+                        x["GazeDirectionRight(X)"], x["GazeDirectionRight(Y)"]
+                    ),
+                    axis=1,
+                )
+                df_odd["GazeDirectionRight(Y)Degree"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_y_axis_to_degree(
+                        x["GazeDirectionRight(Y)"], x["GazeDirectionRight(Z)"]
+                    ),
+                    axis=1,
+                )
+
+                # Gaze direction (left eye)
+                df_odd["GazeDirectionLeft(X)Degree"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_x_axis_to_degree(
+                        x["GazeDirectionLeft(X)"], x["GazeDirectionLeft(Y)"]
+                    ),
+                    axis=1,
+                )
+                df_odd["GazeDirectionLeft(Y)Degree"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_y_axis_to_degree(
+                        x["GazeDirectionLeft(Y)"], x["GazeDirectionLeft(Z)"]
+                    ),
+                    axis=1,
+                )
+
+                # check degree_within_fovea or not
+                df_odd["GazeDirectionRight(X)inFovea"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionRight(X)Degree"]
+                    ),
+                    axis=1,
+                )
+                df_odd["GazeDirectionRight(Y)inFovea"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionRight(Y)Degree"]
+                    ),
+                    axis=1,
+                )
+                df_odd["GazeDirectionLeft(X)inFovea"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionLeft(X)Degree"]
+                    ),
+                    axis=1,
+                )
+                df_odd["GazeDirectionLeft(Y)inFovea"] = df_odd.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionLeft(Y)Degree"]
+                    ),
+                    axis=1,
+                )
+
+                # Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (odd subjects)
+                df_odd["FoveaOdd"] = (
+                    df_odd["GazeDirectionRight(X)inFovea"]
+                    + df_odd["GazeDirectionLeft(X)inFovea"]
+                    + df_odd["GazeDirectionRight(Y)inFovea"]
+                    + df_odd["GazeDirectionLeft(Y)inFovea"]
+                )
+                df_odd.loc[df_odd["FoveaOdd"] > 1, "FoveaOdd"] = 1
+
+                # Change 1 => look , 0 => not look (odd subjects)
+                df_odd.loc[df_odd["FoveaOdd"] == 1, "FoveaOdd"] = "look"
+                df_odd.loc[df_odd["FoveaOdd"] == 0, "FoveaOdd"] = "not look"
+
+                # Populate all odd dataframes into a list
+                odd_total_list.append(df_odd)
+
+                ############################################### Even subject ###############################################
+                # Combine all pre even files
+                df_even = pd.read_csv(files_pre_even[idx], index_col=None, header=0)
+
+                # Replace missing values with averages of columns where they are
+                df_even.fillna(df_even.mean(), inplace=True)
+
+                # Remove space before column names
+                df_even_new_columns = df_even.columns.str.replace(" ", "")
+                df_even.columns = df_even_new_columns
+
+                # convert cartesian to degree of eye data
+
+                # Gaze direction (right eye)
+                df_even["GazeDirectionRight(X)Degree"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_x_axis_to_degree(
+                        x["GazeDirectionRight(X)"], x["GazeDirectionRight(Y)"]
+                    ),
+                    axis=1,
+                )
+                df_even["GazeDirectionRight(Y)Degree"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_y_axis_to_degree(
+                        x["GazeDirectionRight(Y)"], x["GazeDirectionRight(Z)"]
+                    ),
+                    axis=1,
+                )
+
+                # Gaze direction (left eye)
+                df_even["GazeDirectionLeft(X)Degree"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_x_axis_to_degree(
+                        x["GazeDirectionLeft(X)"], x["GazeDirectionLeft(Y)"]
+                    ),
+                    axis=1,
+                )
+                df_even["GazeDirectionLeft(Y)Degree"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.convert_gaze_direction_in_y_axis_to_degree(
+                        x["GazeDirectionLeft(Y)"], x["GazeDirectionLeft(Z)"]
+                    ),
+                    axis=1,
+                )
+
+                # check degree_within_fovea or not
+                df_even["GazeDirectionRight(X)inFovea"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionRight(X)Degree"]
+                    ),
+                    axis=1,
+                )
+                df_even["GazeDirectionRight(Y)inFovea"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionRight(Y)Degree"]
+                    ),
+                    axis=1,
+                )
+                df_even["GazeDirectionLeft(X)inFovea"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionLeft(X)Degree"]
+                    ),
+                    axis=1,
+                )
+                df_even["GazeDirectionLeft(Y)inFovea"] = df_even.apply(
+                    lambda x: self.__intermediaryEye.check_degree_within_fovea(
+                        x["GazeDirectionLeft(Y)Degree"]
+                    ),
+                    axis=1,
+                )
+
+                # Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (even subjects)
+                df_even["FoveaEven"] = (
+                    df_even["GazeDirectionRight(X)inFovea"]
+                    + df_even["GazeDirectionLeft(X)inFovea"]
+                    + df_even["GazeDirectionRight(Y)inFovea"]
+                    + df_even["GazeDirectionLeft(Y)inFovea"]
+                )
+                df_even.loc[df_even["FoveaEven"] > 1, "FoveaEven"] = 1
+
+                # Change 1 => look , 0 => not look (even subjects)
+                df_even.loc[df_even["FoveaEven"] == 1, "FoveaEven"] = "look"
+                df_even.loc[df_even["FoveaEven"] == 0, "FoveaEven"] = "not look"
+
+                # Populate all even dataframes into a list
+                even_total_list.append(df_even)
+
+                indicator = str(idx + 1)
+                end_info = "Pair-" + indicator + " " + tag + " is done"
+                print(end_info)
+                bar()
+
+            # Combine all odd dataframes into a single dataframe
+            combined_odd_df = pd.concat(odd_total_list).reset_index(drop=True)
+            # Combine all even dataframes into a single dataframe
+            combined_even_df = pd.concat(even_total_list).reset_index(drop=True)
+
+        return combined_odd_df, combined_even_df
