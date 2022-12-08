@@ -540,7 +540,6 @@ class EyeAnalysis:
 
         return diff_averted_eye, diff_direct_eye, diff_natural_eye
 
-    # @staticmethod
     def combine_dataframe(self, path2files: str, tag: str):
 
         """
@@ -562,8 +561,8 @@ class EyeAnalysis:
         pattern = re.compile(r"[S]+(\d+)\-")
         files_pre_odd = []
         files_pre_even = []
-        df_odd_total = []
-        df_even_total = []
+        odd_total_list = []
+        even_total_list = []
 
         for idx, file in enumerate(pre_files):
 
@@ -650,21 +649,49 @@ class EyeAnalysis:
                 )
 
                 # Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (odd subjects)
-                df_odd["FoveaOdd"] = (
+
+                # Sum score of x-axis and y-axis of right fovea
+                df_odd["RightFovea"] = (
                     df_odd["GazeDirectionRight(X)inFovea"]
-                    + df_odd["GazeDirectionLeft(X)inFovea"]
                     + df_odd["GazeDirectionRight(Y)inFovea"]
+                )
+
+                # Sum score of x-axis and y-axis of left fovea
+                df_odd["LeftFovea"] = (
+                    df_odd["GazeDirectionLeft(X)inFovea"]
                     + df_odd["GazeDirectionLeft(Y)inFovea"]
                 )
+
+                # Check if the sum of score is 2, then it is in fovea (give value 1 otherwise 0)
+                df_odd["RightFovea"] = np.where(df_odd["RightFovea"] == 2, 1, 0)
+
+                # Check if the sum of score is 2, then it is in fovea (give value 1 otherwise 0)
+                df_odd["LeftFovea"] = np.where(df_odd["LeftFovea"] == 2, 1, 0)
+
+                # Check if the score either rightfovea or leftfovea is 1, then give FoveaEven = 1 otherwise 0
+                # Define conditions
+                conditions = [
+                    df_odd["RightFovea"] == 1,
+                    df_odd["LeftFovea"] == 1,
+                    df_odd["RightFovea"] == 0,
+                    df_odd["LeftFovea"] == 0,
+                ]
+
+                # Define choices
+                choices = [1, 1, 0, 0]
+
+                # Create new column which indicates that the eye(s) are in Fovea area. Give FoveaOdd = 1 otherwise 0
+                df_odd["FoveaOdd"] = np.select(conditions, choices)
+
                 # Sum of that scores are 4. If all of eye conditions are in the fovea area
-                df_odd["FoveaOdd"] = np.where(df_odd["FoveaOdd"] >= 2, 1, 0)
+                # df_odd["FoveaOdd"] = np.where(df_odd["FoveaOdd"] >= 2, 1, 0)
 
                 # Change 1 => look , 0 => not look (odd subjects)
                 df_odd.loc[df_odd["FoveaOdd"] == 1, "FoveaOdd"] = "look"
                 df_odd.loc[df_odd["FoveaOdd"] == 0, "FoveaOdd"] = "not look"
 
                 # Populate all odd dataframes into a list
-                df_odd_total.append(df_odd)
+                odd_total_list.append(df_odd)
 
                 ############################################### Even subject ###############################################
                 # Combine all pre even files
@@ -734,31 +761,55 @@ class EyeAnalysis:
                 )
 
                 # Compare values of in_fovea for both x-axis and y-axis whether both of them are 1 (even subjects)
-                df_even["FoveaEven"] = (
+
+                # Sum score of x-axis and y-axis of right fovea
+                df_even["RightFovea"] = (
                     df_even["GazeDirectionRight(X)inFovea"]
-                    + df_even["GazeDirectionLeft(X)inFovea"]
                     + df_even["GazeDirectionRight(Y)inFovea"]
+                )
+
+                # Sum score of x-axis and y-axis of left fovea
+                df_even["LeftFovea"] = (
+                    df_even["GazeDirectionLeft(X)inFovea"]
                     + df_even["GazeDirectionLeft(Y)inFovea"]
                 )
 
-                # Sum of that scores are 4. If all of eye conditions are in the fovea area
-                df_even["FoveaEven"] = np.where(df_even["FoveaEven"] >= 2, 1, 0)
+                # Check if the sum of score is 2, then it is in fovea (give value 1 otherwise 0)
+                df_even["RightFovea"] = np.where(df_even["RightFovea"] == 2, 1, 0)
+
+                # Check if the sum of score is 2, then it is in fovea (give value 1 otherwise 0)
+                df_even["LeftFovea"] = np.where(df_even["LeftFovea"] == 2, 1, 0)
+
+                # Check if the score either rightfovea or leftfovea is 1, then give FoveaEven = 1 otherwise 0
+                # Define conditions
+                conditions = [
+                    df_odd["RightFovea"] == 1,
+                    df_odd["LeftFovea"] == 1,
+                    df_odd["RightFovea"] == 0,
+                    df_odd["LeftFovea"] == 0,
+                ]
+
+                # Define choices
+                choices = [1, 1, 0, 0]
+
+                # Create new column which indicates that the eye(s) are in Fovea area. Give FoveaEven = 1 otherwise 0
+                df_even["FoveaEven"] = np.select(conditions, choices)
 
                 # Change 1 => look , 0 => not look (even subjects)
                 df_even.loc[df_even["FoveaEven"] == 1, "FoveaEven"] = "look"
                 df_even.loc[df_even["FoveaEven"] == 0, "FoveaEven"] = "not look"
 
                 # Populate all even dataframes into a list
-                df_even_total.append(df_even)
+                even_total_list.append(df_even)
 
                 indicator = str(idx + 1)
                 end_info = "Pair-" + indicator + " " + tag + " is done"
                 print(end_info)
                 bar()
 
-            # Combined all odd dataframes into one
-            combined_odd_df = pd.concat(df_odd_total).reset_index(drop=True)
-            # Combined all even dataframes into one
-            combined_even_df = pd.concat(df_even_total).reset_index(drop=True)
+            # Combine all odd dataframes into a single dataframe
+            combined_odd_df = pd.concat(odd_total_list).reset_index(drop=True)
+            # Combine all even dataframes into a single dataframe
+            combined_even_df = pd.concat(even_total_list).reset_index(drop=True)
 
         return combined_odd_df, combined_even_df
