@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 import mne
 import numpy as np
 import snoop
+from EEG.label_converter import get_electrode_labels_connections
 from hypyp import analyses, prep, stats
-from label_converter import get_electrode_labels_connections
 from pandas import read_pickle
 from scipy.stats import pearsonr
 from tqdm import tqdm
