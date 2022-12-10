@@ -1,0 +1,127 @@
+# %%
+import sys
+from typing import List
+
+import matplotlib.cm
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from EEG.stats import Connections
+from eye_tracker.analysis import EyeAnalysis
+
+# add alpha (transparency) to a colormap (with background picture)
+from matplotlib import cm
+from matplotlib.colors import LinearSegmentedColormap
+from scipy.stats import pearsonr
+
+# %% Combine dataframe of eye tracker
+eye_analysis = EyeAnalysis()
+
+path2eyefiles = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_experimental_eye_data/raw_combined_experimental_eye_data/raw_cleaned_combined_experimental_eye_data/"
+
+df_avert_pre_odd, df_avert_pre_even = eye_analysis.combine_eye_data(
+    path2eyefiles, "averted_pre"
+)
+
+# %% Make Copy of odd and even
+df_avert_pre_odd_new = df_avert_pre_odd.copy(deep=True)
+df_avert_pre_even_new = df_avert_pre_even.copy(deep=True)
+# %% Change FoveaEven to Fovea and FoveaOdd to Fovea
+df_avert_pre_odd_new.rename(columns={"FoveaOdd": "Fovea"}, inplace=True)
+df_avert_pre_even_new.rename(columns={"FoveaEven": "Fovea"}, inplace=True)
+
+
+# %% Combine dataframe odd and even
+df_combined_averted_pre = pd.concat(
+    [df_avert_pre_odd_new, df_avert_pre_even_new], ignore_index=True
+)
+
+# %% Get maximum value from the following columns. We use this info to create grid
+print(
+    df_combined_averted_pre[
+        [
+            "GazeDirectionRight(X)",
+            "GazeDirectionRight(Y)",
+            "GazeDirectionLeft(X)",
+            "GazeDirectionLeft(Y)",
+        ]
+    ].max()
+)
+
+# %% Get minimum value from the following columns. We use this info to create grid
+print(
+    df_combined_averted_pre[
+        [
+            "GazeDirectionRight(X)",
+            "GazeDirectionRight(Y)",
+            "GazeDirectionLeft(X)",
+            "GazeDirectionLeft(Y)",
+        ]
+    ].min()
+)
+
+# Plot GazeDirectionRight (X & Y)
+df_combined_averted_pre.plot()
+
+# %%
+# If you want to customize the round off by individual columns
+df_combined_averted_pre = df_combined_averted_pre.round(
+    {"GazeDirectionRight(X)": 1, "GazeDirectionRight(Y)": 1}
+)
+
+
+# %% Plot with background picture
+
+# Convert dataframe to numpy array
+pivot_array = pivot.to_numpy()
+
+wd = matplotlib.cm.winter._segmentdata  # only has r,g,b
+wd["alpha"] = ((0.0, 0.0, 0.3), (0.3, 0.3, 1.0), (1.0, 1.0, 1.0))
+
+# modified colormap with changing alpha
+al_winter = LinearSegmentedColormap("AlphaWinter", wd)
+
+# get the map IMAGE as an array so we can plot it
+map_img = mpimg.imread("averted_eye.jpg")
+
+# making and plotting heatmap
+sns.set()
+
+hmax = sns.heatmap(
+    pivot_array,
+    # cmap = al_winter, # this worked but I didn't like it
+    cmap=matplotlib.cm.winter,
+    alpha=0.5,  # whole heatmap is translucent
+    annot=False,
+    zorder=2,
+)
+
+
+# heatmap uses pcolormesh instead of imshow, so we can't pass through
+# extent as a kwarg, so we can't mmatch the heatmap to the map. Instead,
+# match the map to the heatmap:
+
+hmax.imshow(
+    map_img,
+    aspect=hmax.get_aspect(),
+    extent=hmax.get_xlim() + hmax.get_ylim(),
+    zorder=1,
+)  # put the map under the heatmap
+
+
+# %%  Plot heatmap without background picture
+
+# Group multiple columns and reset the index
+df_group = (
+    df_combined_averted_pre.groupby(["GazeDirectionRight(X)", "GazeDirectionRight(Y)"])
+    .size()
+    .reset_index(name="count")
+)
+
+pivot = df_group.pivot(
+    index="GazeDirectionRight(X)", columns="GazeDirectionRight(Y)", values="count"
+)
+ax = sns.heatmap(pivot, cbar_kws={"label": "Looking duration"})
+plt.show()
