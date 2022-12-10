@@ -125,3 +125,59 @@ pivot = df_group.pivot(
 )
 ax = sns.heatmap(pivot, cbar_kws={"label": "Looking duration"})
 plt.show()
+
+
+# %% Testing changing legend of colorbar, remove x & y axis heatmap
+
+import seaborn as sns
+
+sns.set()
+import numpy as np
+
+np.random.seed(0)
+from matplotlib import pyplot as plt
+
+fig, ax = plt.subplots()
+fig.set_size_inches(14, 7)
+uniform_data = np.random.rand(10, 12)
+cbar_ax = fig.add_axes([0.92, 0.3, 0.02, 0.4])
+
+# Plot the data
+sns.heatmap(
+    uniform_data, ax=ax, cbar_ax=cbar_ax, cbar_kws={"label": "Intensity of looking"}
+)
+
+ax = sns.heatmap(
+    uniform_data, ax=ax, cbar_ax=cbar_ax, cbar_kws={"label": "Intensity of looking"}
+)
+# Remove ticks for both x and y axis
+ax.tick_params(axis="both", which="both", length=0)
+# Remove x labels
+ax.set(xticklabels=[], yticklabels=[])
+
+# Get the legend labels of colorbar
+legend_labels = [x.get_text() for x in cbar_ax.get_yticklabels()]
+legend_labels_new = []
+
+# Change old legend label with new labels
+for idx, val in enumerate(legend_labels):
+
+    if idx == 1:
+        val = "Low"
+        legend_labels_new.append(val)
+
+    elif idx == (len(legend_labels) - 2):
+        val = "High"
+        legend_labels_new.append(val)
+    else:
+        val = ""
+        legend_labels_new.append(val)
+
+# set the yticklabels to the new labels we just created.
+cbar_ax.set_yticklabels(legend_labels_new)
+# Remove x and y ticks in color bar
+cbar_ax.tick_params(axis="both", which="both", length=0)
+
+# ToDO : Change color so that it can be transparent. See if it is already available in the available code above
+
+# %%
