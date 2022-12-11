@@ -25,7 +25,9 @@ df_avert_pre_odd, df_avert_pre_even = eye_analysis.combine_eye_data(
     path2eyefiles, "averted_pre"
 )
 
-# %% Make Copy of odd and even
+# %% Prepare the data so that ready to be plotted
+
+# Make Copy of odd and even
 df_avert_pre_odd_new = df_avert_pre_odd.copy(deep=True)
 df_avert_pre_even_new = df_avert_pre_even.copy(deep=True)
 
@@ -38,47 +40,18 @@ df_combined_averted_pre = pd.concat(
     [df_avert_pre_odd_new, df_avert_pre_even_new], ignore_index=True
 )
 
-# %% Get maximum value from the following columns. We use this info to create grid
-print(
-    df_combined_averted_pre[
-        [
-            "GazeDirectionRight(X)",
-            "GazeDirectionRight(Y)",
-            "GazeDirectionLeft(X)",
-            "GazeDirectionLeft(Y)",
-        ]
-    ].max()
-)
-
-# %% Get minimum value from the following columns. We use this info to create grid
-print(
-    df_combined_averted_pre[
-        [
-            "GazeDirectionRight(X)",
-            "GazeDirectionRight(Y)",
-            "GazeDirectionLeft(X)",
-            "GazeDirectionLeft(Y)",
-        ]
-    ].min()
-)
-
-# Plot GazeDirectionRight (X & Y)
-df_combined_averted_pre.plot()
-
-#  Round off by individual columns
+# Round off columns of GazeDirectionRight column
 df_combined_averted_pre = df_combined_averted_pre.round(
     {"GazeDirectionRight(X)": 1, "GazeDirectionRight(Y)": 1}
 )
 
-
-# %% Plot with background picture
 # Group multiple columns and reset the index
 df_group = (
     df_combined_averted_pre.groupby(["GazeDirectionRight(X)", "GazeDirectionRight(Y)"])
     .size()
     .reset_index(name="count")
 )
-
+# Count how many data that are under the same coordinate or spot
 pivot = df_group.pivot(
     index="GazeDirectionRight(X)", columns="GazeDirectionRight(Y)", values="count"
 )
@@ -86,8 +59,9 @@ pivot = df_group.pivot(
 # Convert dataframe to numpy array
 pivot_array = pivot.to_numpy()
 
+# %% Plot the data with background picture
 
-fig, ax = plt.subplots(figsize=(8.5, 8.5))
+fig, ax = plt.subplots(figsize=(7, 7))
 wd = matplotlib.cm.winter._segmentdata  # only has r,g,b
 wd["alpha"] = ((0.0, 0.0, 0.3), (0.3, 0.3, 1.0), (1.0, 1.0, 1.0))
 
@@ -104,7 +78,7 @@ colormap = sns.color_palette("Spectral", as_cmap=True)
 
 sns.set()
 
-
+# This is where we plot the data
 hmax = sns.heatmap(
     pivot_array,
     # cmap = al_winter, # this worked but I didn't like it
@@ -120,6 +94,7 @@ hmax = sns.heatmap(
 # extent as a kwarg, so we can't mmatch the heatmap to the map. Instead,
 # match the map to the heatmap:
 
+# This is where we put the background picture
 hmax.imshow(
     map_img,
     aspect=hmax.get_aspect(),
@@ -138,6 +113,6 @@ c_bar = hmax.collections[0].colorbar
 c_bar.set_ticks([10000, 80000])
 c_bar.set_ticklabels(["low", "High"])
 
-plt.show()
-
-# %%
+# %% Save the figures
+fig = hmax.get_figure()
+fig.savefig("figures/averted_pre150.png", dpi=100)
