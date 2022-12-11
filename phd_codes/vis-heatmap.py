@@ -87,11 +87,16 @@ pivot = df_group.pivot(
 # Convert dataframe to numpy array
 pivot_array = pivot.to_numpy()
 
+# %% Plot with background picture
+
+
+fig, ax = plt.subplots(figsize=(8.5, 8.5))
 wd = matplotlib.cm.winter._segmentdata  # only has r,g,b
 wd["alpha"] = ((0.0, 0.0, 0.3), (0.3, 0.3, 1.0), (1.0, 1.0, 1.0))
 
 # modified colormap with changing alpha
 al_winter = LinearSegmentedColormap("AlphaWinter", wd)
+
 
 # get the map IMAGE as an array so we can plot it
 map_img = mpimg.imread("averted_eye.jpg")
