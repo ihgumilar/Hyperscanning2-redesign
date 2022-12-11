@@ -28,12 +28,12 @@ df_avert_pre_odd, df_avert_pre_even = eye_analysis.combine_eye_data(
 # %% Make Copy of odd and even
 df_avert_pre_odd_new = df_avert_pre_odd.copy(deep=True)
 df_avert_pre_even_new = df_avert_pre_even.copy(deep=True)
-# %% Change FoveaEven to Fovea and FoveaOdd to Fovea
+
+# Change FoveaEven to Fovea and FoveaOdd to Fovea
 df_avert_pre_odd_new.rename(columns={"FoveaOdd": "Fovea"}, inplace=True)
 df_avert_pre_even_new.rename(columns={"FoveaEven": "Fovea"}, inplace=True)
 
-
-# %% Combine dataframe odd and even
+# Combine dataframe odd and even
 df_combined_averted_pre = pd.concat(
     [df_avert_pre_odd_new, df_avert_pre_even_new], ignore_index=True
 )
@@ -73,6 +73,16 @@ df_combined_averted_pre = df_combined_averted_pre.round(
 
 
 # %% Plot with background picture
+# Group multiple columns and reset the index
+df_group = (
+    df_combined_averted_pre.groupby(["GazeDirectionRight(X)", "GazeDirectionRight(Y)"])
+    .size()
+    .reset_index(name="count")
+)
+
+pivot = df_group.pivot(
+    index="GazeDirectionRight(X)", columns="GazeDirectionRight(Y)", values="count"
+)
 
 # Convert dataframe to numpy array
 pivot_array = pivot.to_numpy()
@@ -87,13 +97,17 @@ al_winter = LinearSegmentedColormap("AlphaWinter", wd)
 map_img = mpimg.imread("averted_eye.jpg")
 
 # making and plotting heatmap
+# colormap = matplotlib.cm.winter
+# colormap = sns.color_palette("magma", as_cmap=True)
+colormap = sns.color_palette("Spectral", as_cmap=True)
+
 sns.set()
 
 hmax = sns.heatmap(
     pivot_array,
     # cmap = al_winter, # this worked but I didn't like it
-    cmap=matplotlib.cm.winter,
-    alpha=0.5,  # whole heatmap is translucent
+    cmap=colormap,
+    alpha=0.48,  # whole heatmap is translucent
     annot=False,
     zorder=2,
 )
@@ -110,7 +124,7 @@ hmax.imshow(
     zorder=1,
 )  # put the map under the heatmap
 
-
+plt.show()
 # %%  Plot heatmap without background picture
 
 # Group multiple columns and reset the index
