@@ -65,8 +65,7 @@ print(
 # Plot GazeDirectionRight (X & Y)
 df_combined_averted_pre.plot()
 
-# %%
-# If you want to customize the round off by individual columns
+#  Round off by individual columns
 df_combined_averted_pre = df_combined_averted_pre.round(
     {"GazeDirectionRight(X)": 1, "GazeDirectionRight(Y)": 1}
 )
@@ -87,8 +86,6 @@ pivot = df_group.pivot(
 # Convert dataframe to numpy array
 pivot_array = pivot.to_numpy()
 
-# %% Plot with background picture
-
 
 fig, ax = plt.subplots(figsize=(8.5, 8.5))
 wd = matplotlib.cm.winter._segmentdata  # only has r,g,b
@@ -102,8 +99,7 @@ al_winter = LinearSegmentedColormap("AlphaWinter", wd)
 map_img = mpimg.imread("averted_eye.jpg")
 
 # making and plotting heatmap
-# colormap = matplotlib.cm.winter
-# colormap = sns.color_palette("magma", as_cmap=True)
+
 colormap = sns.color_palette("Spectral", as_cmap=True)
 
 sns.set()
@@ -133,110 +129,15 @@ hmax.imshow(
 
 ax.set_title("Averted-Eye Gaze Condition")
 
-# cbar_ax = fig.add_axes([0.92, 0.3, 0.02, 0.4])
-# # Remove ticks for both x and y axis
-ax.tick_params(axis="both", which="both", length=0)
-# # Remove x labels
-ax.set(xticklabels=[], yticklabels=[])
-
-# # Get the legend labels of colorbar
-# legend_labels = [x.get_text() for x in cbar_ax.get_yticklabels()]
-# legend_labels_new = []
-
-# # Change old legend label with new labels
-# for idx, val in enumerate(legend_labels):
-
-#     if idx == 1:
-#         val = "Low"
-#         legend_labels_new.append(val)
-
-#     elif idx == (len(legend_labels) - 2):
-#         val = "High"
-#         legend_labels_new.append(val)
-#     else:
-#         val = ""
-#         legend_labels_new.append(val)
-
-# # set the yticklabels to the new labels we just created.
-# cbar_ax.set_yticklabels(legend_labels_new)
-
-# Remove x and y ticks in color bar
-# ax.tick_params(axis="both", which="both", length=0)
-# Specify labels for specific ticks in the colorbar
-# c_bar = hmax.colorbar(hmax, ticks=range(5))
-# labels = ('null', 'exit', 'power', 'smile', 'null')
-# c_bar.ax.set_yticklabels(labels)
-# c_bar.set_ticks([-8, 0, 8 ])
-# c_bar.set_ticklabels(["Low", "Medium", "High"])
-
-plt.show()
-# %%  Plot heatmap without background picture
-
-# Group multiple columns and reset the index
-df_group = (
-    df_combined_averted_pre.groupby(["GazeDirectionRight(X)", "GazeDirectionRight(Y)"])
-    .size()
-    .reset_index(name="count")
-)
-
-pivot = df_group.pivot(
-    index="GazeDirectionRight(X)", columns="GazeDirectionRight(Y)", values="count"
-)
-ax = sns.heatmap(pivot, cbar_kws={"label": "Looking duration"})
-plt.show()
-
-
-# %% Testing changing legend of colorbar, remove x & y axis heatmap
-
-import seaborn as sns
-
-sns.set()
-import numpy as np
-
-np.random.seed(0)
-from matplotlib import pyplot as plt
-
-fig, ax = plt.subplots()
-fig.set_size_inches(14, 7)
-uniform_data = np.random.rand(10, 12)
-cbar_ax = fig.add_axes([0.92, 0.3, 0.02, 0.4])
-
-# Plot the data
-sns.heatmap(
-    uniform_data, ax=ax, cbar_ax=cbar_ax, cbar_kws={"label": "Intensity of looking"}
-)
-
-ax = sns.heatmap(
-    uniform_data, ax=ax, cbar_ax=cbar_ax, cbar_kws={"label": "Intensity of looking"}
-)
-# Remove ticks for both x and y axis
 ax.tick_params(axis="both", which="both", length=0)
 # Remove x labels
 ax.set(xticklabels=[], yticklabels=[])
 
-# Get the legend labels of colorbar
-legend_labels = [x.get_text() for x in cbar_ax.get_yticklabels()]
-legend_labels_new = []
+# Color bar related thing
+c_bar = hmax.collections[0].colorbar
+c_bar.set_ticks([10000, 80000])
+c_bar.set_ticklabels(["low", "High"])
 
-# Change old legend label with new labels
-for idx, val in enumerate(legend_labels):
-
-    if idx == 1:
-        val = "Low"
-        legend_labels_new.append(val)
-
-    elif idx == (len(legend_labels) - 2):
-        val = "High"
-        legend_labels_new.append(val)
-    else:
-        val = ""
-        legend_labels_new.append(val)
-
-# set the yticklabels to the new labels we just created.
-cbar_ax.set_yticklabels(legend_labels_new)
-# Remove x and y ticks in color bar
-cbar_ax.tick_params(axis="both", which="both", length=0)
-
-# ToDO : Change color so that it can be transparent. See if it is already available in the available code above
+plt.show()
 
 # %%
