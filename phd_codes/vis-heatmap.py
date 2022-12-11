@@ -108,6 +108,7 @@ colormap = sns.color_palette("Spectral", as_cmap=True)
 
 sns.set()
 
+
 hmax = sns.heatmap(
     pivot_array,
     # cmap = al_winter, # this worked but I didn't like it
@@ -115,6 +116,7 @@ hmax = sns.heatmap(
     alpha=0.48,  # whole heatmap is translucent
     annot=False,
     zorder=2,
+    cbar_kws={"label": "Gaze-Direction Intensity"},
 )
 
 
@@ -128,6 +130,44 @@ hmax.imshow(
     extent=hmax.get_xlim() + hmax.get_ylim(),
     zorder=1,
 )  # put the map under the heatmap
+
+ax.set_title("Averted-Eye Gaze Condition")
+
+# cbar_ax = fig.add_axes([0.92, 0.3, 0.02, 0.4])
+# # Remove ticks for both x and y axis
+ax.tick_params(axis="both", which="both", length=0)
+# # Remove x labels
+ax.set(xticklabels=[], yticklabels=[])
+
+# # Get the legend labels of colorbar
+# legend_labels = [x.get_text() for x in cbar_ax.get_yticklabels()]
+# legend_labels_new = []
+
+# # Change old legend label with new labels
+# for idx, val in enumerate(legend_labels):
+
+#     if idx == 1:
+#         val = "Low"
+#         legend_labels_new.append(val)
+
+#     elif idx == (len(legend_labels) - 2):
+#         val = "High"
+#         legend_labels_new.append(val)
+#     else:
+#         val = ""
+#         legend_labels_new.append(val)
+
+# # set the yticklabels to the new labels we just created.
+# cbar_ax.set_yticklabels(legend_labels_new)
+
+# Remove x and y ticks in color bar
+# ax.tick_params(axis="both", which="both", length=0)
+# Specify labels for specific ticks in the colorbar
+# c_bar = hmax.colorbar(hmax, ticks=range(5))
+# labels = ('null', 'exit', 'power', 'smile', 'null')
+# c_bar.ax.set_yticklabels(labels)
+# c_bar.set_ticks([-8, 0, 8 ])
+# c_bar.set_ticklabels(["Low", "Medium", "High"])
 
 plt.show()
 # %%  Plot heatmap without background picture
