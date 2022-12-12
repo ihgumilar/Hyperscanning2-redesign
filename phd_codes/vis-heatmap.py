@@ -24,30 +24,80 @@ path2eyefiles = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EyeTracker/raw_
 df_avert_pre_odd, df_avert_pre_even = eye_analysis.combine_eye_data(
     path2eyefiles, "averted_pre"
 )
-
+df_avert_post_odd, df_avert_post_even = eye_analysis.combine_eye_data(
+    path2eyefiles, "averted_post"
+)
 # %% Prepare the data so that ready to be plotted
 
-# Make Copy of odd and even
+# Make Copy of odd and even (Pre-training)
 df_avert_pre_odd_new = df_avert_pre_odd.copy(deep=True)
 df_avert_pre_even_new = df_avert_pre_even.copy(deep=True)
 
-# Change FoveaEven to Fovea and FoveaOdd to Fovea
+# Make Copy of odd and even (Post-training)
+df_avert_post_odd_new = df_avert_post_odd.copy(deep=True)
+df_avert_post_even_new = df_avert_post_even.copy(deep=True)
+
+# Change FoveaEven to Fovea and FoveaOdd to Fovea (Pre-training)
 df_avert_pre_odd_new.rename(columns={"FoveaOdd": "Fovea"}, inplace=True)
 df_avert_pre_even_new.rename(columns={"FoveaEven": "Fovea"}, inplace=True)
 
-# Combine dataframe odd and even
+# Change FoveaEven to Fovea and FoveaOdd to Fovea (Post-training)
+df_avert_post_odd_new.rename(columns={"FoveaOdd": "Fovea"}, inplace=True)
+df_avert_post_even_new.rename(columns={"FoveaEven": "Fovea"}, inplace=True)
+
+# Combine dataframe odd and even (Pre-training)
 df_combined_averted_pre = pd.concat(
     [df_avert_pre_odd_new, df_avert_pre_even_new], ignore_index=True
 )
 
-# Round off columns of GazeDirectionRight column
-df_combined_averted_pre = df_combined_averted_pre.round(
-    {"GazeDirectionRight(X)": 1, "GazeDirectionRight(Y)": 1}
+# Combine dataframe odd and even (Post-training)
+df_combined_averted_post = pd.concat(
+    [df_avert_post_odd_new, df_avert_post_even_new], ignore_index=True
 )
+
+# Combine dataframe of Pre and Post-training
+df_combined_averted_pre_post = pd.concat(
+    [df_combined_averted_pre, df_combined_averted_post], ignore_index=True
+)
+
+
+# Round off columns of GazeDirectionRight column
+df_combined_averted_pre_post = df_combined_averted_pre_post.round(
+    {
+        "GazeDirectionRight(X)": 1,
+        "GazeDirectionRight(Y)": 1,
+        "GazeDirectionLeft(X)": 1,
+        "GazeDirectionLeft(Y)": 1,
+    }
+)
+
+# Take only Gaze direction for both right and left eye
+df_combined_pre_post_right = df_combined_averted_pre_post[
+    ["GazeDirectionRight(X)", "GazeDirectionRight(Y)"]
+]
+df_combined_pre_post_left = df_combined_averted_pre_post[
+    ["GazeDirectionLeft(X)", "GazeDirectionLeft(Y)"]
+]
+
+# Rename the columns of left eye to be similar to right eye so that we can combine
+df_combined_pre_post_left.rename(
+    columns={"GazeDirectionLeft(X)": "GazeDirectionRight(X)"}, inplace=True
+)
+df_combined_pre_post_left.rename(
+    columns={"GazeDirectionLeft(Y)": "GazeDirectionRight(Y)"}, inplace=True
+)
+
+# Combine both right and left eye gaze directions into one dataframe (stacking each other - vertically)
+df_combined_averted_pre_post_gaze_only = pd.concat(
+    [df_combined_pre_post_right, df_combined_pre_post_left], ignore_index=True
+)
+
 
 # Group multiple columns and reset the index
 df_group = (
-    df_combined_averted_pre.groupby(["GazeDirectionRight(X)", "GazeDirectionRight(Y)"])
+    df_combined_averted_pre_post_gaze_only.groupby(
+        ["GazeDirectionRight(X)", "GazeDirectionRight(Y)"]
+    )
     .size()
     .reset_index(name="count")
 )
@@ -110,9 +160,13 @@ ax.set(xticklabels=[], yticklabels=[])
 
 # Color bar related thing
 c_bar = hmax.collections[0].colorbar
-c_bar.set_ticks([10000, 80000])
-c_bar.set_ticklabels(["low", "High"])
+ticks_number = [ticks for ticks in c_bar.get_ticks()]
+c_bar.set_ticks([ticks_number[1], ticks_number[-2]])
+c_bar.set_ticklabels(["Low", "High"])
 
 # %% Save the figures
-fig = hmax.get_figure()
-fig.savefig("figures/averted_pre150.png", dpi=100)
+save_fig = False  # Default
+if save_fig == True:
+    fig = hmax.get_figure()
+    # ToDo : Set up the path that needs to be put in parameter to save the file
+    fig.savefig("figures/averted_pre_combined.png", dpi=100)
