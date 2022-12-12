@@ -32,8 +32,6 @@ import pandas as pd
 import seaborn as sns
 from alive_progress import alive_bar
 from EEG.stats import Connections
-from eye_tracker.analysis import EyeAnalysis
-
 # add alpha (transparency) to a colormap (with background picture)
 from matplotlib import cm
 from matplotlib.colors import LinearSegmentedColormap
@@ -776,8 +774,8 @@ class EyeAnalysis:
 
         return combined_odd_df, combined_even_df
 
+    @staticmethod
     def plot_heatmap(
-        self,
         df_pre_odd: DataFrame,
         df_pre_even: DataFrame,
         df_post_odd: DataFrame,
