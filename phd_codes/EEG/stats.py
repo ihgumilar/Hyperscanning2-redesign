@@ -25,37 +25,57 @@ class Connections:
     def permut_sig_connection(
         self, preproc_files: str, sig_connection_path: str, n_permutations: int
     ):
+        """ * To find out which connections that are statistically significant. This will run permutation \
+            out of 256 connections of each pair (16 x 16 electrodes). See **note** and **warning**.
 
-        """
-        Objective : - Out of 256 connections of each pair (16 x 16 electrodes), this function will try to find out
-                    which connections that are statistically significant. This will run permutation.
 
-                    REMEMBER !! : - The higher permutation, the longer it takes time to process
-                                    - The permutation is performed for inter-brain synchrony scores
-                                    that are computed with three different algorithms:
-                                        1. ccorr
-                                        2. coh
-                                        3. plv
+        :param preproc_files: Path to where pre-processed files are stored. See **note**.
+        :type preproc_files: str
+        :param sig_connection_path: Path to where significant connections files will be stored. See **note**.
+        :type sig_connection_path: str
+        :param n_permutations: number of permutations
+        :type n_permutations: int
 
-        Parameters :
-                    - preproc_files(str) : Path to where pre-processed files are stored.
-                                        (REMEMBER ! Different eye condition (pre/pro) requires a unique directory)
+        :returns: :literal:`*.pkl` files, each pair will have 6 files. See **note**.
+        :rtype: :literal:`*.pkl`
 
-                    - sig_connection_path(str) : Path to where significant connections files will be stored
-                                                 (REMEMBER ! Different eye condition (pre/pro) requires a unique directory)
-                                                Note :
-                                                    There will be 3 main containers (actual score of ccor, plv, coh).
-                                                    Each of them has 4 lists (theta, alpha, beta, and gamma)
+        .. note:: * objective: 
+                      The permutation for finding significant inter-brain synchrony scores \
+                      are computed with three different algorithms as listed below. \
+                      Each pair of electrode is computed by using the following algorithms.
+                               #. ccorr - circular correlation coefficient
+                               #. coh - coherence
+                               #. plv - phase locking value
+                      
+                      See `other supported connectivity measures (algorithms) on note section <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_.
+                  
+                  * parameters: 
+                      :literal:`preproc_files`
 
-        Output     :
-                    - *.pkl files, each pair will have 6 files as listed below :
+                        * Different eye condition (pre/pro) requires a unique directory
+                                
+                      :literal:`sig_connection_path`
 
-                    1. Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl
-                    2. Pre_ccorr_combined_pair_S1_and_S2_connection_data.pkl
-                    3. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
-                    4. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
-                    5. Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl
-                    6. Pre_plv_combined_pair_S1_and_S2_connection_data.pkl
+                        * Different eye condition (pre/pro) requires a unique directory
+                        * There will be 3 main containers (actual score of ccor, plv, coh).
+                        * Each of them has 4 lists (theta, alpha, beta, and gamma).
+
+                  * returns: :literal:`*.pkl` files :
+                      #. Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl
+                      #. Pre_ccorr_combined_pair_S1_and_S2_connection_data.pkl
+                      #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
+                      #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
+                      #. Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl
+                      #. Pre_plv_combined_pair_S1_and_S2_connection_data.pkl
+                  
+                  
+
+        .. warning:: The higher permutation, the longer it takes time to process. \
+                     The current experiment used **30 times** permutation that applies \
+                     to every electrode pair.
+
+ 
+
         """
 
         heartrate.trace(browser=True)

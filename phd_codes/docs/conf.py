@@ -17,6 +17,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../EEG/"))
 
 # os.path.abspath("../EEG/")
 # os.path.abspath("../eye_tracker/")
@@ -26,7 +27,14 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
+    "sphinxcontrib.inlinesyntaxhighlight",
 ]
+
+# use language set by highlight directive if no language is set by role
+inline_highlight_respect_highlight = True
+
+# use language set by highlight directive if no role is set
+inline_highlight_literals = True
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
