@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EEG.label_converter &mdash; Hyperscanning Experiments 1.0.0 Exp2-redesign documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Hyperscanning Experiments
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">phd_codes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Hyperscanning Experiments</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">EEG.label_converter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for EEG.label_converter</h1><div class="highlight"><pre>
+<span></span><span class="c1"># ---</span>
+<span class="c1"># jupyter:</span>
+<span class="c1">#   jupytext:</span>
+<span class="c1">#     cell_metadata_filter: -all</span>
+<span class="c1">#     custom_cell_magics: kql</span>
+<span class="c1">#     text_representation:</span>
+<span class="c1">#       extension: .py</span>
+<span class="c1">#       format_name: percent</span>
+<span class="c1">#       format_version: &#39;1.3&#39;</span>
+<span class="c1">#       jupytext_version: 1.11.2</span>
+<span class="c1">#   kernelspec:</span>
+<span class="c1">#     display_name: Python 3 (ipykernel)</span>
+<span class="c1">#     language: python</span>
+<span class="c1">#     name: python3</span>
+<span class="c1"># ---</span>
+
+<span class="c1"># %%</span>
+<div class="viewcode-block" id="get_electrode_labels_connections"><a class="viewcode-back" href="../../EEG.html#EEG.label_converter.get_electrode_labels_connections">[docs]</a><span class="k">def</span> <span class="nf">get_electrode_labels_connections</span><span class="p">(</span><span class="n">channels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Giving labels of paired channels that are statistically connected</span>
+<span class="sd">        This is using OpenBCI. Remember this !! (16 x 16 channels = 256).</span>
+
+<span class="sd">    parameter :</span>
+<span class="sd">        - channels | tuple : a pair of channel indices.</span>
+<span class="sd">                            E.g., (0,0)...(15,15)</span>
+<span class="sd">    output :</span>
+<span class="sd">        - channels | str : a pair of channel labels, eg., &#39;FP1-FP1&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numeral_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;FP1-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;FP1-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;FP1-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;FP1-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;FP1-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;FP1-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;FP1-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;FP1-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;FP1-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;FP1-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;FP1-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;FP1-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;FP1-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;FP1-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;FP1-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;FP1-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;Fp2-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;Fp2-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;Fp2-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;Fp2-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;Fp2-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;Fp2-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;Fp2-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;Fp2-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;Fp2-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;Fp2-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;Fp2-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;Fp2-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;Fp2-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;Fp2-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;Fp2-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;Fp2-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;F7-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;F7-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;F7-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;F7-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;F7-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;F7-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;F7-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;F7-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;F7-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;F7-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;F7-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;F7-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;F7-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;F7-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;F7-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;F7-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;F3-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;F3-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;F3-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;F3-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;F3-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;F3-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;F3-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;F3-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;F3-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;F3-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;F3-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;F3-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;F3-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;F3-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;F3-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;F3-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;F4-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;F4-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;F4-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;F4-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;F4-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;F4-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;F4-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;F4-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;F4-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;F4-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;F4-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;F4-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;F4-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;F4-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;F4-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;F4-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;F8-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;F8-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;F8-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;F8-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;F8-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;F8-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;F8-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;F8-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;F8-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;F8-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;F8-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;F8-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;F8-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;F8-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;F8-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;F8-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;T7-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;T7-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;T7-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;T7-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;T7-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;T7-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;T7-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;T7-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;T7-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;T7-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;T7-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;T7-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;T7-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;T7-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;T7-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;T7-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;C3-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;C3-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;C3-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;C3-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;C3-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;C3-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;C3-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;C3-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;C3-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;C3-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;C3-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;C3-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;C3-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;C3-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;C3-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;C3-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;C4-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;C4-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;C4-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;C4-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;C4-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;C4-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;C4-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;C4-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;C4-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;C4-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;C4-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;C4-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;C4-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;C4-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;C4-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;C4-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;T8-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;T8-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;T8-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;T8-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;T8-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;T8-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;T8-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;T8-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;T8-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;T8-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;T8-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;T8-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;T8-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;T8-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;T8-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;T8-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;P7-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;P7-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;P7-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;P7-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;P7-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;P7-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;P7-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;P7-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;P7-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;P7-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;P7-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;P7-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;P7-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;P7-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;P7-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;P7-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;P3-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;P3-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;P3-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;P3-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;P3-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;P3-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;P3-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;P3-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;P3-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;P3-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;P3-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;P3-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;P3-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;P3-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;P3-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;P3-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;P4-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;P4-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;P4-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;P4-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;P4-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;P4-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;P4-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;P4-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;P4-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;P4-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;P4-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;P4-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;P4-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;P4-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;P4-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;P4-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;P8-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;P8-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;P8-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;P8-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;P8-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;P8-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;P8-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;P8-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;P8-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;P8-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;P8-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;P8-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;P8-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;P8-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;P8-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;P8-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;O1-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;O1-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;O1-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;O1-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;O1-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;O1-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;O1-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;O1-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;O1-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;O1-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;O1-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;O1-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;O1-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;O1-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;O1-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;O1-O2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span> <span class="s2">&quot;O2-FP1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;O2-Fp2&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;O2-F7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;O2-F3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;O2-F4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;O2-F8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;O2-T7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">):</span> <span class="s2">&quot;O2-C3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;O2-C4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">9</span><span class="p">):</span> <span class="s2">&quot;O2-T8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;O2-P7&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span> <span class="s2">&quot;O2-P3&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;O2-P4&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span> <span class="s2">&quot;O2-P8&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">14</span><span class="p">):</span> <span class="s2">&quot;O2-O1&quot;</span><span class="p">,</span>
+        <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;O2-O2&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">numeral_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">channels</span><span class="p">,</span> <span class="s2">&quot;N/A paired label&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Ihshan Gumilar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

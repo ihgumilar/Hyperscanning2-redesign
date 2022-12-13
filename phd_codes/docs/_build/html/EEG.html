@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EEG package &mdash; Hyperscanning Experiments 1.0.0 Exp2-redesign documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="eye_tracker package" href="eye_tracker.html" />
+    <link rel="prev" title="phd_codes" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Hyperscanning Experiments
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">phd_codes</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">EEG package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-EEG.EEG_interfaces">EEG.EEG_interfaces module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#EEG.EEG_interfaces.analysis_eeg_exp2_redesign"><code class="docutils literal notranslate"><span class="pre">analysis_eeg_exp2_redesign</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#EEG.EEG_interfaces.pre_eeg_exp2_redesign"><code class="docutils literal notranslate"><span class="pre">pre_eeg_exp2_redesign</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-EEG.analysis">EEG.analysis module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign"><code class="docutils literal notranslate"><span class="pre">Compute_Sync_EEG_Exp2_Redesign</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#EEG.analysis.Time_Conversion"><code class="docutils literal notranslate"><span class="pre">Time_Conversion</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-EEG.label_converter">EEG.label_converter module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#EEG.label_converter.get_electrode_labels_connections"><code class="docutils literal notranslate"><span class="pre">get_electrode_labels_connections()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#eeg-preprocesses-module">EEG.preprocesses module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-EEG.stats">EEG.stats module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#EEG.stats.Connections"><code class="docutils literal notranslate"><span class="pre">Connections</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-EEG.template">EEG.template module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#EEG.template.MainClass1"><code class="docutils literal notranslate"><span class="pre">MainClass1</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-EEG">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="eye_tracker.html">eye_tracker package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="questionnaire.html">questionnaire package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Hyperscanning Experiments</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">phd_codes</a></li>
+      <li class="breadcrumb-item active">EEG package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/EEG.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eeg-package">
+<h1>EEG package<a class="headerlink" href="#eeg-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-EEG.EEG_interfaces">
+<span id="eeg-eeg-interfaces-module"></span><h2>EEG.EEG_interfaces module<a class="headerlink" href="#module-EEG.EEG_interfaces" title="Permalink to this heading"></a></h2>
+<p>This is a collection of abstract classes and functions (interfaces)
+that are related to EEG data processing.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="EEG.EEG_interfaces.analysis_eeg_exp2_redesign">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EEG.EEG_interfaces.</span></span><span class="sig-name descname"><span class="pre">analysis_eeg_exp2_redesign</span></span><a class="reference internal" href="_modules/EEG/EEG_interfaces.html#analysis_eeg_exp2_redesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.EEG_interfaces.analysis_eeg_exp2_redesign" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.EEG_interfaces.analysis_eeg_exp2_redesign.analysis_hyperscanning">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">analysis_hyperscanning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/EEG_interfaces.html#analysis_eeg_exp2_redesign.analysis_hyperscanning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.EEG_interfaces.analysis_eeg_exp2_redesign.analysis_hyperscanning" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="EEG.EEG_interfaces.pre_eeg_exp2_redesign">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EEG.EEG_interfaces.</span></span><span class="sig-name descname"><span class="pre">pre_eeg_exp2_redesign</span></span><a class="reference internal" href="_modules/EEG/EEG_interfaces.html#pre_eeg_exp2_redesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.EEG_interfaces.pre_eeg_exp2_redesign" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.EEG_interfaces.pre_eeg_exp2_redesign.extract_baseline_eeg_data">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_baseline_eeg_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/EEG_interfaces.html#pre_eeg_exp2_redesign.extract_baseline_eeg_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.EEG_interfaces.pre_eeg_exp2_redesign.extract_baseline_eeg_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.EEG_interfaces.pre_eeg_exp2_redesign.extract_experimental_eeg_data">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extract_experimental_eeg_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/EEG_interfaces.html#pre_eeg_exp2_redesign.extract_experimental_eeg_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.EEG_interfaces.pre_eeg_exp2_redesign.extract_experimental_eeg_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-EEG.analysis">
+<span id="eeg-analysis-module"></span><h2>EEG.analysis module<a class="headerlink" href="#module-EEG.analysis" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="EEG.analysis.Compute_Sync_EEG_Exp2_Redesign">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EEG.analysis.</span></span><span class="sig-name descname"><span class="pre">Compute_Sync_EEG_Exp2_Redesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_raw_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ccorr'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[[],</span> <span class="pre">['Fp2',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'F8',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">[],</span> <span class="pre">[],</span> <span class="pre">[],</span> <span class="pre">['F7'],</span> <span class="pre">['Fp2',</span> <span class="pre">'T7'],</span> <span class="pre">[],</span> <span class="pre">[],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'F4',</span> <span class="pre">'C3'],</span> <span class="pre">[],</span> <span class="pre">['Fp2',</span> <span class="pre">'F4',</span> <span class="pre">'C3',</span> <span class="pre">'C4'],</span> <span class="pre">[],</span> <span class="pre">[],</span> <span class="pre">[],</span> <span class="pre">[]]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Compute_Sync_EEG_Exp2_Redesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>High-level module (Compute inter-brain synchrony and clean up EEG data simultaneously)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_averted_post_exp">
+<span class="sig-name descname"><span class="pre">clean_N_compute_sync_eeg_averted_post_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experimental_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_score_n_del_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_averted_post_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_averted_post_exp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Objective<span class="classifier">1. Clean up noises of EEG files that have been combined</span></dt><dd><ol class="arabic simple" start="2">
+<li><p>Delete bad epochs</p></li>
+<li><p>Calculate score of inter-brain synchrony</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experimental_data</strong> (<em>-</em>) – Folder where the combined files (averted_post) of experiment that will be cleaned are stored(Subject 1 and 2)</p></li>
+<li><p><strong>preprocessed_data</strong> (<em>-</em>) – Folder to which will store the pre-processed epoched data(<a href="#id1"><span class="problematic" id="id2">*</span></a>.fif)</p></li>
+<li><p><strong>sync_score_n_del_indices</strong> (<em>-</em>) – Folder to which will store the indices of deleted epoch of EEG data</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Output    :</dt><dd><ol class="arabic">
+<li><p>Pre-processed epoched EEG file of subject 1 (<a href="#id3"><span class="problematic" id="id4">*</span></a>.fif)</p></li>
+<li><p>Pre-processed epoched EEG file of subject 2 (<a href="#id5"><span class="problematic" id="id6">*</span></a>.fif)</p></li>
+<li><p>Scores of inter-brain synchrony (<a href="#id7"><span class="problematic" id="id8">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">The structure of pkl files is each pair will have 4 lists, which has the following order</span></dt><dd><ul class="simple">
+<li><p>Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,</p></li>
+<li><p>then move the 2nd four lists which belong to pair 2 and so on.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>Indices of deleted epochs of EEG (<a href="#id9"><span class="problematic" id="id10">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">Length of list once pkl file is loaded is equal to the number of pairs</span></dt><dd><p>If we have 15 pairs, then there will be 15 lists within that pkl file</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_averted_pre_exp">
+<span class="sig-name descname"><span class="pre">clean_N_compute_sync_eeg_averted_pre_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experimental_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_score_n_del_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_averted_pre_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_averted_pre_exp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Objective<span class="classifier">1. Clean up noises of EEG files that have been combined</span></dt><dd><ol class="arabic simple" start="2">
+<li><p>Delete bad epochs</p></li>
+<li><p>Calculate score of inter-brain synchrony</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experimental_data</strong> (<em>-</em>) – Folder where the combined files (averted_pre) of experiment that will be cleaned are stored(Subject 1 and 2)</p></li>
+<li><p><strong>preprocessed_data</strong> (<em>-</em>) – Folder to which will store the pre-processed epoched data(<a href="#id11"><span class="problematic" id="id12">*</span></a>.fif)</p></li>
+<li><p><strong>sync_score_n_del_indices</strong> (<em>-</em>) – Folder to which will store the indices of deleted epoch of EEG data</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Output    :</dt><dd><ol class="arabic">
+<li><p>Pre-processed epoched EEG file of subject 1 (<a href="#id13"><span class="problematic" id="id14">*</span></a>.fif)</p></li>
+<li><p>Pre-processed epoched EEG file of subject 2 (<a href="#id15"><span class="problematic" id="id16">*</span></a>.fif)</p></li>
+<li><p>Scores of inter-brain synchrony (<a href="#id17"><span class="problematic" id="id18">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">The structure of pkl files is each pair will have 4 lists, which has the following order</span></dt><dd><ul class="simple">
+<li><p>Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,</p></li>
+<li><p>then move the 2nd four lists which belong to pair 2 and so on.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>Indices of deleted epochs of EEG (<a href="#id19"><span class="problematic" id="id20">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">Length of list once pkl file is loaded is equal to the number of pairs</span></dt><dd><p>If we have 15 pairs, then there will be 15 lists within that pkl file</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_direct_post_exp">
+<span class="sig-name descname"><span class="pre">clean_N_compute_sync_eeg_direct_post_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experimental_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_score_n_del_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_direct_post_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_direct_post_exp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Objective<span class="classifier">1. Clean up noises of EEG files that have been combined</span></dt><dd><ol class="arabic simple" start="2">
+<li><p>Delete bad epochs</p></li>
+<li><p>Calculate score of inter-brain synchrony</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experimental_data</strong> (<em>-</em>) – Folder where the combined files (direct_post) of experiment that will be cleaned are stored(Subject 1 and 2)</p></li>
+<li><p><strong>preprocessed_data</strong> (<em>-</em>) – Folder to which will store the pre-processed epoched data(<a href="#id21"><span class="problematic" id="id22">*</span></a>.fif)</p></li>
+<li><p><strong>sync_score_n_del_indices</strong> (<em>-</em>) – Folder to which will store the indices of deleted epoch of EEG data</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Output    :</dt><dd><ol class="arabic">
+<li><p>Pre-processed epoched EEG file of subject 1 (<a href="#id23"><span class="problematic" id="id24">*</span></a>.fif)</p></li>
+<li><p>Pre-processed epoched EEG file of subject 2 (<a href="#id25"><span class="problematic" id="id26">*</span></a>.fif)</p></li>
+<li><p>Scores of inter-brain synchrony (<a href="#id27"><span class="problematic" id="id28">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">The structure of pkl files is each pair will have 4 lists, which has the following order</span></dt><dd><ul class="simple">
+<li><p>Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,</p></li>
+<li><p>then move the 2nd four lists which belong to pair 2 and so on.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>Indices of deleted epochs of EEG (<a href="#id29"><span class="problematic" id="id30">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">Length of list once pkl file is loaded is equal to the number of pairs</span></dt><dd><p>If we have 15 pairs, then there will be 15 lists within that pkl file</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_direct_pre_exp">
+<span class="sig-name descname"><span class="pre">clean_N_compute_sync_eeg_direct_pre_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experimental_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_score_n_del_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_direct_pre_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_direct_pre_exp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Objective<span class="classifier">1. Clean up noises of EEG files that have been combined</span></dt><dd><ol class="arabic simple" start="2">
+<li><p>Delete bad epochs</p></li>
+<li><p>Calculate score of inter-brain synchrony</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experimental_data</strong> (<em>-</em>) – Folder where the combined files (direct_pre) of experiment that will be cleaned are stored(Subject 1 and 2)</p></li>
+<li><p><strong>preprocessed_data</strong> (<em>-</em>) – Folder to which will store the pre-processed epoched data(<a href="#id31"><span class="problematic" id="id32">*</span></a>.fif)</p></li>
+<li><p><strong>sync_score_n_del_indices</strong> (<em>-</em>) – Folder to which will store the indices of deleted epoch of EEG data</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Output    :</dt><dd><ol class="arabic">
+<li><p>Pre-processed epoched EEG file of subject 1 (<a href="#id33"><span class="problematic" id="id34">*</span></a>.fif)</p></li>
+<li><p>Pre-processed epoched EEG file of subject 2 (<a href="#id35"><span class="problematic" id="id36">*</span></a>.fif)</p></li>
+<li><p>Scores of inter-brain synchrony (<a href="#id37"><span class="problematic" id="id38">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">The structure of pkl files is each pair will have 4 lists, which has the following order</span></dt><dd><ul class="simple">
+<li><p>Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,</p></li>
+<li><p>then move the 2nd four lists which belong to pair 2 and so on.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>Indices of deleted epochs of EEG (<a href="#id39"><span class="problematic" id="id40">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">Length of list once pkl file is loaded is equal to the number of pairs</span></dt><dd><p>If we have 15 pairs, then there will be 15 lists within that pkl file</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_natural_post_exp">
+<span class="sig-name descname"><span class="pre">clean_N_compute_sync_eeg_natural_post_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experimental_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_score_n_del_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_natural_post_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_natural_post_exp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Objective<span class="classifier">1. Clean up noises of EEG files that have been combined</span></dt><dd><ol class="arabic simple" start="2">
+<li><p>Delete bad epochs</p></li>
+<li><p>Calculate score of inter-brain synchrony</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experimental_data</strong> (<em>-</em>) – Folder where the combined files (natural_post) of experiment that will be cleaned are stored(Subject 1 and 2)</p></li>
+<li><p><strong>preprocessed_data</strong> (<em>-</em>) – Folder to which will store the pre-processed epoched data(<a href="#id41"><span class="problematic" id="id42">*</span></a>.fif)</p></li>
+<li><p><strong>sync_score_n_del_indices</strong> (<em>-</em>) – Folder to which will store the indices of deleted epoch of EEG data</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Output    :</dt><dd><ol class="arabic">
+<li><p>Pre-processed epoched EEG file of subject 1 (<a href="#id43"><span class="problematic" id="id44">*</span></a>.fif)</p></li>
+<li><p>Pre-processed epoched EEG file of subject 2 (<a href="#id45"><span class="problematic" id="id46">*</span></a>.fif)</p></li>
+<li><p>Scores of inter-brain synchrony (<a href="#id47"><span class="problematic" id="id48">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">The structure of pkl files is each pair will have 4 lists, which has the following order</span></dt><dd><ul class="simple">
+<li><p>Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,</p></li>
+<li><p>then move the 2nd four lists which belong to pair 2 and so on.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>Indices of deleted epochs of EEG (<a href="#id49"><span class="problematic" id="id50">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">Length of list once pkl file is loaded is equal to the number of pairs</span></dt><dd><p>If we have 15 pairs, then there will be 15 lists within that pkl file</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_natural_pre_exp">
+<span class="sig-name descname"><span class="pre">clean_N_compute_sync_eeg_natural_pre_exp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experimental_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessed_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_score_n_del_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_natural_pre_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Compute_Sync_EEG_Exp2_Redesign.clean_N_compute_sync_eeg_natural_pre_exp" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Objective<span class="classifier">1. Clean up noises of EEG files that have been combined</span></dt><dd><ol class="arabic simple" start="2">
+<li><p>Delete bad epochs</p></li>
+<li><p>Calculate score of inter-brain synchrony</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experimental_data</strong> (<em>-</em>) – Folder where the combined files (natural_pre) of experiment that will be cleaned are stored(Subject 1 and 2)</p></li>
+<li><p><strong>preprocessed_data</strong> (<em>-</em>) – Folder to which will store the pre-processed epoched data(<a href="#id51"><span class="problematic" id="id52">*</span></a>.fif)</p></li>
+<li><p><strong>sync_score_n_del_indices</strong> (<em>-</em>) – Folder to which will store the indices of deleted epoch of EEG data</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Output    :</dt><dd><ol class="arabic">
+<li><p>Pre-processed epoched EEG file of subject 1 (<a href="#id53"><span class="problematic" id="id54">*</span></a>.fif)</p></li>
+<li><p>Pre-processed epoched EEG file of subject 2 (<a href="#id55"><span class="problematic" id="id56">*</span></a>.fif)</p></li>
+<li><p>Scores of inter-brain synchrony (<a href="#id57"><span class="problematic" id="id58">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">The structure of pkl files is each pair will have 4 lists, which has the following order</span></dt><dd><ul class="simple">
+<li><p>Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,</p></li>
+<li><p>then move the 2nd four lists which belong to pair 2 and so on.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p>Indices of deleted epochs of EEG (<a href="#id59"><span class="problematic" id="id60">*</span></a>.pkl files)</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Note<span class="classifier">Length of list once pkl file is loaded is equal to the number of pairs</span></dt><dd><p>If we have 15 pairs, then there will be 15 lists within that pkl file</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="EEG.analysis.Time_Conversion">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EEG.analysis.</span></span><span class="sig-name descname"><span class="pre">Time_Conversion</span></span><a class="reference internal" href="_modules/EEG/analysis.html#Time_Conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Time_Conversion" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Low-level module</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.analysis.Time_Conversion.convert">
+<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/analysis.html#Time_Conversion.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.analysis.Time_Conversion.convert" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-EEG.label_converter">
+<span id="eeg-label-converter-module"></span><h2>EEG.label_converter module<a class="headerlink" href="#module-EEG.label_converter" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="EEG.label_converter.get_electrode_labels_connections">
+<span class="sig-prename descclassname"><span class="pre">EEG.label_converter.</span></span><span class="sig-name descname"><span class="pre">get_electrode_labels_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/label_converter.html#get_electrode_labels_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.label_converter.get_electrode_labels_connections" title="Permalink to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>Giving labels of paired channels that are statistically connected</dt><dd><p>This is using OpenBCI. Remember this !! (16 x 16 channels = 256).</p>
+</dd>
+<dt>parameter :</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>channels | tuple<span class="classifier">a pair of channel indices.</span></dt><dd><p>E.g., (0,0)…(15,15)</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>output :</dt><dd><ul class="simple">
+<li><p>channels | str : a pair of channel labels, eg., ‘FP1-FP1’</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="eeg-preprocesses-module">
+<h2>EEG.preprocesses module<a class="headerlink" href="#eeg-preprocesses-module" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-EEG.stats">
+<span id="eeg-stats-module"></span><h2>EEG.stats module<a class="headerlink" href="#module-EEG.stats" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="EEG.stats.Connections">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EEG.stats.</span></span><span class="sig-name descname"><span class="pre">Connections</span></span><a class="reference internal" href="_modules/EEG/stats.html#Connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.stats.Connections" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that is related to a number of significant connections of EEG data</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.stats.Connections.corr_eeg_connection_n_eye">
+<span class="sig-name descname"><span class="pre">corr_eeg_connection_n_eye</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diff_eye_cond</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_eeg_connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/stats.html#Connections.corr_eeg_connection_n_eye"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.stats.Connections.corr_eeg_connection_n_eye" title="Permalink to this definition"></a></dt>
+<dd><p>Objective : Find correlation between eye gaze percentage of looking and a number of eeg connections</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diff_eye_cond</strong> (<em>-</em>) – Percentage of looking that has been deducted between pre and post</p></li>
+<li><p><strong>diff_eeg_connections</strong> (<em>-</em>) – Number of connections of EEG that has been deducted between pre and post.
+It is the output of diff_n_connections_pre_pos function</p></li>
+</ul>
+</dd>
+</dl>
+<dl>
+<dt>Output    :</dt><dd><p>corr_eye_eeg(list): Pearson correlational values. This is the order :</p>
+<blockquote>
+<div><p>total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.stats.Connections.corr_eeg_connection_n_question">
+<span class="sig-name descname"><span class="pre">corr_eeg_connection_n_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diff_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/stats.html#Connections.corr_eeg_connection_n_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.stats.Connections.corr_eeg_connection_n_question" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Analyze pearson correlation between number of connections of EEG</span></dt><dd><p>(substracted between post and pre) and subscale of SPGQ or SPGQ total score</p>
+</dd>
+<dt>Parameters :</dt><dd><ul>
+<li><dl>
+<dt>diff_connection(List[list])<span class="classifier">Substracted number of connections of EEG. Each list will have six order</span></dt><dd><blockquote>
+<div><p>as follow :  Resulted from EEG.Analysis.diff_n_connections_pre_post funct</p>
+</div></blockquote>
+<p>diff_connect_ccorr_theta_connections, diff_connect_ccorr_alpha_connections, diff_connect_ccorr_beta_connections, diff_connect_ccorr_gamma_connections,
+diff_connect_coh_theta_connections, diff_connect_coh_alpha_connections, diff_connect_coh_beta_connections, diff_connect_coh_gamma_connections,
+diff_connect_plv_theta_connections, diff_connect_plv_alpha_connections, diff_connect_plv_beta_connections, diff_connect_plv_gamma_connections</p>
+</dd>
+</dl>
+</li>
+<li><p>diff_scale(list) :  Substracted subscale / total score of SPGQ between pre and post</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“Empathy SPGQ”</p></li>
+<li><p>“NegativeFeelings SPGQ”</p></li>
+<li><p>“Behavioural SPGQ”</p></li>
+<li><p>“SPGQ Total”</p></li>
+<li><p>“CoPresence Total”</p></li>
+</ul>
+<p>Resulted from Questionnnaire.questionnaire.diff_score_questionnaire_pre_post funct</p>
+</div></blockquote>
+</li>
+<li><p>title (str)      : Title of correlation between which eye condition and subscale of questionnaire</p></li>
+</ul>
+</dd>
+<dt>Output     :</dt><dd><p>Print Correlational score between the following connections and subscale of questionnaire (SPGQ)</p>
+<p>diff_connect_ccorr_theta_connections, diff_connect_ccorr_alpha_connections, diff_connect_ccorr_beta_connections, diff_connect_ccorr_gamma_connections,
+diff_connect_coh_theta_connections, diff_connect_coh_alpha_connections, diff_connect_coh_beta_connections, diff_connect_coh_gamma_connections,
+diff_connect_plv_theta_connections, diff_connect_plv_alpha_connections, diff_connect_plv_beta_connections, diff_connect_plv_gamma_connections</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.stats.Connections.count_sig_connections">
+<span class="sig-name descname"><span class="pre">count_sig_connections</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/stats.html#Connections.count_sig_connections"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.stats.Connections.count_sig_connections" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Count a number of significant connections for a certain eye condition, eg. averted_pre.</span></dt><dd><p>Divided into different algorithms (ccorr, coh, and plv) and frequencies (theta, alpha, beta, and gamma)</p>
+</dd>
+<dt>Parameters :</dt><dd><dl>
+<dt>path (str)<span class="classifier">A path that contains <a href="#id61"><span class="problematic" id="id62">*</span></a>pkl file which contains actual scores of connections.</span></dt><dd><p>Each <a href="#id63"><span class="problematic" id="id64">*</span></a>.pkl file will have a lenght of 4 (the order is theta, alpha, beta, and gamma)</p>
+</dd>
+</dl>
+</dd>
+<dt>Outputs:</dt><dd><p>all_connections (namedtuple): it returns multiple values. The order is described below:</p>
+<p>total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.stats.Connections.diff_n_connections_pre_post">
+<span class="sig-name descname"><span class="pre">diff_n_connections_pre_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">averted_pre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">averted_post</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direct_pre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direct_post</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_pre</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">natural_post</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/stats.html#Connections.diff_n_connections_pre_post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.stats.Connections.diff_n_connections_pre_post" title="Permalink to this definition"></a></dt>
+<dd><p>Objective  : To find difference (absolute number) between pre and post for each eye condition, combination algorithm and frequency</p>
+<p>Parameters :</p>
+<blockquote>
+<div><p>These are the results of count_sig_connections function. Run it for each eye condition
+each result will become an input of this function.</p>
+</div></blockquote>
+<dl>
+<dt>Outputs    :</dt><dd><blockquote>
+<div><ul class="simple">
+<li><p>diff_averted</p></li>
+<li><p>diff_direct</p></li>
+<li><p>diff_natural</p></li>
+</ul>
+</div></blockquote>
+<p>NOTE : Read the notes below to understand the structure of the above output of three variables</p>
+<p>These are the order of list for each eye condition (diff_averted, diff_direct, diff_natural)
+total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
+total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
+total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.stats.Connections.permut_sig_connection">
+<span class="sig-name descname"><span class="pre">permut_sig_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preproc_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sig_connection_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_permutations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/stats.html#Connections.permut_sig_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.stats.Connections.permut_sig_connection" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">- Out of 256 connections of each pair (16 x 16 electrodes), this function will try to find out</span></dt><dd><p>which connections that are statistically significant. This will run permutation.</p>
+<dl>
+<dt>REMEMBER !!<span class="classifier">- The higher permutation, the longer it takes time to process</span></dt><dd><ul class="simple">
+<li><p>The permutation is performed for inter-brain synchrony scores</p></li>
+</ul>
+<dl class="simple">
+<dt>that are computed with three different algorithms:</dt><dd><ol class="arabic simple">
+<li><p>ccorr</p></li>
+<li><p>coh</p></li>
+<li><p>plv</p></li>
+</ol>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt>Parameters :</dt><dd><ul>
+<li><dl class="simple">
+<dt>preproc_files(str)<span class="classifier">Path to where pre-processed files are stored.</span></dt><dd><p>(REMEMBER ! Different eye condition (pre/pro) requires a unique directory)</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>sig_connection_path(str)<span class="classifier">Path to where significant connections files will be stored</span></dt><dd><blockquote>
+<div><p>(REMEMBER ! Different eye condition (pre/pro) requires a unique directory)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Note :</dt><dd><p>There will be 3 main containers (actual score of ccor, plv, coh).
+Each of them has 4 lists (theta, alpha, beta, and gamma)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Output     :</dt><dd><ul class="simple">
+<li><p><a href="#id65"><span class="problematic" id="id66">*</span></a>.pkl files, each pair will have 6 files as listed below :</p></li>
+</ul>
+<ol class="arabic simple">
+<li><p>Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl</p></li>
+<li><p>Pre_ccorr_combined_pair_S1_and_S2_connection_data.pkl</p></li>
+<li><p>Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl</p></li>
+<li><p>Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl</p></li>
+<li><p>Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl</p></li>
+<li><p>Pre_plv_combined_pair_S1_and_S2_connection_data.pkl</p></li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.stats.Connections.plot_eeg_connection_n_question">
+<span class="sig-name descname"><span class="pre">plot_eeg_connection_n_question</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_axis_diff_connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_diff_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/stats.html#Connections.plot_eeg_connection_n_question"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.stats.Connections.plot_eeg_connection_n_question" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Plot a correlation (scatter plot) between number of connections (EEG) and</span></dt><dd><p>score of subscale of SPGQ / Co-Presence</p>
+</dd>
+<dt>Parameters :</dt><dd><ul>
+<li><p>x_axis_diff_connection (list) : (data for x axis) Number of connections for a certain eye conditon, algorithm, and frequency</p></li>
+<li><dl>
+<dt>y_axis_diff_scale (list)<span class="classifier">(data for y axis) Score of subscale for a certain eye conditon</span></dt><dd><ul class="simple">
+<li><p>“Empathy SPGQ”</p></li>
+<li><p>“NegativeFeelings SPGQ”</p></li>
+<li><p>“Behavioural SPGQ”</p></li>
+<li><p>“SPGQ Total”</p></li>
+<li><p>“CoPresence Total”</p></li>
+</ul>
+<p>Take ONE of the lists that is resulted from EEG.Analysis.diff_n_connections_pre_post funct
+as an input</p>
+</dd>
+</dl>
+</li>
+<li><p>title (str)                   : Title for the plot</p></li>
+<li><p>xlabel (str)                  : Xlabel for the plot</p></li>
+<li><p>ylabel (str)                  : Ylabel for the plot</p></li>
+</ul>
+</dd>
+<dt>Output     :</dt><dd><p>Plot</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-EEG.template">
+<span id="eeg-template-module"></span><h2>EEG.template module<a class="headerlink" href="#module-EEG.template" title="Permalink to this heading"></a></h2>
+<p>This module illustrates how to write your docstring in OpenAlea
+and other projects related to OpenAlea.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="EEG.template.MainClass1">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">EEG.template.</span></span><span class="sig-name descname"><span class="pre">MainClass1</span></span><a class="reference internal" href="_modules/EEG/template.html#MainClass1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.template.MainClass1" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class docstring shows how to use sphinx and rst syntax</p>
+<p>The first line is brief explanation, which may be completed with
+a longer one. For instance to discuss about its methods. The only
+method here is <a class="reference internal" href="#EEG.template.MainClass1.function1" title="EEG.template.MainClass1.function1"><code class="xref py py-func docutils literal notranslate"><span class="pre">function1()</span></code></a>’s. The main idea is to document
+the class and methods’s arguments with</p>
+<ul>
+<li><p><strong>parameters</strong>, <strong>types</strong>, <strong>return</strong> and <strong>return types</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">:</span><span class="n">param</span> <span class="n">arg1</span><span class="p">:</span> <span class="n">description</span>
+<span class="p">:</span><span class="n">param</span> <span class="n">arg2</span><span class="p">:</span> <span class="n">description</span>
+<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
+<span class="p">:</span><span class="nb">type</span> <span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span> <span class="n">description</span>
+<span class="p">:</span><span class="k">return</span><span class="p">:</span> <span class="k">return</span> <span class="n">description</span>
+<span class="p">:</span><span class="n">rtype</span><span class="p">:</span> <span class="n">the</span> <span class="k">return</span> <span class="nb">type</span> <span class="n">description</span>
+</pre></div>
+</div>
+</li>
+<li><p>and to provide sections such as <strong>Example</strong> using the double commas syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>:Example:
+
+followed by a blank line !
+</pre></div>
+</div>
+<p>which appears as follow:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<p>followed by a blank line</p>
+</li>
+<li><p>Finally special sections such as <strong>See Also</strong>, <strong>Warnings</strong>, <strong>Notes</strong>
+use the sphinx syntax (<em>paragraph directives</em>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">seealso</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">warnings</span> <span class="n">also</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">note</span><span class="p">::</span> <span class="n">blabla</span>
+<span class="o">..</span> <span class="n">todo</span><span class="p">::</span> <span class="n">blabla</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>There are many other Info fields but they may be redundant:</dt><dd><ul class="simple">
+<li><p>param, parameter, arg, argument, key, keyword: Description of a
+parameter.</p></li>
+<li><p>type: Type of a parameter.</p></li>
+<li><p>raises, raise, except, exception: That (and when) a specific
+exception is raised.</p></li>
+<li><p>var, ivar, cvar: Description of a variable.</p></li>
+<li><p>returns, return: Description of the return value.</p></li>
+<li><p>rtype: Return type.</p></li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>There are many other directives such as versionadded, versionchanged,
+rubric, centered, … See the sphinx documentation for more details.</p>
+</div>
+<p>Here below is the results of the <a class="reference internal" href="#EEG.template.MainClass1.function1" title="EEG.template.MainClass1.function1"><code class="xref py py-func docutils literal notranslate"><span class="pre">function1()</span></code></a> docstring.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="EEG.template.MainClass1.function1">
+<span class="sig-name descname"><span class="pre">function1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/EEG/template.html#MainClass1.function1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#EEG.template.MainClass1.function1" title="Permalink to this definition"></a></dt>
+<dd><p>returns (arg1 / arg2) + arg3</p>
+<p>This is a longer explanation, which may include math with latex syntax
+<span class="math notranslate nohighlight">\(\alpha\)</span>.
+Then, you need to provide optional subsection in this order (just to be
+consistent and have a uniform documentation. Nothing prevent you to
+switch the order):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>parameters using <code class="docutils literal notranslate"><span class="pre">:param</span> <span class="pre">&lt;name&gt;:</span> <span class="pre">&lt;description&gt;</span></code></p></li>
+<li><p>type of the parameters <code class="docutils literal notranslate"><span class="pre">:type</span> <span class="pre">&lt;name&gt;:</span> <span class="pre">&lt;description&gt;</span></code></p></li>
+<li><p>returns using <code class="docutils literal notranslate"><span class="pre">:returns:</span> <span class="pre">&lt;description&gt;</span></code></p></li>
+<li><p>examples (doctest)</p></li>
+<li><p>seealso using <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">seealso::</span> <span class="pre">text</span></code></p></li>
+<li><p>notes using <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">note::</span> <span class="pre">text</span></code></p></li>
+<li><p>warning using <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">warning::</span> <span class="pre">text</span></code></p></li>
+<li><p>todo <code class="docutils literal notranslate"><span class="pre">..</span> <span class="pre">todo::</span> <span class="pre">text</span></code></p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt><strong>Advantages</strong>:</dt><dd><ul class="simple">
+<li><p>Uses sphinx markups, which will certainly be improved in future
+version</p></li>
+<li><p>Nice HTML output with the See Also, Note, Warnings directives</p></li>
+</ul>
+</dd>
+<dt><strong>Drawbacks</strong>:</dt><dd><ul class="simple">
+<li><p>Just looking at the docstring, the parameter, type and  return
+sections do not appear nicely</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg1</strong> (<em>int</em><em>, </em><em>float</em><em>,</em><em>...</em>) – the first value</p></li>
+<li><p><strong>arg2</strong> (<em>int</em><em>, </em><em>float</em><em>,</em><em>...</em>) – the first value</p></li>
+<li><p><strong>arg3</strong> (<em>int</em><em>, </em><em>float</em><em>,</em><em>...</em>) – the first value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>arg1/arg2 +arg3</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int, float</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">template</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">MainClass1</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">function1</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>can be useful to emphasize
+important feature</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">MainClass2</span></code></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>arg2 must be non-zero.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-EEG">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-EEG" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="phd_codes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="eye_tracker.html" class="btn btn-neutral float-right" title="eye_tracker package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Ihshan Gumilar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>questionnaire.questionnaire &mdash; Hyperscanning Experiments 1.0.0 Exp2-redesign documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Hyperscanning Experiments
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">phd_codes</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Hyperscanning Experiments</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">questionnaire.questionnaire</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for questionnaire.questionnaire</h1><div class="highlight"><pre>
+<span></span><span class="c1"># ### Relevant packages</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+
+
+<div class="viewcode-block" id="Questionnaire"><a class="viewcode-back" href="../../questionnaire.html#questionnaire.questionnaire.Questionnaire">[docs]</a><span class="k">class</span> <span class="nc">Questionnaire</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Functions that are related to questionnaire scoring</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Questionnaire.scoring_questionnaire"><a class="viewcode-back" href="../../questionnaire.html#questionnaire.questionnaire.Questionnaire.scoring_questionnaire">[docs]</a>    <span class="k">def</span> <span class="nf">scoring_questionnaire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path2questions</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Objective : Scoring questionnnaire for each eye condition. Both subscales and</span>
+<span class="sd">                    total score of Social Prensece Game Questionnaire (SPGQ)</span>
+
+<span class="sd">        Parameter :</span>
+<span class="sd">                    - path2questions (str): Path to where raw questionnaire data (*.csv) is stored</span>
+
+<span class="sd">        Output    :</span>
+<span class="sd">                    - all_questionnaires (namedtuple). Here is the order :</span>
+<span class="sd">                        [&quot;averted_pre&quot;,</span>
+<span class="sd">                        &quot;averted_post&quot;,</span>
+<span class="sd">                        &quot;direct_pre&quot;,</span>
+<span class="sd">                        &quot;direct_post&quot;,</span>
+<span class="sd">                        &quot;natural_pre&quot;,</span>
+<span class="sd">                        &quot;natural_post&quot;&#39;</span>
+
+<span class="sd">        Note : Related to questionnaires</span>
+<span class="sd">                There are 2 questionnaires here that we use in the experiment :</span>
+<span class="sd">                * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales (Higher score, Higher Social Presence)</span>
+<span class="sd">                    * Psychological involvement - Empathy</span>
+<span class="sd">                    * Psychological involvement - Negative feelings</span>
+<span class="sd">                    * Psychological involvement - Behavioral engagement</span>
+<span class="sd">                * Co-Presence questionnaire (REMEMBER : HIGER score, indicates LESS CoPresence !!!)</span>
+<span class="sd">                * See here for details https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span>
+            <span class="s2">&quot;questionnnaires&quot;</span><span class="p">,</span>
+            <span class="p">[</span>
+                <span class="s2">&quot;averted_pre&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;averted_post&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;direct_pre&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;direct_post&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;natural_pre&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;natural_post&quot;</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Define list</span>
+
+        <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path2questions</span><span class="p">)</span>
+        <span class="n">averted_questions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">direct_questions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">natural_questions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">averted_pre_questions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">averted_post_questions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">direct_pre_questions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">direct_post_questions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">natural_pre_questions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">natural_post_questions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Set index to separate pre and post questionnaire for each eye condition</span>
+        <span class="n">begin_idx_question</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">step_idx_question</span> <span class="o">=</span> <span class="mi">2</span>
+
+        <span class="c1"># Populate averted, direct, and natural into a separate list</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;averted&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">averted_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s2">&quot;direct&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">direct_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">natural_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="c1"># Separate pre/post questionnaire into a different list (eg. averted_pre, direct_pre, natural_pre)</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">begin_idx_question</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">averted_questions</span><span class="p">),</span> <span class="n">step_idx_question</span><span class="p">):</span>
+
+            <span class="c1"># averted_pre</span>
+            <span class="n">averted_pre_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">averted_questions</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+            <span class="c1"># averted_post</span>
+            <span class="n">averted_post_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">averted_questions</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># direct_pre</span>
+            <span class="n">direct_pre_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direct_questions</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+            <span class="c1"># direct_post</span>
+            <span class="n">direct_post_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direct_questions</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+            <span class="c1"># natural_pre</span>
+            <span class="n">natural_pre_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">natural_questions</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+            <span class="c1"># natural_post</span>
+            <span class="n">natural_post_questions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">natural_questions</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># Scoring for each subscale (averted_pre) &amp; Combine into a single dataframe</span>
+
+        <span class="c1"># Load questionnaire data</span>
+
+        <span class="n">averted_pre_all_data_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create a loop that takes all files from the above list</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">averted_pre_questions</span><span class="p">):</span>
+
+            <span class="n">file_to_load</span> <span class="o">=</span> <span class="n">path2questions</span> <span class="o">+</span> <span class="n">file</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">file_to_load</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Sum subscore of empathy</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of negative feeling</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of behavioral</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Total score of SPGQ</span>
+            <span class="n">subscales_spgq</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SPGQ Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">subscales_spgq</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Total score of copresence</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CoPresence Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Get first row and all columns</span>
+            <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:]</span>
+
+            <span class="c1"># Put into a list</span>
+            <span class="n">averted_pre_all_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span>
+
+        <span class="c1"># Combine int a single dataframe for averted pre</span>
+        <span class="n">df_averted_pre</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">averted_pre_all_data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Scoring for each subscale (averted_post) &amp; Combine into a single dataframe</span>
+        <span class="c1"># Load questionnaire data</span>
+
+        <span class="n">averted_post_all_data_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Create a loop that takes all files from the above list</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">averted_post_questions</span><span class="p">):</span>
+
+            <span class="n">file_to_load</span> <span class="o">=</span> <span class="n">path2questions</span> <span class="o">+</span> <span class="n">file</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">file_to_load</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Sum subscore of empathy</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of negative feeling</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of behavioral</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Total score of SPGQ</span>
+            <span class="n">subscales_spgq</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SPGQ Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">subscales_spgq</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Total score of copresence</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CoPresence Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Get first row and all columns</span>
+            <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:]</span>
+
+            <span class="c1"># Put into a list</span>
+            <span class="n">averted_post_all_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span>
+
+        <span class="c1"># Combine int a single dataframe for averted pre</span>
+        <span class="n">df_averted_post</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">averted_post_all_data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Scoring for each subscale (direct_pre) &amp; Combine into a single dataframe</span>
+        <span class="c1"># Load questionnaire data</span>
+
+        <span class="n">direct_pre_all_data_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create a loop that takes all files from the above list</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">direct_pre_questions</span><span class="p">):</span>
+
+            <span class="n">file_to_load</span> <span class="o">=</span> <span class="n">path2questions</span> <span class="o">+</span> <span class="n">file</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">file_to_load</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Sum subscore of empathy</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of negative feeling</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of behavioral</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Total score of SPGQ</span>
+            <span class="n">subscales_spgq</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SPGQ Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">subscales_spgq</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Total score of copresence</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CoPresence Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Get first row and all columns</span>
+            <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:]</span>
+
+            <span class="c1"># Put into a list</span>
+            <span class="n">direct_pre_all_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span>
+
+        <span class="c1"># Combine int a single dataframe for averted pre</span>
+        <span class="n">df_direct_pre</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">direct_pre_all_data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Scoring for each subscale (direct_post) &amp; Combine into a single dataframe</span>
+        <span class="c1"># Load questionnaire data</span>
+
+        <span class="n">direct_post_all_data_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create a loop that takes all files from the above list</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">direct_post_questions</span><span class="p">):</span>
+
+            <span class="n">file_to_load</span> <span class="o">=</span> <span class="n">path2questions</span> <span class="o">+</span> <span class="n">file</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">file_to_load</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Sum subscore of empathy</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of negative feeling</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of behavioral</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Total score of SPGQ</span>
+            <span class="n">subscales_spgq</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SPGQ Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">subscales_spgq</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Total score of copresence</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CoPresence Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Get first row and all columns</span>
+            <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:]</span>
+
+            <span class="c1"># Put into a list</span>
+            <span class="n">direct_post_all_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span>
+
+        <span class="c1"># Combine int a single dataframe for averted pre</span>
+        <span class="n">df_direct_post</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">direct_post_all_data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Scoring for each subscale (natural_pre) &amp; Combine into a single dataframe</span>
+        <span class="c1"># Load questionnaire data</span>
+
+        <span class="n">natural_pre_all_data_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create a loop that takes all files from the above list</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">natural_pre_questions</span><span class="p">):</span>
+
+            <span class="n">file_to_load</span> <span class="o">=</span> <span class="n">path2questions</span> <span class="o">+</span> <span class="n">file</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">file_to_load</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Sum subscore of empathy</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of negative feeling</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of behavioral</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Total score of SPGQ</span>
+            <span class="n">subscales_spgq</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SPGQ Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">subscales_spgq</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Total score of copresence</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CoPresence Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Get first row and all columns</span>
+            <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:]</span>
+
+            <span class="c1"># Put into a list</span>
+            <span class="n">natural_pre_all_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span>
+
+        <span class="c1"># Combine int a single dataframe for averted pre</span>
+        <span class="n">df_natural_pre</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">natural_pre_all_data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Scoring for each subscale (natural_post) &amp; Combine into a single dataframe</span>
+        <span class="c1"># Load questionnaire data</span>
+
+        <span class="n">natural_post_all_data_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Create a loop that takes all files from the above list</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">natural_post_questions</span><span class="p">):</span>
+
+            <span class="n">file_to_load</span> <span class="o">=</span> <span class="n">path2questions</span> <span class="o">+</span> <span class="n">file</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                <span class="n">file_to_load</span><span class="p">,</span>
+                <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Sum subscore of empathy</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of negative feeling</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sum subscore of behavioral</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">13</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Total score of SPGQ</span>
+            <span class="n">subscales_spgq</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s2">&quot;Empathy SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;NegativeFeelings SPGQ&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Behavioural SPGQ&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;SPGQ Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">subscales_spgq</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Total score of copresence</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;CoPresence Total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Answer&quot;</span><span class="p">][</span><span class="mi">7</span><span class="p">:</span><span class="mi">13</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Get first row and all columns</span>
+            <span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">:]</span>
+
+            <span class="c1"># Put into a list</span>
+            <span class="n">natural_post_all_data_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_clean</span><span class="p">)</span>
+
+        <span class="c1"># Combine int a single dataframe for averted pre</span>
+        <span class="n">df_natural_post</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">natural_post_all_data_list</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">all_questionnaires</span> <span class="o">=</span> <span class="n">results</span><span class="p">(</span>
+            <span class="n">df_averted_pre</span><span class="p">,</span>
+            <span class="n">df_averted_post</span><span class="p">,</span>
+            <span class="n">df_direct_pre</span><span class="p">,</span>
+            <span class="n">df_direct_post</span><span class="p">,</span>
+            <span class="n">df_natural_pre</span><span class="p">,</span>
+            <span class="n">df_natural_post</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">all_questionnaires</span></div>
+
+<div class="viewcode-block" id="Questionnaire.diff_score_questionnaire_pre_post"><a class="viewcode-back" href="../../questionnaire.html#questionnaire.questionnaire.Questionnaire.diff_score_questionnaire_pre_post">[docs]</a>    <span class="k">def</span> <span class="nf">diff_score_questionnaire_pre_post</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">df_averted_pre</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_averted_post</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_direct_pre</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_direct_post</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_natural_pre</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">df_natural_post</span><span class="p">:</span> <span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">column_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Objective : Find a difference between post and pre of subscale of questionnnaire for each eye condition.</span>
+<span class="sd">                    Both subscales and total score of Social Prensece Game Questionnaire (SPGQ)</span>
+
+<span class="sd">        Parameters :</span>
+<span class="sd">                    - df_averted_pre (DataFrame) : DataFrame that is resulted from scoring_questionnaire function</span>
+<span class="sd">                    - df_averted_post (DataFrame) : DataFrame that is resulted from scoring_questionnaire function</span>
+<span class="sd">                    - df_direct_pre (DataFrame) : DataFrame that is resulted from scoring_questionnaire function</span>
+<span class="sd">                    - df_direct_post (DataFrame) : DataFrame that is resulted from scoring_questionnaire function</span>
+<span class="sd">                    - df_natural_pre (DataFrame) : DataFrame that is resulted from scoring_questionnaire function</span>
+<span class="sd">                    - df_natural_post (DataFrame) : DataFrame that is resulted from scoring_questionnaire function</span>
+<span class="sd">                    - column_name (str) : Choose one of the options below</span>
+<span class="sd">                                        - &quot;Empathy SPGQ&quot;</span>
+<span class="sd">                                        - &quot;NegativeFeelings SPGQ&quot;</span>
+<span class="sd">                                        - &quot;Behavioural SPGQ&quot;</span>
+<span class="sd">                                        - &quot;SPGQ Total&quot;</span>
+<span class="sd">                                        - &quot;CoPresence Total&quot;</span>
+
+<span class="sd">        Outputs    :</span>
+<span class="sd">                    There are 3 outputs which are the result of substraction post and pre of</span>
+<span class="sd">                       (subscale / SPGQ total) questionnnaire :</span>
+<span class="sd">                    - substracted_averted</span>
+<span class="sd">                    - substracted_direct</span>
+<span class="sd">                    - substracted_natural</span>
+
+<span class="sd">                    Note : Related to questionnaires</span>
+<span class="sd">                            There are 2 questionnaires here that we use in the experiment :</span>
+<span class="sd">                            * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales (Higher score, Higher Social Presence)</span>
+<span class="sd">                                * Psychological involvement - Empathy</span>
+<span class="sd">                                * Psychological involvement - Negative feelings</span>
+<span class="sd">                                * Psychological involvement - Behavioral engagement</span>
+<span class="sd">                            * Co-Presence questionnaire (REMEMBER : HIGER score, indicates LESS CoPresence !!!)</span>
+<span class="sd">                            * See here for details https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">df_averted_pre_list</span> <span class="o">=</span> <span class="n">df_averted_pre</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">df_averted_post_list</span> <span class="o">=</span> <span class="n">df_averted_post</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">df_direct_pre_list</span> <span class="o">=</span> <span class="n">df_direct_pre</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">df_direct_post_list</span> <span class="o">=</span> <span class="n">df_direct_post</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">df_natural_pre_list</span> <span class="o">=</span> <span class="n">df_natural_pre</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">df_natural_post_list</span> <span class="o">=</span> <span class="n">df_natural_post</span><span class="p">[</span><span class="n">column_name</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="n">df_averted_pre_combined</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">df_direct_pre_combined</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">df_natural_pre_combined</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">df_averted_post_combined</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">df_direct_post_combined</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">df_natural_post_combined</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">begin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_averted_pre_list</span><span class="p">)</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+            <span class="c1"># Pre conditions</span>
+            <span class="n">df_averted_pre_combined</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df_averted_pre_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_averted_pre_list</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+            <span class="n">df_direct_pre_combined</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df_direct_pre_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_direct_pre_list</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+            <span class="n">df_natural_pre_combined</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df_natural_pre_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_natural_pre_list</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Post conditions</span>
+            <span class="n">df_averted_post_combined</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df_averted_post_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_averted_post_list</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+            <span class="n">df_direct_post_combined</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df_direct_post_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_direct_post_list</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+            <span class="n">df_natural_post_combined</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">df_natural_post_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">+</span> <span class="n">df_natural_post_list</span><span class="p">[</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Substract post and pre score of subscale / SPGQ Total score. Depending on the input of parameter</span>
+        <span class="n">substracted_averted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">averted_post</span> <span class="o">-</span> <span class="n">averted_pre</span>
+                <span class="k">for</span> <span class="n">averted_post</span><span class="p">,</span> <span class="n">averted_pre</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="n">df_averted_post_combined</span><span class="p">,</span> <span class="n">df_averted_pre_combined</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">substracted_direct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">direct_post</span> <span class="o">-</span> <span class="n">direct_pre</span>
+                <span class="k">for</span> <span class="n">direct_post</span><span class="p">,</span> <span class="n">direct_pre</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="n">df_direct_post_combined</span><span class="p">,</span> <span class="n">df_direct_pre_combined</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">substracted_natural</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">natural_post</span> <span class="o">-</span> <span class="n">natural_pre</span>
+                <span class="k">for</span> <span class="n">natural_post</span><span class="p">,</span> <span class="n">natural_pre</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="n">df_natural_post_combined</span><span class="p">,</span> <span class="n">df_natural_pre_combined</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">substracted_averted</span><span class="p">,</span> <span class="n">substracted_direct</span><span class="p">,</span> <span class="n">substracted_natural</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Ihshan Gumilar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

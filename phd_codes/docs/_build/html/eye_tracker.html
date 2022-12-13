@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eye_tracker package &mdash; Hyperscanning Experiments 1.0.0 Exp2-redesign documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="questionnaire package" href="questionnaire.html" />
+    <link rel="prev" title="EEG package" href="EEG.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Hyperscanning Experiments
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">phd_codes</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="EEG.html">EEG package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eye_tracker package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-eye_tracker.analysis">eye_tracker.analysis module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eye_tracker.analysis.Degree"><code class="docutils literal notranslate"><span class="pre">Degree</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eye_tracker.analysis.EyeAnalysis"><code class="docutils literal notranslate"><span class="pre">EyeAnalysis</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eye_tracker.analysis.Looking"><code class="docutils literal notranslate"><span class="pre">Looking</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-eye_tracker.preprocesses">eye_tracker.preprocesses module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#eye_tracker.preprocesses.Clean_Eye_Exp2_Redesign"><code class="docutils literal notranslate"><span class="pre">Clean_Eye_Exp2_Redesign</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign"><code class="docutils literal notranslate"><span class="pre">Combine_Eye_Exp2_Redesign</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eye_tracker.preprocesses.Extract_Eye_Exp2_Redesign"><code class="docutils literal notranslate"><span class="pre">Extract_Eye_Exp2_Redesign</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-eye_tracker">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="questionnaire.html">questionnaire package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Hyperscanning Experiments</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">phd_codes</a></li>
+      <li class="breadcrumb-item active">eye_tracker package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/eye_tracker.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eye-tracker-package">
+<h1>eye_tracker package<a class="headerlink" href="#eye-tracker-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-eye_tracker.analysis">
+<span id="eye-tracker-analysis-module"></span><h2>eye_tracker.analysis module<a class="headerlink" href="#module-eye_tracker.analysis" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="eye_tracker.analysis.Degree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eye_tracker.analysis.</span></span><span class="sig-name descname"><span class="pre">Degree</span></span><a class="reference internal" href="_modules/eye_tracker/analysis.html#Degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.Degree" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Low-level module</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.Degree.check_degree_within_fovea">
+<span class="sig-name descname"><span class="pre">check_degree_within_fovea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gaze_direction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#Degree.check_degree_within_fovea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.Degree.check_degree_within_fovea" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">We need to check if the degree is within fovea or not, which indicates something is being looked.</span></dt><dd><p>In total 30 degrees where human can recognize an object. So we need to divide by 2</p>
+<p>Half right and half left</p>
+</dd>
+<dt>Parameters<span class="classifier">gaze direction (float or int)</span><span class="classifier">gaze direction which is in degree</span></dt><dd><p>If we refer to pandas dataframe, it is related to either one of these columns</p>
+<ul class="simple">
+<li><p>GazeDirectionRight(X)Degree</p></li>
+<li><p>GazeDirectionRight(Y)Degree</p></li>
+<li><p>GazeDirectionLeft(X)Degree</p></li>
+<li><p>GazeDirectionLeft(Y)Degree</p></li>
+</ul>
+</dd>
+<dt>Output (int)<span class="classifier">1 = within the area of fovea (30 degrees) and</span></dt><dd><p>0 = NOT within area of fovea</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.Degree.gaze_direction_in_x_axis_degree">
+<span class="sig-name descname"><span class="pre">gaze_direction_in_x_axis_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#Degree.gaze_direction_in_x_axis_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.Degree.gaze_direction_in_x_axis_degree" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Convert cartesian value to degree for gaze direction in X axis</span></dt><dd><p>Eye tracker data that is produced by HTC Vive pro is in cartesian</p>
+<p>See “Right hand rule coordinate” for further information</p>
+</dd>
+<dt>Parameters<span class="classifier">- x (float or int)</span><span class="classifier">data in X axis</span></dt><dd><ul class="simple">
+<li><p>y (float or int) :  data in Y axis</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output      : - degree (float or int) : if it is float, then it has been rounded to 2 decimals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.Degree.gaze_direction_in_y_axis_degree">
+<span class="sig-name descname"><span class="pre">gaze_direction_in_y_axis_degree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#Degree.gaze_direction_in_y_axis_degree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.Degree.gaze_direction_in_y_axis_degree" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Convert cartesian value to degree for gaze direction in Y axis</span></dt><dd><p>Eye tracker data that is produced by HTC Vive pro is in cartesian</p>
+<p>See “Right hand rule coordinate” for further information</p>
+</dd>
+<dt>Parameters<span class="classifier">- y (float or int)</span><span class="classifier">data in Y axis</span></dt><dd><ul class="simple">
+<li><p>z (float or int) :  data in Z axis</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output      : - degree (float or int) : if it is float, then it has been rounded to 2 decimals</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eye_tracker.analysis.EyeAnalysis">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eye_tracker.analysis.</span></span><span class="sig-name descname"><span class="pre">EyeAnalysis</span></span><a class="reference internal" href="_modules/eye_tracker/analysis.html#EyeAnalysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.EyeAnalysis" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>High-level module</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.EyeAnalysis.combine_eye_data">
+<span class="sig-name descname"><span class="pre">combine_eye_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#EyeAnalysis.combine_eye_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.EyeAnalysis.combine_eye_data" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Combine all cleaned eye tracker data for each eye condition, eg. averted_pre, into one dataframe.</span></dt><dd><p>It also involves pre-processing (replacing missing values with average value of columns
+where they are). It calculates how much each pair looks at each other</p>
+<p>throughout the experiment(each eye condition)</p>
+</dd>
+<dt>Parameters<span class="classifier">- path2files (str): Path to a directory where all cleaned eye tracker files are stored</span></dt><dd><ul class="simple">
+<li><p>tag (str): eye gaze condition, ie. averted_pre, averted_post, direct_pre, direct_post, natural_pre, natural_post</p></li>
+</ul>
+</dd>
+<dt>Output:</dt><dd><ul class="simple">
+<li><p>combined_odd_df (dataframe)  : Combined dataframe of odd subjects (1, 3, 5 ..)</p></li>
+<li><p>combined_even_df (dataframe) : Combined dataframe of even subjects (2, 4, 6 ..)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.EyeAnalysis.diff_look_percent_pre_post">
+<span class="sig-name descname"><span class="pre">diff_look_percent_pre_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">looking_percentage_all_pairs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#EyeAnalysis.diff_look_percent_pre_post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.EyeAnalysis.diff_look_percent_pre_post" title="Permalink to this definition"></a></dt>
+<dd><p>Objective  : Find difference of looking percentage between pre and post for three different eye conditions (averted, direct, and natural)</p>
+<dl>
+<dt>Parameters :</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>looking_percentage_all_pairs (list): Percentage of “really” looking at each other for all pairs for all eye conditions (both pre and post)</dt><dd><p>It is the output of eye_data_analysis function</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Outputs     :</dt><dd><p>Percentage of looking that has been deducted between pre and post for three different eye conditions:</p>
+<p>diff_averted_eye,
+diff_direct_eye,
+diff_natural_eye</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.EyeAnalysis.eye_data_analysis">
+<span class="sig-name descname"><span class="pre">eye_data_analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path2files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#EyeAnalysis.eye_data_analysis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.EyeAnalysis.eye_data_analysis" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Analyze all cleaned eye tracker data, eg. averted_pre.</span></dt><dd><p>It also involves pre-processing (replacing missing values with average value of columns
+where they are). It calculates how much each pair looks at each other</p>
+<p>throughout the experiment(each eye condition)</p>
+</dd>
+<dt>Parameters<span class="classifier">- path2files (str): Path to a directory where all cleaned eye tracker files are stored</span></dt><dd><ul class="simple">
+<li><p>tag (str): eye gaze condition, ie. averted_pre, averted_post, direct_pre, direct_post, natural_pre, natural_post</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output:      - looking_percentage_all_pairs (list) : Each element represents the percentage</p>
+<blockquote>
+<div><p>of looking of each pair throughout the experiment</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.EyeAnalysis.plot_heatmap">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_pre_odd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_pre_even</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_post_odd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_post_even</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2savefigure</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/hpc/igum002/codes/Hyperscanning2-redesign/phd_codes/docs'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#EyeAnalysis.plot_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.EyeAnalysis.plot_heatmap" title="Permalink to this definition"></a></dt>
+<dd><p>Objective  : Plot heatmap of gaze direction for a particular eye condition, i.e., averted, direct, and natural</p>
+<dl class="simple">
+<dt>Parameters :</dt><dd><ul class="simple">
+<li><p>df_pre_odd (DataFrame): Combined dataframe of pre training of odd subjects</p></li>
+<li><p>df_pre_even (DataFrame): Combined dataframe of pre training of even subjects</p></li>
+<li><p>df_post_odd (DataFrame): Combined dataframe of post training of odd subjects</p></li>
+<li><dl class="simple">
+<dt>df_post_even (DataFrame): Combined dataframe of post training of even subjects</dt><dd><dl class="simple">
+<dt>NOTE<span class="classifier">the above inputs (combined dataframe)</span></dt><dd><p>is the output of combine_eye_data function</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>tag (str)<span class="classifier">Choose one of the options below. MUST be the exact word below :</span></dt><dd><p>“averted”, “direct”, “natural”</p>
+</dd>
+</dl>
+</li>
+<li><p>save_fig (boolean)=False (opt) : Option to save the figure. Default is not saving</p></li>
+<li><p>path2savefigure (str)=os.getcwd() (opt) : Set path to save the figure. Default is current working directory</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eye_tracker.analysis.Looking">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eye_tracker.analysis.</span></span><span class="sig-name descname"><span class="pre">Looking</span></span><a class="reference internal" href="_modules/eye_tracker/analysis.html#Looking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.Looking" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Low-level module</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.analysis.Looking.looking_percentage">
+<span class="sig-name descname"><span class="pre">looking_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">odd_dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">even_dataframe</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">srate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">125</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">13</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/analysis.html#Looking.looking_percentage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.analysis.Looking.looking_percentage" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Count how many times each pair “really” looks at each other throughout the experiment</span></dt><dd><p>This will look at per second.  “Really” is determined by a previous research which indicates
+that humans are conscious look at each other within 100ms,
+which is equal to there are 13 times of “looking” value within column of FoveaOdd or FoveaEven</p>
+</dd>
+<dt>Parameters<span class="classifier">- odd_dataframe (pandas dataframe)</span><span class="classifier">dataframe of odd participant</span></dt><dd><ul>
+<li><p>even_dataframe (pandas dataframe) :  dataframe of even participant</p></li>
+<li><dl class="simple">
+<dt>srate (int)<span class="classifier">which indicates the step / per second that we will check whether</span></dt><dd><p>the pair looking or not</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>threshold (int)<span class="classifier">threshold to determine whether the pair “really” looks or not</span></dt><dd><blockquote>
+<div><p>if there are at least 13 times of “looking” within a second (srate)
+under the column of FoveaOdd or FoveaEven, then it is considered “really” looking</p>
+</div></blockquote>
+<p>Note : Kindly refer to this research to see the threshold of 30 (100ms)
+<a class="reference external" href="https://journals.sagepub.com/doi/abs/10.1111/j.1467-9280.2006.01750.x?casa_token=AYU81Dg2DAMAAAAA%3Asy9nVGA6NjQPFuRthQW5eCZl9V06TpqV2OgtYbUFPwVKCV4so2PlVJrBWo01EfiSX-yNHul7mX_DlYk&amp;journalCode=pssa">https://journals.sagepub.com/doi/abs/10.1111/j.1467-9280.2006.01750.x?casa_token=AYU81Dg2DAMAAAAA%3Asy9nVGA6NjQPFuRthQW5eCZl9V06TpqV2OgtYbUFPwVKCV4so2PlVJrBWo01EfiSX-yNHul7mX_DlYk&amp;journalCode=pssa</a></p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>Output      : - percent_look (float) : percentage of looking of a pair throughout the experiment</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-eye_tracker.preprocesses">
+<span id="eye-tracker-preprocesses-module"></span><h2>eye_tracker.preprocesses module<a class="headerlink" href="#module-eye_tracker.preprocesses" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Clean_Eye_Exp2_Redesign">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eye_tracker.preprocesses.</span></span><span class="sig-name descname"><span class="pre">Clean_Eye_Exp2_Redesign</span></span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Clean_Eye_Exp2_Redesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Clean_Eye_Exp2_Redesign" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Clean_Eye_Exp2_Redesign.delete_epoch_eye_tracker">
+<span class="sig-name descname"><span class="pre">delete_epoch_eye_tracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eyetracker_data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path2save_cleaned_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Clean_Eye_Exp2_Redesign.delete_epoch_eye_tracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Clean_Eye_Exp2_Redesign.delete_epoch_eye_tracker" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Objective<span class="classifier">Since EEG data has been cleaned (delete bad data) then the same part of eye tracker data will also</span></dt><dd><p>need to be deleted. This function will do the job</p>
+</dd>
+<dt>Parameters :</dt><dd><ul>
+<li><p>eyetracker_data_path (str)  : path to where extracted eye data has been stored</p></li>
+<li><p>path2save_cleaned_data(str) : path to save cleaned eye data</p></li>
+<li><p>file_tag(str)               : averted_pre, averted_post, direct_pre, direct_post</p></li>
+<li><dl>
+<dt>indices (List[List[int]])<span class="classifier">List of indices of deleted epochs of EEG data</span></dt><dd><blockquote>
+<div><p>Note : Load pkl file which consists of deleted EEG indices</p>
+</div></blockquote>
+<dl>
+<dt>with open(“list_deleted_epoch_indices_averted_pre.pkl”, “rb”) as handle:</dt><dd><blockquote>
+<div><p>deleted_epochs_indices_averted_pre = pickle.load(handle)</p>
+</div></blockquote>
+<p>Take the variable of deleted_epochs_indices_averted_pre as input</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p>Outputs    : Cleaned csv files where the same part of EEG data has been deleted</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eye_tracker.preprocesses.</span></span><span class="sig-name descname"><span class="pre">Combine_Eye_Exp2_Redesign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_raw_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_averted_baseline">
+<span class="sig-name descname"><span class="pre">combine_post_averted_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_baseline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_baseline_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_post_averted_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_averted_baseline" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of POST-training during baseline stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_baseline(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of baseline</span></dt><dd><ul class="simple">
+<li><p>raw_combined_baseline_data_directory(str) : path to store combined baseline-data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_averted_experiment">
+<span class="sig-name descname"><span class="pre">combine_post_averted_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_experiment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_experimental_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_post_averted_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_averted_experiment" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of POST-training during experimental stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_experiment(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of experiment</span></dt><dd><ul class="simple">
+<li><p>raw_combined_experimental_data_directory(str) : path to store combined-experimental data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_direct_experiment">
+<span class="sig-name descname"><span class="pre">combine_post_direct_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_experiment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_experimental_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_post_direct_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_direct_experiment" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of POST-training during experimental stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_experiment(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of experiment</span></dt><dd><ul class="simple">
+<li><p>raw_combined_experimental_data_directory(str) : path to store combined-experimental data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_natural_experiment">
+<span class="sig-name descname"><span class="pre">combine_post_natural_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_experiment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_experimental_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_post_natural_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_post_natural_experiment" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of POST-training during experimental stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_experiment(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of experiment</span></dt><dd><ul class="simple">
+<li><p>raw_combined_experimental_data_directory(str) : path to store combined-experimental data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_averted_baseline">
+<span class="sig-name descname"><span class="pre">combine_pre_averted_baseline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_baseline</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_baseline_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_pre_averted_baseline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_averted_baseline" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of PRE-training during baseline stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_baseline(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of baseline</span></dt><dd><ul class="simple">
+<li><p>raw_combined_baseline_data_directory(str) : path to store combined baseline-data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_averted_experiment">
+<span class="sig-name descname"><span class="pre">combine_pre_averted_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_experiment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_experimental_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_pre_averted_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_averted_experiment" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of POST-training during experimental stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_experiment(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of experiment</span></dt><dd><ul class="simple">
+<li><p>raw_combined_experimental_data_directory(str) : path to store combined-experimental data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_direct_experiment">
+<span class="sig-name descname"><span class="pre">combine_pre_direct_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_experiment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_experimental_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_pre_direct_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_direct_experiment" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of POST-training during experimental stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_experiment(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of experiment</span></dt><dd><ul class="simple">
+<li><p>raw_combined_experimental_data_directory(str) : path to store combined-experimental data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_natural_experiment">
+<span class="sig-name descname"><span class="pre">combine_pre_natural_experiment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_dir_experiment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_combined_experimental_data_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Combine_Eye_Exp2_Redesign.combine_pre_natural_experiment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Combine_Eye_Exp2_Redesign.combine_pre_natural_experiment" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><dl>
+<dt>Objective :</dt><dd><p>After the data of eye tracker has been extracted, it is separated between left and right hand data</p>
+<p>Due to that, we need to combine both data by using this function. During pre-training, participants need to point</p>
+<p>their hands with right and left alternatively. It is 1 minute for each hand. Since there are</p>
+<p>two hands, then it was 2 minutes for both hands. This function is to combine data of eye tracker</p>
+<p>of POST-training during experimental stage.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>Parameters<span class="classifier">- raw_dir_experiment(str)</span><span class="classifier">path to directory that contains separate eye tracker data files of experiment</span></dt><dd><ul class="simple">
+<li><p>raw_combined_experimental_data_directory(str) : path to store combined-experimental data of eye tracker</p></li>
+</ul>
+</dd>
+</dl>
+<p>Output     : Combined eye tracker data in format .csv</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Extract_Eye_Exp2_Redesign">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">eye_tracker.preprocesses.</span></span><span class="sig-name descname"><span class="pre">Extract_Eye_Exp2_Redesign</span></span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Extract_Eye_Exp2_Redesign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Extract_Eye_Exp2_Redesign" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Extract_Eye_Exp2_Redesign.extract_baseline_eye_data">
+<span class="sig-name descname"><span class="pre">extract_baseline_eye_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_2_csv_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_2_save_baseline_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labelsequence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Extract_Eye_Exp2_Redesign.extract_baseline_eye_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Extract_Eye_Exp2_Redesign.extract_baseline_eye_data" title="Permalink to this definition"></a></dt>
+<dd><p>Objective: Extract baseline data from raw Eye Tracker file (<a href="#id1"><span class="problematic" id="id2">*</span></a>.csv) that was obtained from hyperscanning2-redesign experiment</p>
+<dl>
+<dt>Parameters :</dt><dd><ul class="simple">
+<li><p>path_2_csv_files (str) : path to raw Eye tracker file</p></li>
+<li><p>path_2_save_baseline_file (str) : path to save extracted baseline file for each condition</p></li>
+<li><p>bad_files (list) (optional) : file name of raw EyeTracker file, e.g., EyeTracker-S8.csv, that wants to be skipped to process</p></li>
+<li><p>labelsequence (int) : order of pre-defined label sequence, 1 (averted) is default</p></li>
+</ul>
+</dd>
+<dt>Output :</dt><dd><p>Extracted <a href="#id3"><span class="problematic" id="id4">*</span></a>.csv file for each condition of hand (finger pointing and tracking).
+There are 6 files in total for each participant.</p>
+<p>REMEMBER : All resulted files will be in “AVERTED” condition since the baseline condition is in AVERTED condition.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eye_tracker.preprocesses.Extract_Eye_Exp2_Redesign.extract_experiment_eye_data">
+<span class="sig-name descname"><span class="pre">extract_experiment_eye_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_2_csv_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_2_save_experimental_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labelsequence_experiment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bad_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/eye_tracker/preprocesses.html#Extract_Eye_Exp2_Redesign.extract_experiment_eye_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#eye_tracker.preprocesses.Extract_Eye_Exp2_Redesign.extract_experiment_eye_data" title="Permalink to this definition"></a></dt>
+<dd><p>Objective  : Extract experimental data from raw Eye Tracker file (<a href="#id5"><span class="problematic" id="id6">*</span></a>.csv) that was obtained from hyperscanning2-redesign experiment</p>
+<dl class="simple">
+<dt>Parameters :</dt><dd><ul class="simple">
+<li><p>path_2_csv_files (str) : path to raw Eye tracker file</p></li>
+<li><p>path_2_save_experimental_file (str) : path to save extracted experimental file for each condition</p></li>
+<li><p>labelsequence_experiment (list) : order of pre-defined label sequence</p></li>
+<li><p>bad_files (list) (optional) : file name of raw EyeTracker file, e.g., EyeTracker-S8.csv, that wants to be skipped to process</p></li>
+</ul>
+</dd>
+<dt>Output :</dt><dd><p>Extracted <a href="#id7"><span class="problematic" id="id8">*</span></a>.csv file for each condition of hand (finger pointing and tracking).
+There are 6 files in total for each participant.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-eye_tracker">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-eye_tracker" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="EEG.html" class="btn btn-neutral float-left" title="EEG package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="questionnaire.html" class="btn btn-neutral float-right" title="questionnaire package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Ihshan Gumilar.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
