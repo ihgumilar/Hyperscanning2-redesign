@@ -66,7 +66,6 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
         .. warning:: All resulted files will be in AVERTED condition \
                      since the baseline condition is in AVERTED condition.
         """
-      
 
         list_file_names = []
         full_path_2_each_file = []
@@ -306,11 +305,37 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
 
     def extract_experimental_eeg_data(
         self,
-        path_2_csv_files,
-        path_2_save_experimental_file,
+        path_2_csv_files: str,
+        path_2_save_experimental_file: str,
         labelsequence_experiment: list,
         bad_files=[],
     ):
+        
+        """ * Extract experimental data from raw EEG data which is in csv format.\
+            Every raw csv file of EEG data must contain 48 markers in total (opening & closing).\
+            Basically, there are 24 markers. However, experimental data is from marker 7 to 24.\
+            (36 markers if including opening & closing markers).
+
+        :param path_2_csv_files: path to raw EEG file (csv format).
+        :type path_2_csv_files: str
+        :param path_2_save_experimental_file: path to save extracted experimental data of EEG (which is in *.fif).
+        :type path_2_save_experimental_file: str
+        :param labelsequence_experiment: order of label sequence.
+        :type labelsequence_experiment: list
+        :param bad_files: raw EEG file(s) that want to be skipped to be processed by the script, defaults to []
+        :type bad_files: list, optional
+        :raises IndexError: _description_
+        :raises ValueError: _description_
+
+        .. note:: * returns: :literal:`*.fif` files  
+                       * File name format :
+                       * EEG-Subject no_EyeCondition__TrainingCondition_HandCondition_raw.fif
+                           * **EEG-S01-averted_left_tracking_raw**.
+                       * There are 18 files in total for each participant.
+
+        # .. warning:: All resulted files will be in AVERTED condition \
+        #              since the baseline condition is in AVERTED condition.
+        """
 
         # """
 
@@ -332,37 +357,34 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
 
         # """
 
-        """
-        **Objective** :
+        # """
+        # **Objective** :
 
-        - Extract experimental data from raw EEG data which is in csv format.
-          Every raw csv file of EEG data must contain 48 markers in total (opening & closing).
-          Basically, there are 24 markers. However, experimental data is from marker 7 to 24.
-          (36 markers if including opening & closing markers).
+        # - Extract experimental data from raw EEG data which is in csv format.
+        #   Every raw csv file of EEG data must contain 48 markers in total (opening & closing).
+        #   Basically, there are 24 markers. However, experimental data is from marker 7 to 24.
+        #   (36 markers if including opening & closing markers).
 
+        # **Parameters** :
 
-        **Parameters** :
+        # :param path_2_csv_files: path to raw EEG file (csv format).
+        # :param path_2_save_experimental_file: path to save extracted experimental data of EEG .
+        # :param labelsequence_experiment: order of label sequence.
+        # :param bad_files: (opt) raw EEG file(s) that want to be skipped to be processed by the script.
 
-        :param path_2_csv_files: path to raw EEG file (csv format).
-        :param path_2_save_experimental_file: path to save extracted experimental data of EEG .
-        :param labelsequence_experiment: order of label sequence.
-        :param bad_files: (opt) raw EEG file(s) that want to be skipped to be processed by the script.
+        # :type path_2_csv_files: str
+        # :type path_2_save_experimental_file: str
+        # :type labelsequence_experiment: list
+        # :type bad_files: list
 
-        :type path_2_csv_files: str
-        :type path_2_save_experimental_file: str
-        :type labelsequence_experiment: list
-        :type bad_files: list
+        # :returns: extracted_files (experimental)
+        # :rtype: *.fif (mne)
 
-        :returns: extracted_files (experimental)
-        :rtype: *.fif (mne)
+        # .. note:: EEG file in *.fif format with the name formatting :
+        #           Subject no_EyeCondition__TrainingCondition_HandCondition_raw.fif
+        #           For instance, "EEG-S01-averted_left_tracking_raw". In total, there will be 18 files for each participant.
 
-
-        .. note:: EEG file in *.fif format with the name formatting :
-                  Subject no_EyeCondition__TrainingCondition_HandCondition_raw.fif
-                  For instance, "EEG-S01-averted_left_tracking_raw". In total, there will be 18 files for each participant.
-
-
-        """
+        # """
 
         list_file_names = []
         full_path_2_each_file = []
