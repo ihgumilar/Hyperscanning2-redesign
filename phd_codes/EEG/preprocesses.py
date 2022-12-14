@@ -41,40 +41,32 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
         labelsequence=1,
         bad_files=[],
     ):
-
-        """
-        **Objective** :
-
-        - Extract baseline data from raw EEG data which is in csv format.
-          Every raw csv file of EEG data must contain 48 markers in total (opening & closing).
-          Basically, there are 24 markers. However, baseline data is in the first 6 markers.
-          (12 markers if including opening & closing markers).
-
-
-        **Parameters** :
+        """ * Extract baseline data from raw EEG data which is in csv format. \
+            Every raw csv file of EEG data must contain 48 markers in total (opening & closing). \
+            Basically, there are 24 markers. However, baseline data is in the first 6 markers. \
+            (12 markers if including opening & closing markers).
 
         :param path_2_csv_files: path to raw EEG file (csv format).
-        :param path_2_save_baseline_file: path to save extracted baseline data of EEG (output file in *.fif format).
-        :param labelsequence: (opt) order of label sequence, in this case is 1 by default.
-        :param bad_files: (opt) raw EEG file(s) that want to be skipped to be processed by the script.
-
         :type path_2_csv_files: str
+        :param path_2_save_baseline_file: path to save extracted baseline data of EEG (output file in *.fif).
         :type path_2_save_baseline_file: str
-        :type labelsequence: list
-        :type bad_files: list
-
-        :returns: extracted_files (baseline)
+        :param labelsequence: order of label sequence, in this case is 1 by default, defaults to 1
+        :type labelsequence: int, optional
+        :param bad_files: raw EEG file(s) that want to be skipped to be processed by the script, defaults to []
+        :type bad_files: list, optional
+        :returns: extracted_EEG_files (baseline)
         :rtype: *.fif (mne)
 
+        .. note:: * returns: :literal:`*.fif` files  
+                       * File name format :
+                       * EEG-Subject no_EyeCondition_TrainingCondition_HandCondition_raw.fif.
+                           * **EEG-S01-averted_left_tracking_raw**.
+                       * There are 6 files in total for each participant.
 
-        .. note:: Output is EEG file in *.fif format with the name formatting :
-                  Subject no_EyeCondition__TrainingCondition_HandCondition_raw.fif
-                  For instance, "EEG-S01-averted_left_tracking_raw".
-                  There are 6 files in total for each participant.
-
-        .. warning:: All resulted files will be in AVERTED condition since the baseline condition is in AVERTED condition.
-
+        .. warning:: All resulted files will be in AVERTED condition \
+                     since the baseline condition is in AVERTED condition.
         """
+      
 
         list_file_names = []
         full_path_2_each_file = []

@@ -18,6 +18,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath(".."))
 sys.path.insert(0, os.path.abspath("../EEG/"))
+sys.path.insert(0, os.path.abspath("../eye_tracker/"))
+sys.path.insert(0, os.path.abspath("../questionnaire/"))
 
 # os.path.abspath("../EEG/")
 # os.path.abspath("../eye_tracker/")
