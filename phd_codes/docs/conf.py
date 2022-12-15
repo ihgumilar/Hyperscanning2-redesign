@@ -41,6 +41,8 @@ inline_highlight_literals = True
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+# smartquotes deactivation. Otherwise "" / '' rendered as other quotations which are not nice to put in code
+smartquotes = False
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

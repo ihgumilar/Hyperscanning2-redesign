@@ -39,40 +39,43 @@ class Connections:
         :returns: :literal:`*.pkl` files, each pair will have 6 files. See **note**.
         :rtype: :literal:`*.pkl`
 
-        .. note:: * objective: 
-                      The permutation for finding significant inter-brain synchrony scores \
-                      are computed with three different algorithms as listed below. \
-                      Each pair of electrode is computed by using the following algorithms.
-                               #. ccorr - circular correlation coefficient
-                               #. coh - coherence
-                               #. plv - phase locking value
-                      
-                      See `other supported connectivity measures (algorithms) on note section <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_.
-                  
-                  * parameters: 
-                      :literal:`preproc_files`
-
-                        * Different eye condition (pre/pro) requires a unique directory
+        .. note:: 
+            * objective: 
+                The permutation for finding significant inter-brain synchrony scores \
+                are computed with three different algorithms as listed below. \
+                Each pair of electrode is computed by using the following algorithms.
+                    #. ccorr - circular correlation coefficient
+                    #. coh - coherence
+                    #. plv - phase locking value
                                 
-                      :literal:`sig_connection_path`
+        
+            * parameters: 
+                :literal:`preproc_files`
 
-                        * Different eye condition (pre/pro) requires a unique directory
-                        * There will be 3 main containers (actual score of ccor, plv, coh).
-                        * Each of them has 4 lists (theta, alpha, beta, and gamma).
+                * Different eye condition (pre/pro) requires a unique directory.
+                    
+                    
+                :literal:`sig_connection_path`
 
-                  * returns: :literal:`*.pkl` files :
-                      #. Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl
-                      #. Pre_ccorr_combined_pair_S1_and_S2_connection_data.pkl
-                      #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
-                      #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
-                      #. Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl
-                      #. Pre_plv_combined_pair_S1_and_S2_connection_data.pkl
-                  
-                  
+                * Different eye condition (pre/pro) requires a unique directory.
+                * There will be 3 main containers (actual score of ccor, plv, coh).
+                * Each of them has 4 lists (theta, alpha, beta, and gamma).
 
-        .. warning:: The higher permutation, the longer it takes time to process. \
-                     The current experiment used **30 times** permutation that applies \
-                     to every electrode pair.
+            * returns: 
+                ``*.pkl`` files. Each pair will have 6 files as shown below as example :
+                    #. Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl
+                    #. Pre_ccorr_combined_pair_S1_and_S2_connection_data.pkl
+                    #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
+                    #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
+                    #. Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl
+                    #. Pre_plv_combined_pair_S1_and_S2_connection_data.pkl
+        
+        .. seealso::
+            For more updated supported connectivity measures (algorithm) in `HyPyP module. <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_
+
+        .. warning:: 
+            The higher permutation, the longer it takes time to process.\
+            The current experiment used **30 times** permutation that applies to every electrode pair.
 
  
 

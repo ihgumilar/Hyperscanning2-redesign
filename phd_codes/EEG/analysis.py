@@ -64,8 +64,32 @@ class _Intermediary_Clean_EEG:
 
 
 class Compute_Sync_EEG_Exp2_Redesign:
-    """
-    High-level module (Compute inter-brain synchrony and clean up EEG data simultaneously)
+    """Initialization of using :literal:`Compute_Sync_EEG_Exp2_Redesign` class.
+
+    High-level module to compute inter-brain synchrony and clean up EEG data simultaneously.
+
+        :param n_raw_files: number of raw EEG files (*.csv)
+        :type n_raw_files: int
+        :param algorithm: algorithm for calculating inter-brain synchrony, defaults to "ccorr"
+        :type algorithm: str, optional
+        :param bad_channels: bad channels, defaults to [ [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "F8", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], [], [], [], ["F7"], ["Fp2", "T7"], [], [], [], ["Fp2", "F4", "C3"], [], ["Fp2", "F4", "C3", "C4"], [], [], [], [], ]
+        :type bad_channels: list, optional
+
+    .. note::
+        Supported connectivity measures (algorithm) :
+            * ``"envelope_corr"``: envelope correlation
+            * ``"pow_corr"``: power correlation
+            * ``"plv"``: phase locking value
+            * ``"ccorr"``: circular correlation coefficient
+            * ``"coh"``: coherence
+            * ``imaginary_coh``: imaginary coherence
+            * ``"pli"`` : phase lag index
+            * ``"wpli"`` : weighted phase lag index
+
+    .. seealso::
+        For more updated supported connectivity measures (algorithm) in `HyPyP module. <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_
+
+
     """
 
     def __init__(
@@ -135,24 +159,7 @@ class Compute_Sync_EEG_Exp2_Redesign:
             [],
         ],
     ):
-        """
-        - n_raw_files = number of raw EEG files. It must be EVEN number because it always goes
-                       in pair
 
-        - algorithm (str)(opt) : Type of algorithm that is used to calculate inter-brain syncrony. See below for options :
-
-            * supported connectivity measures (algorithm) : - 'envelope_corr': envelope correlation
-                                                            - 'pow_corr': power correlation
-                                                            - 'plv': phase locking value
-                                                            - 'ccorr': circular correlation coefficient
-                                                            - 'coh': coherence
-                                                            - 'imaginary_coh': imaginary coherence
-                                                            - 'pli': phase lag index
-                                                            - 'wpli': weighted phase lag index
-
-        - bad_channels (List[List])(Opt): List of of defined bad channels, if any
-
-        """
         self.number_raw_files = n_raw_files
         self.__algorithm = algorithm
         self._bad_channels = bad_channels
