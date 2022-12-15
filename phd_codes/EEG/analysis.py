@@ -33,6 +33,14 @@ class Time_Conversion:
 
     # Time conversion
     def convert(self, seconds: int or float):
+        """Convert elapsed time into hour, minutes, seconds
+
+        :param seconds: number of elapsed seconds
+        :type seconds: int or float
+        :return: hour:minutes:seconds
+        :rtype: str
+        """
+
         seconds = seconds % (24 * 3600)
         hour = seconds // 3600
         seconds %= 3600
