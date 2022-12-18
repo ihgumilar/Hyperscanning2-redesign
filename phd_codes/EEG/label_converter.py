@@ -15,16 +15,20 @@
 # ---
 
 # %%
-def get_electrode_labels_connections(channels):
-    """Giving labels of paired channels that are statistically connected
-        This is using OpenBCI. Remember this !! (16 x 16 channels = 256).
-
-    parameter :
-        - channels | tuple : a pair of channel indices.
-                            E.g., (0,0)...(15,15)
-    output :
-        - channels | str : a pair of channel labels, eg., 'FP1-FP1'
+def get_electrode_labels_connections(channels: tuple):
     """
+        Give labels of paired channels that are statistically connected.
+
+        :param channels: a pair of channel indices, e.g., (0,0)...(15,15).
+        :type channels: tuple
+        :return: a pair of channel labels, eg., "FP1-F7"
+        :rtype: str
+
+        .. note::
+            The current experiment is using OpenBCI.\
+            16 x 16 channels = 256 channel combinations ! 
+    """
+
     numeral_dict = {
         (0, 0): "FP1-FP1",
         (0, 1): "FP1-Fp2",
