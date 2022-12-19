@@ -9,35 +9,42 @@ from pandas import DataFrame
 
 class Questionnaire:
     """
-    Functions that are related to questionnaire scoring
+    This class contains functions that are related to questionnaire scoring.
     """
 
     def scoring_questionnaire(self, path2questions: str):
 
         """
-        Objective : Scoring questionnnaire for each eye condition. Both subscales and
-                    total score of Social Prensece Game Questionnaire (SPGQ)
+            Scoring questionnnaire for each eye condition. Both subscales and\
+            total score of Social Prensece Game Questionnaire (SPGQ)
 
-        Parameter :
-                    - path2questions (str): Path to where raw questionnaire data (*.csv) is stored
+            :param path2questions: Path to where raw questionnaire data (*.csv) is stored.
+            :type path2questions: str
+            :return all_questionnaires: all scored questionnaires for each eye condition
+            :rtype: namedtuple
+            
 
-        Output    :
-                    - all_questionnaires (namedtuple). Here is the order :
-                        ["averted_pre",
-                        "averted_post",
-                        "direct_pre",
-                        "direct_post",
-                        "natural_pre",
-                        "natural_post"'
+            .. note::
+                returns:
+                    * all_questionnaires (namedtuple). Here is the order :
+                        * "averted_pre"
+                        * "averted_post"
+                        * "direct_pre"
+                        * "direct_post"
+                        * "natural_pre"
+                        * "natural_post"
+                        
+                questionnaires:
+                    * There are 2 questionnaires here that we use in the experiment :
+                    * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales\
+                      (Higher score, Higher Social Presence)
+                        * Psychological involvement - Empathy
+                        * Psychological involvement - Negative feelings
+                        * Psychological involvement - Behavioral engagement
 
-        Note : Related to questionnaires
-                There are 2 questionnaires here that we use in the experiment :
-                * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales (Higher score, Higher Social Presence)
-                    * Psychological involvement - Empathy
-                    * Psychological involvement - Negative feelings
-                    * Psychological involvement - Behavioral engagement
-                * Co-Presence questionnaire (REMEMBER : HIGER score, indicates LESS CoPresence !!!)
-                * See here for details https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#
+                    * Co-Presence questionnaire (REMEMBER : HIGHER score, indicates LESS CoPresence !!!)
+                    * See `here for details <https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#>`_.
+
         """
 
         results = namedtuple(
