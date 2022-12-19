@@ -390,38 +390,63 @@ class Questionnaire:
     ):
 
         """
-        Objective : Find a difference between post and pre of subscale of questionnnaire for each eye condition.
-                    Both subscales and total score of Social Prensece Game Questionnaire (SPGQ)
+            Find a difference between post and pre of subscale of questionnnaire for each eye condition.\
+            Both subscales and total score of Social Prensece Game Questionnaire (SPGQ)
 
-        Parameters :
-                    - df_averted_pre (DataFrame) : DataFrame that is resulted from scoring_questionnaire function
-                    - df_averted_post (DataFrame) : DataFrame that is resulted from scoring_questionnaire function
-                    - df_direct_pre (DataFrame) : DataFrame that is resulted from scoring_questionnaire function
-                    - df_direct_post (DataFrame) : DataFrame that is resulted from scoring_questionnaire function
-                    - df_natural_pre (DataFrame) : DataFrame that is resulted from scoring_questionnaire function
-                    - df_natural_post (DataFrame) : DataFrame that is resulted from scoring_questionnaire function
-                    - column_name (str) : Choose one of the options below
-                                        - "Empathy SPGQ"
-                                        - "NegativeFeelings SPGQ"
-                                        - "Behavioural SPGQ"
-                                        - "SPGQ Total"
-                                        - "CoPresence Total"
 
-        Outputs    :
-                    There are 3 outputs which are the result of substraction post and pre of
-                       (subscale / SPGQ total) questionnnaire :
-                    - substracted_averted
-                    - substracted_direct
-                    - substracted_natural
+            :param df_averted_pre: combined dataframe of averted_pre.
+            :type df_averted_pre: DataFrame
+            :param df_averted_post: combined dataframe of averted_post.
+            :type df_averted_post: DataFrame
+            :param df_direct_pre: combined dataframe of averted_pre.
+            :type df_direct_pre: DataFrame
+            :param df_direct_post: combined dataframe of averted_post.
+            :type df_direct_post: DataFrame
+            :param df_natural_pre: combined dataframe of averted_pre.
+            :type df_natural_pre: DataFrame
+            :param df_natural_post: combined dataframe of averted_post.
+            :type df_natural_post: DataFrame
+            :param column_name: one of column names in a dataframe. 
+            :type column_name: str
+            :return: substracted_averted, substracted_direct, substracted_natural
+            :rtype: DataFrame
 
-                    Note : Related to questionnaires
-                            There are 2 questionnaires here that we use in the experiment :
-                            * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales (Higher score, Higher Social Presence)
-                                * Psychological involvement - Empathy
-                                * Psychological involvement - Negative feelings
-                                * Psychological involvement - Behavioral engagement
-                            * Co-Presence questionnaire (REMEMBER : HIGER score, indicates LESS CoPresence !!!)
-                            * See here for details https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#
+            .. note::
+                parameters:
+                    * A dataframe that serves as a parameter is the return\
+                    dataframe of scoring_questionnaire function.
+                    
+                    * column_name :
+                        * ``"Empathy SPGQ"``
+                        * ``"NegativeFeelings SPGQ"``
+                        * ``"Behavioural SPGQ"``
+                        * ``"SPGQ Total"``
+                        * ``"CoPresence Total"``
+ 
+                returns:
+                    * There are 3 outputs which are the result of substraction post and pre\
+                        of (subscale / SPGQ total) questionnnaire :
+
+                        * substracted_averted
+                        * substracted_direct
+                        * substracted_natural
+                        
+                questionnaires:
+                    * There are 2 questionnaires here that we use in the experiment :
+                    * Social Presence in Gaming Questionnaire (SPGQ), which consists of 3 subscales\
+                      (Higher score, Higher Social Presence)
+                        * Psychological involvement - Empathy
+                        * Psychological involvement - Negative feelings
+                        * Psychological involvement - Behavioral engagement
+
+                    * Co-Presence questionnaire (REMEMBER : HIGHER score, indicates LESS CoPresence !!!)
+                    * See `here for details <https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#>`_.
+
+            .. seealso::
+                :py:meth:`~questionnnaire.Questionnaire.scoring_questionnaire`
+                
+
+
         """
 
         df_averted_pre_list = df_averted_pre[column_name].tolist()
