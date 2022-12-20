@@ -25,59 +25,61 @@ class Connections:
     def permut_sig_connection(
         self, preproc_files: str, sig_connection_path: str, n_permutations: int
     ):
-        """ * To find out which connections that are statistically significant. This will run permutation \
+
+        """ 
+            * To find out which connections that are statistically significant. This will run permutation \
             out of 256 connections of each pair (16 x 16 electrodes). See **note** and **warning**.
 
 
-        :param preproc_files: Path to where pre-processed files are stored. See **note**.
-        :type preproc_files: str
-        :param sig_connection_path: Path to where significant connections files will be stored. See **note**.
-        :type sig_connection_path: str
-        :param n_permutations: number of permutations
-        :type n_permutations: int
+            :param preproc_files: Path to where pre-processed files are stored. See **note**.
+            :type preproc_files: str
+            :param sig_connection_path: Path to where significant connections files will be stored. See **note**.
+            :type sig_connection_path: str
+            :param n_permutations: number of permutations
+            :type n_permutations: int
 
-        :returns: :literal:`*.pkl` files, each pair will have 6 files. See **note**.
-        :rtype: :literal:`*.pkl`
+            :returns: :literal:`*.pkl` files, each pair will have 6 files. See **note**.
+            :rtype: :literal:`*.pkl`
 
-        .. note:: 
-            * objective: 
-                The permutation for finding significant inter-brain synchrony scores \
-                are computed with three different algorithms as listed below. \
-                Each pair of electrode is computed by using the following algorithms.
-                    #. ccorr - circular correlation coefficient
-                    #. coh - coherence
-                    #. plv - phase locking value
-                                
-        
-            * parameters: 
-                :literal:`preproc_files`
+            .. note:: 
+                * objective: 
+                    The permutation for finding significant inter-brain synchrony scores \
+                    are computed with three different algorithms as listed below. \
+                    Each pair of electrode is computed by using the following algorithms.
+                        #. ccorr - circular correlation coefficient
+                        #. coh - coherence
+                        #. plv - phase locking value
+                                    
+            
+                * parameters: 
+                    :literal:`preproc_files`
 
-                * Different eye condition (pre/pro) requires a unique directory.
-                    
-                    
-                :literal:`sig_connection_path`
+                    * Different eye condition (pre/pro) requires a unique directory.
+                        
+                        
+                    :literal:`sig_connection_path`
 
-                * Different eye condition (pre/pro) requires a unique directory.
-                * There will be 3 main containers (actual score of ccor, plv, coh).
-                * Each of them has 4 lists (theta, alpha, beta, and gamma).
+                    * Different eye condition (pre/pro) requires a unique directory.
+                    * There will be 3 main containers (actual score of ccor, plv, coh).
+                    * Each of them has 4 lists (theta, alpha, beta, and gamma).
 
-            * returns: 
-                ``*.pkl`` files. Each pair will have 6 files as shown below as example :
-                    #. Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl
-                    #. Pre_ccorr_combined_pair_S1_and_S2_connection_data.pkl
-                    #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
-                    #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
-                    #. Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl
-                    #. Pre_plv_combined_pair_S1_and_S2_connection_data.pkl
-        
-        .. seealso::
-            For more updated supported connectivity measures (algorithm) in `HyPyP module. <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_
+                * returns: 
+                    ``*.pkl`` files. Each pair will have 6 files as shown below as example :
+                        #. Pre_ccorr_combined_pair_S1_and_S2_actual_score_data.pkl
+                        #. Pre_ccorr_combined_pair_S1_and_S2_connection_data.pkl
+                        #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
+                        #. Pre_coh_combined_pair_S1_and_S2_actual_score_data.pkl
+                        #. Pre_plv_combined_pair_S1_and_S2_actual_score_data.pkl
+                        #. Pre_plv_combined_pair_S1_and_S2_connection_data.pkl
+            
+            .. seealso::
+                For more updated supported connectivity measures (algorithm) in `HyPyP module. <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_
 
-        .. warning:: 
-            The higher permutation, the longer it takes time to process.\
-            The current experiment used **30 times** permutation that applies to every electrode pair.
+            .. warning:: 
+                The higher permutation, the longer it takes time to process.\
+                The current experiment used **30 times** permutation that applies to every electrode pair.
 
- 
+    
 
         """
 
@@ -807,19 +809,40 @@ class Connections:
 
     def count_sig_connections(self, path: str):
         """
-        Objective : Count a number of significant connections for a certain eye condition, eg. averted_pre.
-                    Divided into different algorithms (ccorr, coh, and plv) and frequencies (theta, alpha, beta, and gamma)
+            Count a number of significant connections for a certain eye condition, eg. averted_pre.\
+            Divided into different algorithms (ccorr, coh, and plv) and frequencies (theta, alpha, beta, and gamma).
 
-        Parameters :
-                      path (str) : A path that contains *pkl file which contains actual scores of connections.
-                                   Each *.pkl file will have a lenght of 4 (the order is theta, alpha, beta, and gamma)
+            :param path: a path that contains ``*pkl`` file which contains actual scores of connections.                        
+            :type path: str
+            :return all_connections: it returns multiple values.
+            :rtype: namedtuple
 
-        Outputs:
-                    all_connections (namedtuple): it returns multiple values. The order is described below:
+            .. note::
+                * parameters:
+                    * ``path``: 
+                    * Each ``*.pkl`` file will have a lenght of 4 (the order is theta, alpha, beta, and gamma).
+                    * It is the output of :meth:`~EEG.stats.permut_sig_connection`.
 
-                    total_sig_ccorr_theta_connections, total_sig_ccorr_alpha_connections, total_sig_ccorr_beta_connections, total_sig_ccorr_gamma_connections,
-                    total_sig_coh_theta_connections, total_sig_coh_alpha_connections, total_sig_coh_beta_connections, total_sig_coh_gamma_connections,
-                    total_sig_plv_theta_connections, total_sig_plv_alpha_connections, total_sig_plv_beta_connections, total_sig_plv_gamma_connections,
+                * returns:
+                    * The order of ``all_connections (namedtuple)`` is described below :
+                    * REMEMBER ! Index starts from ``zero`` in python
+
+                    0. total_sig_ccorr_theta_connections,
+                    1. total_sig_ccorr_alpha_connections,
+                    #. total_sig_ccorr_beta_connections,
+                    #. total_sig_ccorr_gamma_connections,
+                    #. total_sig_coh_theta_connections,
+                    #. total_sig_coh_alpha_connections,
+                    #. total_sig_coh_beta_connections,
+                    #. total_sig_coh_gamma_connections,
+                    #. total_sig_plv_theta_connections,
+                    #. total_sig_plv_alpha_connections,
+                    #. total_sig_plv_beta_connections,
+                    #. total_sig_plv_gamma_connections.
+            
+            .. seealso::
+                :meth:`~EEG.stats.permut_sig_connection`
+                   
 
         """
 
