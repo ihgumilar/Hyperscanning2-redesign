@@ -45,6 +45,9 @@ class Questionnaire:
                     * Co-Presence questionnaire (REMEMBER : HIGHER score, indicates LESS CoPresence !!!)
                     * See `here for details <https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#>`_.
 
+            .. seealso::
+                :meth:`diff_score_questionnaire_pre_post`
+
         """
 
         results = namedtuple(
@@ -443,7 +446,7 @@ class Questionnaire:
                     * See `here for details <https://docs.google.com/document/d/118ZIYY5o2bhJ6LF0fYcxDA8iinaLcn1EZ5V77zt_AeQ/edit#>`_.
 
             .. seealso::
-                :py:meth:`~questionnnaire.Questionnaire.scoring_questionnaire`
+                :meth:`scoring_questionnaire`
                 
 
 

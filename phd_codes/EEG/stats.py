@@ -73,7 +73,8 @@ class Connections:
                         #. Pre_plv_combined_pair_S1_and_S2_connection_data.pkl
             
             .. seealso::
-                For more updated supported connectivity measures (algorithm) in `HyPyP module. <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_
+                * For more updated supported connectivity measures (algorithm) in `HyPyP module. <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_
+                * :meth:`count_sig_connections` . That function uses parameter, which is the output of the current :meth:`permut_sig_connection` function. 
 
             .. warning:: 
                 The higher permutation, the longer it takes time to process.\
@@ -821,7 +822,7 @@ class Connections:
                 * parameters:
                     * ``path``: 
                     * Each ``*.pkl`` file will have a lenght of 4 (the order is theta, alpha, beta, and gamma).
-                    * It is the output of :meth:`~EEG.stats.permut_sig_connection`.
+                    * It is the output of :meth:`permut_sig_connection`.
 
                 * returns:
                     * The order of ``all_connections (namedtuple)`` is described below :
@@ -841,7 +842,7 @@ class Connections:
                     #. total_sig_plv_gamma_connections.
             
             .. seealso::
-                :meth:`~EEG.stats.permut_sig_connection`
+                :meth:`permut_sig_connection`
                    
 
         """
