@@ -41,28 +41,30 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
         labelsequence=1,
         bad_files=[],
     ):
+        """ * Extract baseline data from raw EEG data which is in csv format. \
+            Every raw csv file of EEG data must contain 48 markers in total (opening & closing). \
+            Basically, there are 24 markers. However, baseline data is in the first 6 markers. \
+            (12 markers if including opening & closing markers).
 
-        """
+        :param path_2_csv_files: path to raw EEG file (csv format).
+        :type path_2_csv_files: str
+        :param path_2_save_baseline_file: path to save extracted baseline data of EEG (output file in *.fif).
+        :type path_2_save_baseline_file: str
+        :param labelsequence: order of label sequence, in this case is 1 by default, defaults to 1
+        :type labelsequence: int, optional
+        :param bad_files: raw EEG file(s) that want to be skipped to be processed by the script, defaults to []
+        :type bad_files: list, optional
+        :returns: extracted_EEG_files (baseline)
+        :rtype: *.fif (mne)
 
-        Objective :
-            Extract baseline data from raw EEG data which is in csv format. \n
-            Every raw csv file of EEG data must contain 48 markers in total (opening & closing). \n
-            Basically, there are 24 markers. However, Baseline data is in the first 6 markers. \n
-            (12 markers if including opening & closing markers). \n
+        .. note:: * returns: :literal:`*.fif` files  
+                       * File name format :
+                       * EEG-Subject no_EyeCondition_TrainingCondition_HandCondition_raw.fif.
+                           * **EEG-S01-averted_left_tracking_raw**.
+                       * There are 6 files in total for each participant.
 
-
-        Parameters :
-            - path_2_csv_files : path to raw EEG file (csv format). \n
-            - path_2_save_baseline_file : path to save extracted baseline data of EEG (output file in *.fif format). \n
-            - labelsequence (opt) : order of label sequence, in this case is 1 by default. \n
-            - bad_files (opt) : raw EEG file(s) that want to be skipped to be processed by the script.
-
-        Output :
-            EEG file in *.fif format with the name formatting : Subject no_EyeCondition__TrainingCondition_HandCondition_raw.fif
-            For instance, "EEG-S01-averted_left_tracking_raw". There are 6 files in total for each participant.
-
-            REMEMBER : All resulted files will be in "AVERTED" condition since the baseline condition is in AVERTED condition.
-
+        .. warning:: All resulted files will be in AVERTED condition \
+                     since the baseline condition is in AVERTED condition.
         """
 
         list_file_names = []
@@ -303,30 +305,34 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
 
     def extract_experimental_eeg_data(
         self,
-        path_2_csv_files,
-        path_2_save_experimental_file,
+        path_2_csv_files: str,
+        path_2_save_experimental_file: str,
         labelsequence_experiment: list,
         bad_files=[],
     ):
 
-        """
+        """ * Extract experimental data from raw EEG data which is in csv format.\
+            Every raw csv file of EEG data must contain 48 markers in total (opening & closing).\
+            Basically, there are 24 markers. However, experimental data is from marker 7 to 24.\
+            (36 markers if including opening & closing markers).
 
-        Objective :
-            Extract experimental data from raw EEG data which is in csv format. \n
-            Every raw csv file of EEG data must contain 48 markers in total (opening & closing). \n
-            Basically, there are 24 markers. However, experimental data is from marker 7 to 24. \n
-            (36 markers if including opening & closing markers). \n
+        :param path_2_csv_files: path to raw EEG file (csv format).
+        :type path_2_csv_files: str
+        :param path_2_save_experimental_file: path to save extracted experimental data of EEG (which is in *.fif).
+        :type path_2_save_experimental_file: str
+        :param labelsequence_experiment: order of label sequence.
+        :type labelsequence_experiment: list
+        :param bad_files: raw EEG file(s) that want to be skipped to be processed by the script, defaults to []
+        :type bad_files: list, optional
+        :raises IndexError: _description_
+        :raises ValueError: _description_
 
-        Parameters :
-            - path_2_csv_files (str) : path to raw EEG file (csv format). \n
-            - path_2_save_experimental_file (str) : path to save extracted experimental data of EEG (output file in *.fif format). \n
-            - labelsequence_experiment (list) : order of label sequence. \n
-            - bad_files (list) (opt) : raw EEG file(s) that want to be skipped to be processed by the script.
-
-        Output :
-            EEG file in *.fif format with the name formatting : Subject no_EyeCondition__TrainingCondition_HandCondition_raw.fif
-            For instance, "EEG-S01-averted_left_tracking_raw". In total, there will be 18 files for each participant.
-
+        .. note:: * returns: :literal:`*.fif` files  
+                       * File name format :
+                       * EEG-Subject no_EyeCondition__TrainingCondition_HandCondition_raw.fif
+                           * **EEG-S01-averted_left_tracking_raw**.
+                       * There are 18 files in total for each participant.
+        
         """
 
         list_file_names = []
@@ -789,52 +795,38 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
     ### Combine experimental hand data
 
     def combine_experimental_hand_data(self, path2data: str, path2storedata: str):
+        """ * After the data of EEG has been extracted, it is separated between left and right hand data. \
+            Due to that, we need to combine both data by using this function. During pre-training, participants need to point \
+            their hands with right and left alternatively. It is 1 minute for each hand. Since there are two hands, \
+            then it was 2 minutes for both hands. Similarly, during post-training, they need to do the same thing for both hands.
 
-        """
+        :param path2data: path to separated raw EEG file (*fif).
+        :type path2data: str
+        :param path2storedata: path to save combined experimental data of EEG (*.fif).
+        :type path2storedata: str
+        :returns: EEG file
+        :rtype: *.fif (mne)
+        
+        .. note:: * Each pair needs to point with the opposite hand. For example, if S1 points with right hand, \
+                    then S2 needs to point with left hand.
+                  * Odd subjects (1,3,5..) point with RIGHT-LEFT order.
+                  * Even subjects(2,4,6..) point with LEFT-RIGHT order.
+                  * The function has taken into consideration the above orders
 
-        Objective :
-            After the data of EEG has been extracted, it is separated between left and right hand data \n
-            Due to that, we need to combine both data by using this function. During pre-training, participants need to point \n
-            their hands with right and left alternatively. It is 1 minute for each hand. Since there are \n
-            two hands, then it was 2 minutes for both hands. Similarly, during post-training, \n
-            they need to do the same thing for both hands.
+                  * returns: 
+                       * EEG file in :literal:`*.fif` format has the following name formatting :
+                          * **SubjectNo_EyeCondition_TrainingCondition_HandCondition_raw.fif**
 
-            Note : - Each pair needs to point with the opposite hand. For example, if S1 points with right hand \n
-                then S2 needs to point with left hand.
+                       * In total, there are 6 files that will be resulted from each participant.\
+                         e.g. :
+                          #. S01-averted_post_left_right_point_combined_raw.fif
+                          #. S01-averted_pre_right_left_point_combined_raw.fif
+                          #. S01-direct_post_left_right_point_combined_raw.fif
+                          #. S01-direct_pre_right_left_point_combined_raw.fif
+                          #. S01-natural_post_left_right_point_combined_raw.fif
+                          #. S01-natural_pre_right_left_point_combined_raw.fif
 
-                - Odd subjects (1,3,5..) point with RIGHT-LEFT order.
-                - Even subjects(2,4,6..) point with LEFT-RIGHT order.
-                - The function has taken into consideration the above orders
-                - Make sure the subject no that is written in file names begins with a leading zero, eg. 01, 02, 03.
-
-        Parameters :
-            - path2data (str)      : path to separated raw EEG file (fif format). \n
-
-                                     Format of file name :
-                                      - EEG-SubjectNo-EyeCondition_HandCondition_raw.fif
-                                      e.g., EEG-S01-averted_left_point_raw.fif
-
-                                      Note : This function combines only hand pointing NOT TRACKING.
-                                             Because we are interested in pre vs post training.
-                                             Hand tracking is in training condition
-
-
-            - path2storedata (str) : path to save combined experimental data of EEG (output file in *.fif format). \n
-
-        Output :
-            EEG file in *.fif format with the following name formatting :
-
-            SubjectNo_EyeCondition_TrainingCondition_HandCondition_raw.fif
-
-            In total, there are 6 files that will be resulted from each participant.
-            e.g. :
-                1. S01-averted_post_left_right_point_combined_raw.fif
-                2. S01-averted_pre_right_left_point_combined_raw.fif
-                3. S01-direct_post_left_right_point_combined_raw.fif
-                4. S01-direct_pre_right_left_point_combined_raw.fif
-                5. S01-natural_post_left_right_point_combined_raw.fif
-                6. S01-natural_pre_right_left_point_combined_raw.fif
-
+                       * Make sure the subject number that is written in file names begins with a leading zero, eg. 01, 02, 03.
 
         """
 
@@ -1655,53 +1647,46 @@ class preproc_exp2_redesign(pre_eeg_exp2_redesign):
 
     def combine_baseline_hand_data(self, path2data: str, path2storedata: str):
 
-        """
-        Objective :
-            After the data of EEG has been extracted, it is separated between left and right hand data \n
-            Due to that, we need to combine both data by using this function.
+        """ * After the data of EEG has been extracted, it is separated between left and right hand data. \
+            Due to that, we need to combine both data by using this function. During pre-training, participants need to point \
+            their hands with right and left alternatively. It is 1 minute for each hand. Since there are two hands, \
+            then it was 2 minutes for both hands. Similarly, during post-training, they need to do the same thing for both hands.
 
-            Before the experiment (pre-training session), participants need to point their hands
-            with right and left alternatively.  It is 1 minute for each hand. Since there are two hands, \n
-            then it was 2 minutes for both hands. Participant watched white screen while doing this.
-
-            Note : - Each pair needs to point with the opposite hand. For example, if S1 points with right hand \n
+        :param path2data: path to separated raw EEG file (*fif).
+        :type path2data: str
+        :param path2storedata: path to save combined baseline data of EEG (*.fif).
+        :type path2storedata: str
+        :returns: EEG file
+        :rtype: *.fif (mne)
+                
+        .. note:: * Each pair needs to point with the opposite hand. For example, if S1 points with right hand.
                     then S2 needs to point with left hand.
 
-                - Odd subjects (1,3,5..) point with RIGHT-LEFT order.
-                - Even subjects(2,4,6..) point with LEFT-RIGHT order.
-                - The function has taken into consideration the above orders
-                - Make sure the subject number that is written in file names begins with a leading zero, eg. 01, 02, 03.
+                  * Odd subjects (1,3,5..) point with RIGHT-LEFT order.
+                  * Even subjects(2,4,6..) point with LEFT-RIGHT order.
+                  * The function has taken into consideration the above orders.
+                  * Make sure the subject number that is written in file names begins with a leading zero, eg. 01, 02, 03.
 
-        Parameters :
-            - path2data (str)      : path to separated raw EEG file (fif format).
+                  * parameters: path2data
+                      * EEG file in :literal:`*.fif` format has the following name formatting :
+                        * EEG-SubjectNo-EyeCondition_HandCondition_raw.fif
+                            * **EEG-S01-averted_left_point_raw.fif**
+                        * EyeCondition is ONLY AVERTED.
+                        * **note** :  * This function combines only hand pointing NOT TRACKING.\
+                                      Because we are interested in pre vs post training.\
+                                      Hand tracking is in training condition.
 
-                                    Format of file name :
-                                    - EEG-SubjectNo-EyeCondition_HandCondition_raw.fif
-                                    e.g., EEG-S01-averted_left_point_raw.fif
-                                    - EyeCondition is ONLY AVERTED . Read below
-
-                                    Note : This function combines only hand pointing NOT TRACKING.
-                                            Because we are interested in pre vs post training.
-                                            Hand tracking is in training condition
-
-                                            - The eye condition is ONLY averted.
-                                            Basically, each participant sees only white screen. So whatever eye condition \n
-                                            does not really matter. For the sake of coherence. We just put it averted \n
-                                            During recording, the eye condition is set to averted in UNITY.
+                                      * The eye condition is ONLY averted.\
+                                      Basically, each participant sees only white screen. So whatever eye condition\
+                                      does not really matter. For the sake of coherence. We just put it averted\
+                                      During recording, the eye condition is set to averted in UNITY. 
 
 
-            - path2storedata (str) : path to save combined experimental data of EEG (output file in *.fif format). \n
-
-        Output :
-            EEG file in *.fif format with the following name formatting :
-
-            SubjectNo_EyeCondition_TrainingCondition_HandCondition_raw.fif
-
-            In total, there are 2 files that will be resulted from each participant.
-            e.g. :
-                1. S01-averted_post_left_right_point_combined_raw.fif
-                2. S01-averted_pre_right_left_point_combined_raw.fif
-
+                  * returns: EEG file in :literal:`*.fif` format has the following name formatting.\
+                             2 files will be resulted from each participant:
+                           * EEG-SubjectNo_EyeCondition_TrainingCondition_HandCondition_raw.fif
+                               #. S01-averted_post_left_right_point_combined_raw.fif
+                               #. S01-averted_pre_right_left_point_combined_raw.fif   
         """
 
         # Change a working directory to a folder where extracted baseline data is stored

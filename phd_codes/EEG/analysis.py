@@ -33,6 +33,14 @@ class Time_Conversion:
 
     # Time conversion
     def convert(self, seconds: int or float):
+        """Convert elapsed time into hour, minutes, seconds
+
+        :param seconds: number of elapsed seconds
+        :type seconds: int or float
+        :return: hour:minutes:seconds
+        :rtype: str
+        """
+
         seconds = seconds % (24 * 3600)
         hour = seconds // 3600
         seconds %= 3600
@@ -56,8 +64,32 @@ class _Intermediary_Clean_EEG:
 
 
 class Compute_Sync_EEG_Exp2_Redesign:
-    """
-    High-level module (Compute inter-brain synchrony and clean up EEG data simultaneously)
+    """Initialization of using :literal:`Compute_Sync_EEG_Exp2_Redesign` class.
+
+    High-level module to compute inter-brain synchrony and clean up EEG data simultaneously.
+
+        :param n_raw_files: number of raw EEG files (*.csv)
+        :type n_raw_files: int
+        :param algorithm: algorithm for calculating inter-brain synchrony, defaults to "ccorr"
+        :type algorithm: str, optional
+        :param bad_channels: bad channels, defaults to [ [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "F8", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], ["Fp2", "C3"], [], [], [], [], ["F7"], ["Fp2", "T7"], [], [], [], ["Fp2", "F4", "C3"], [], ["Fp2", "F4", "C3", "C4"], [], [], [], [], ]
+        :type bad_channels: list, optional
+
+    .. note::
+        Supported connectivity measures (algorithm) :
+            * ``"envelope_corr"``: envelope correlation
+            * ``"pow_corr"``: power correlation
+            * ``"plv"``: phase locking value
+            * ``"ccorr"``: circular correlation coefficient
+            * ``"coh"``: coherence
+            * ``imaginary_coh``: imaginary coherence
+            * ``"pli"`` : phase lag index
+            * ``"wpli"`` : weighted phase lag index
+
+    .. seealso::
+        For more updated supported connectivity measures (algorithm) in `HyPyP module. <https://hypyp.readthedocs.io/en/latest/API/analyses/#hypyp.analyses.compute_sync>`_
+
+
     """
 
     def __init__(
@@ -127,24 +159,7 @@ class Compute_Sync_EEG_Exp2_Redesign:
             [],
         ],
     ):
-        """
-        - n_raw_files = number of raw EEG files. It must be EVEN number because it always goes
-                       in pair
 
-        - algorithm (str)(opt) : Type of algorithm that is used to calculate inter-brain syncrony. See below for options :
-
-            * supported connectivity measures (algorithm) : - 'envelope_corr': envelope correlation
-                                                            - 'pow_corr': power correlation
-                                                            - 'plv': phase locking value
-                                                            - 'ccorr': circular correlation coefficient
-                                                            - 'coh': coherence
-                                                            - 'imaginary_coh': imaginary coherence
-                                                            - 'pli': phase lag index
-                                                            - 'wpli': weighted phase lag index
-
-        - bad_channels (List[List])(Opt): List of of defined bad channels, if any
-
-        """
         self.number_raw_files = n_raw_files
         self.__algorithm = algorithm
         self._bad_channels = bad_channels
@@ -157,30 +172,36 @@ class Compute_Sync_EEG_Exp2_Redesign:
         sync_score_n_del_indices: str,
     ):
         """
-        Objective : 1. Clean up noises of EEG files that have been combined
-                    2. Delete bad epochs
-                    3. Calculate score of inter-brain synchrony
+        #. Clean up noises of EEG files that have been combined
+        #. Delete bad epochs
+        #. Calculate score of inter-brain synchrony
 
-        Parameters:
-                    - experimental_data (str): Folder where the combined files (averted_pre) of experiment that will be cleaned are stored(Subject 1 and 2)
 
-                    - preprocessed_data (str): Folder to which will store the pre-processed epoched data(*.fif)
+        :param experimental_data: folder where the combined files (averted_pre) of experiment that will be cleaned are stored(Subject 1 and 2).
+        :type experimental_data: str
+        :param preprocessed_data: folder to which will store the pre-processed epoched data(*.fif).
+        :type preprocessed_data: str
+        :param sync_score_n_del_indices: folder to which will store the indices of deleted epoch of EEG data.
+        :type sync_score_n_del_indices: str
+        :returns:
+            #. Pre-processed epoched EEG file of subject 1 (*.fif)
+            #. Pre-processed epoched EEG file of subject 2 (*.fif)
+            #. Scores of inter-brain synchrony (*.pkl files)
+        :rtype: ``*.fif`` (mne) and ``*.pkl``
 
-                    - sync_score_n_del_indices (str): Folder to which will store the indices of deleted epoch of EEG data
+        .. note::
+            returns:
+                #. Pre-processed epoched EEG file of subject 1 (``*.fif``).
+                #. Pre-processed epoched EEG file of subject 2 (``*.fif``).
+                #. Scores of inter-brain synchrony (*.pkl files).
 
-        Output    :
-                    1. Pre-processed epoched EEG file of subject 1 (*.fif)
-                    2. Pre-processed epoched EEG file of subject 2 (*.fif)
-                    3. Scores of inter-brain synchrony (*.pkl files)
+                    * The structure of pkl files is each pair will have 4 lists, which has the following order.
+                    * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,\
+                       then move the 2nd four lists which belong to pair 2 and so on.    
+                #. Indices of deleted epochs of EEG (``*.pkl`` files)
 
-                        Note : The structure of pkl files is each pair will have 4 lists, which has the following order
-                            * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
-                            * then move the 2nd four lists which belong to pair 2 and so on.
-
-                    4. Indices of deleted epochs of EEG (*.pkl files)
-
-                        Note : Length of list once pkl file is loaded is equal to the number of pairs
-                            If we have 15 pairs, then there will be 15 lists within that pkl file
+                    * Length of list, once pkl file is loaded, is equal to the number of pairs.
+                    * For instance, if we have 13 pairs, then there will be 13 lists within that ``*.pkl`` file.
         """
 
         odd_subject_averted_pre_suffix = (
@@ -534,30 +555,36 @@ class Compute_Sync_EEG_Exp2_Redesign:
         sync_score_n_del_indices: str,
     ):
         """
-        Objective : 1. Clean up noises of EEG files that have been combined
-                    2. Delete bad epochs
-                    3. Calculate score of inter-brain synchrony
+        #. Clean up noises of EEG files that have been combined
+        #. Delete bad epochs
+        #. Calculate score of inter-brain synchrony
 
-        Parameters:
-                    - experimental_data (str): Folder where the combined files (averted_post) of experiment that will be cleaned are stored(Subject 1 and 2)
 
-                    - preprocessed_data (str): Folder to which will store the pre-processed epoched data(*.fif)
+        :param experimental_data: folder where the combined files (averted_post) of experiment that will be cleaned are stored(Subject 1 and 2).
+        :type experimental_data: str
+        :param preprocessed_data: folder to which will store the pre-processed epoched data(*.fif).
+        :type preprocessed_data: str
+        :param sync_score_n_del_indices: folder to which will store the indices of deleted epoch of EEG data.
+        :type sync_score_n_del_indices: str
+        :returns:
+            #. Pre-processed epoched EEG file of subject 1 (*.fif)
+            #. Pre-processed epoched EEG file of subject 2 (*.fif)
+            #. Scores of inter-brain synchrony (*.pkl files)
+        :rtype: ``*.fif`` (mne) and ``*.pkl``
 
-                    - sync_score_n_del_indices (str): Folder to which will store the indices of deleted epoch of EEG data
+        .. note::
+            returns:
+                #. Pre-processed epoched EEG file of subject 1 (``*.fif``).
+                #. Pre-processed epoched EEG file of subject 2 (``*.fif``).
+                #. Scores of inter-brain synchrony (*.pkl files).
 
-        Output    :
-                    1. Pre-processed epoched EEG file of subject 1 (*.fif)
-                    2. Pre-processed epoched EEG file of subject 2 (*.fif)
-                    3. Scores of inter-brain synchrony (*.pkl files)
+                    * The structure of pkl files is each pair will have 4 lists, which has the following order.
+                    * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,\
+                       then move the 2nd four lists which belong to pair 2 and so on.    
+                #. Indices of deleted epochs of EEG (``*.pkl`` files)
 
-                        Note : The structure of pkl files is each pair will have 4 lists, which has the following order
-                            * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
-                            * then move the 2nd four lists which belong to pair 2 and so on.
-
-                    4. Indices of deleted epochs of EEG (*.pkl files)
-
-                        Note : Length of list once pkl file is loaded is equal to the number of pairs
-                            If we have 15 pairs, then there will be 15 lists within that pkl file
+                    * Length of list, once pkl file is loaded, is equal to the number of pairs.
+                    * For instance, if we have 13 pairs, then there will be 13 lists within that ``*.pkl`` file.
         """
 
         odd_subject_averted_post_suffix = (
@@ -911,30 +938,36 @@ class Compute_Sync_EEG_Exp2_Redesign:
         sync_score_n_del_indices: str,
     ):
         """
-        Objective : 1. Clean up noises of EEG files that have been combined
-                    2. Delete bad epochs
-                    3. Calculate score of inter-brain synchrony
+        #. Clean up noises of EEG files that have been combined
+        #. Delete bad epochs
+        #. Calculate score of inter-brain synchrony
 
-        Parameters:
-                    - experimental_data (str): Folder where the combined files (direct_pre) of experiment that will be cleaned are stored(Subject 1 and 2)
 
-                    - preprocessed_data (str): Folder to which will store the pre-processed epoched data(*.fif)
+        :param experimental_data: folder where the combined files (direct_pre) of experiment that will be cleaned are stored(Subject 1 and 2).
+        :type experimental_data: str
+        :param preprocessed_data: folder to which will store the pre-processed epoched data(*.fif).
+        :type preprocessed_data: str
+        :param sync_score_n_del_indices: folder to which will store the indices of deleted epoch of EEG data.
+        :type sync_score_n_del_indices: str
+        :returns:
+            #. Pre-processed epoched EEG file of subject 1 (*.fif)
+            #. Pre-processed epoched EEG file of subject 2 (*.fif)
+            #. Scores of inter-brain synchrony (*.pkl files)
+        :rtype: ``*.fif`` (mne) and ``*.pkl``
 
-                    - sync_score_n_del_indices (str): Folder to which will store the indices of deleted epoch of EEG data
+        .. note::
+            returns:
+                #. Pre-processed epoched EEG file of subject 1 (``*.fif``).
+                #. Pre-processed epoched EEG file of subject 2 (``*.fif``).
+                #. Scores of inter-brain synchrony (*.pkl files).
 
-        Output    :
-                    1. Pre-processed epoched EEG file of subject 1 (*.fif)
-                    2. Pre-processed epoched EEG file of subject 2 (*.fif)
-                    3. Scores of inter-brain synchrony (*.pkl files)
+                    * The structure of pkl files is each pair will have 4 lists, which has the following order.
+                    * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,\
+                       then move the 2nd four lists which belong to pair 2 and so on.    
+                #. Indices of deleted epochs of EEG (``*.pkl`` files)
 
-                        Note : The structure of pkl files is each pair will have 4 lists, which has the following order
-                            * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
-                            * then move the 2nd four lists which belong to pair 2 and so on.
-
-                    4. Indices of deleted epochs of EEG (*.pkl files)
-
-                        Note : Length of list once pkl file is loaded is equal to the number of pairs
-                            If we have 15 pairs, then there will be 15 lists within that pkl file
+                    * Length of list, once pkl file is loaded, is equal to the number of pairs.
+                    * For instance, if we have 13 pairs, then there will be 13 lists within that ``*.pkl`` file.
         """
 
         odd_subject_direct_pre_suffix = "-direct_pre_right_left_point_combined_raw.fif"
@@ -1278,32 +1311,38 @@ class Compute_Sync_EEG_Exp2_Redesign:
         sync_score_n_del_indices: str,
     ):
         """
-        Objective : 1. Clean up noises of EEG files that have been combined
-                    2. Delete bad epochs
-                    3. Calculate score of inter-brain synchrony
+            #. Clean up noises of EEG files that have been combined
+            #. Delete bad epochs
+            #. Calculate score of inter-brain synchrony
 
-        Parameters:
-                    - experimental_data (str): Folder where the combined files (direct_post) of experiment that will be cleaned are stored(Subject 1 and 2)
 
-                    - preprocessed_data (str): Folder to which will store the pre-processed epoched data(*.fif)
+            :param experimental_data: folder where the combined files (direct_post) of experiment that will be cleaned are stored(Subject 1 and 2).
+            :type experimental_data: str
+            :param preprocessed_data: folder to which will store the pre-processed epoched data(*.fif).
+            :type preprocessed_data: str
+            :param sync_score_n_del_indices: folder to which will store the indices of deleted epoch of EEG data.
+            :type sync_score_n_del_indices: str
+            :returns:
+                #. Pre-processed epoched EEG file of subject 1 (*.fif)
+                #. Pre-processed epoched EEG file of subject 2 (*.fif)
+                #. Scores of inter-brain synchrony (*.pkl files)
+            :rtype: ``*.fif`` (mne) and ``*.pkl``
 
-                    - sync_score_n_del_indices (str): Folder to which will store the indices of deleted epoch of EEG data
+            .. note::
+                returns:
+                    #. Pre-processed epoched EEG file of subject 1 (``*.fif``).
+                    #. Pre-processed epoched EEG file of subject 2 (``*.fif``).
+                    #. Scores of inter-brain synchrony (*.pkl files).
 
-        Output    :
-                    1. Pre-processed epoched EEG file of subject 1 (*.fif)
-                    2. Pre-processed epoched EEG file of subject 2 (*.fif)
-                    3. Scores of inter-brain synchrony (*.pkl files)
+                        * The structure of pkl files is each pair will have 4 lists, which has the following order.
+                        * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,\
+                        then move the 2nd four lists which belong to pair 2 and so on.    
+                    #. Indices of deleted epochs of EEG (``*.pkl`` files)
 
-                        Note : The structure of pkl files is each pair will have 4 lists, which has the following order
-                            * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
-                            * then move the 2nd four lists which belong to pair 2 and so on.
-
-                    4. Indices of deleted epochs of EEG (*.pkl files)
-
-                        Note : Length of list once pkl file is loaded is equal to the number of pairs
-                            If we have 15 pairs, then there will be 15 lists within that pkl file
-        """
-
+                        * Length of list, once pkl file is loaded, is equal to the number of pairs.
+                        * For instance, if we have 13 pairs, then there will be 13 lists within that ``*.pkl`` file.
+            """
+        
         odd_subject_direct_post_suffix = (
             "-direct_post_right_left_point_combined_raw.fif"
         )
@@ -1655,32 +1694,38 @@ class Compute_Sync_EEG_Exp2_Redesign:
         sync_score_n_del_indices: str,
     ):
         """
-        Objective : 1. Clean up noises of EEG files that have been combined
-                    2. Delete bad epochs
-                    3. Calculate score of inter-brain synchrony
+            #. Clean up noises of EEG files that have been combined
+            #. Delete bad epochs
+            #. Calculate score of inter-brain synchrony
 
-        Parameters:
-                    - experimental_data (str): Folder where the combined files (natural_pre) of experiment that will be cleaned are stored(Subject 1 and 2)
 
-                    - preprocessed_data (str): Folder to which will store the pre-processed epoched data(*.fif)
+            :param experimental_data: folder where the combined files (natural_pre) of experiment that will be cleaned are stored(Subject 1 and 2).
+            :type experimental_data: str
+            :param preprocessed_data: folder to which will store the pre-processed epoched data(*.fif).
+            :type preprocessed_data: str
+            :param sync_score_n_del_indices: folder to which will store the indices of deleted epoch of EEG data.
+            :type sync_score_n_del_indices: str
+            :returns:
+                #. Pre-processed epoched EEG file of subject 1 (*.fif)
+                #. Pre-processed epoched EEG file of subject 2 (*.fif)
+                #. Scores of inter-brain synchrony (*.pkl files)
+            :rtype: ``*.fif`` (mne) and ``*.pkl``
 
-                    - sync_score_n_del_indices (str): Folder to which will store the indices of deleted epoch of EEG data
+            .. note::
+                returns:
+                    #. Pre-processed epoched EEG file of subject 1 (``*.fif``).
+                    #. Pre-processed epoched EEG file of subject 2 (``*.fif``).
+                    #. Scores of inter-brain synchrony (*.pkl files).
 
-        Output    :
-                    1. Pre-processed epoched EEG file of subject 1 (*.fif)
-                    2. Pre-processed epoched EEG file of subject 2 (*.fif)
-                    3. Scores of inter-brain synchrony (*.pkl files)
+                        * The structure of pkl files is each pair will have 4 lists, which has the following order.
+                        * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,\
+                        then move the 2nd four lists which belong to pair 2 and so on.    
+                    #. Indices of deleted epochs of EEG (``*.pkl`` files)
 
-                        Note : The structure of pkl files is each pair will have 4 lists, which has the following order
-                            * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
-                            * then move the 2nd four lists which belong to pair 2 and so on.
-
-                    4. Indices of deleted epochs of EEG (*.pkl files)
-
-                        Note : Length of list once pkl file is loaded is equal to the number of pairs
-                            If we have 15 pairs, then there will be 15 lists within that pkl file
+                        * Length of list, once pkl file is loaded, is equal to the number of pairs.
+                        * For instance, if we have 13 pairs, then there will be 13 lists within that ``*.pkl`` file.
         """
-
+        
         odd_subject_natural_pre_suffix = (
             "-natural_pre_right_left_point_combined_raw.fif"
         )
@@ -2032,30 +2077,36 @@ class Compute_Sync_EEG_Exp2_Redesign:
         sync_score_n_del_indices: str,
     ):
         """
-        Objective : 1. Clean up noises of EEG files that have been combined
-                    2. Delete bad epochs
-                    3. Calculate score of inter-brain synchrony
+            #. Clean up noises of EEG files that have been combined
+            #. Delete bad epochs
+            #. Calculate score of inter-brain synchrony
 
-        Parameters:
-                    - experimental_data (str): Folder where the combined files (natural_post) of experiment that will be cleaned are stored(Subject 1 and 2)
 
-                    - preprocessed_data (str): Folder to which will store the pre-processed epoched data(*.fif)
+            :param experimental_data: folder where the combined files (natural_post) of experiment that will be cleaned are stored(Subject 1 and 2).
+            :type experimental_data: str
+            :param preprocessed_data: folder to which will store the pre-processed epoched data(*.fif).
+            :type preprocessed_data: str
+            :param sync_score_n_del_indices: folder to which will store the indices of deleted epoch of EEG data.
+            :type sync_score_n_del_indices: str
+            :returns:
+                #. Pre-processed epoched EEG file of subject 1 (*.fif)
+                #. Pre-processed epoched EEG file of subject 2 (*.fif)
+                #. Scores of inter-brain synchrony (*.pkl files)
+            :rtype: ``*.fif`` (mne) and ``*.pkl``
 
-                    - sync_score_n_del_indices (str): Folder to which will store the indices of deleted epoch of EEG data
+            .. note::
+                returns:
+                    #. Pre-processed epoched EEG file of subject 1 (``*.fif``).
+                    #. Pre-processed epoched EEG file of subject 2 (``*.fif``).
+                    #. Scores of inter-brain synchrony (*.pkl files).
 
-        Output    :
-                    1. Pre-processed epoched EEG file of subject 1 (*.fif)
-                    2. Pre-processed epoched EEG file of subject 2 (*.fif)
-                    3. Scores of inter-brain synchrony (*.pkl files)
+                        * The structure of pkl files is each pair will have 4 lists, which has the following order.
+                        * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,\
+                        then move the 2nd four lists which belong to pair 2 and so on.    
+                    #. Indices of deleted epochs of EEG (``*.pkl`` files)
 
-                        Note : The structure of pkl files is each pair will have 4 lists, which has the following order
-                            * Theta, Alpha, Beta, and Gamma. So for example, the first 4 lists are belonged to pair 1,
-                            * then move the 2nd four lists which belong to pair 2 and so on.
-
-                    4. Indices of deleted epochs of EEG (*.pkl files)
-
-                        Note : Length of list once pkl file is loaded is equal to the number of pairs
-                            If we have 15 pairs, then there will be 15 lists within that pkl file
+                        * Length of list, once pkl file is loaded, is equal to the number of pairs.
+                        * For instance, if we have 13 pairs, then there will be 13 lists within that ``*.pkl`` file.
         """
 
         odd_subject_natural_post_suffix = (
