@@ -16,9 +16,11 @@
 
 # %%
 from phd_codes.EEG import stats
+from phd_codes.questionnaire.questionnaire import Questionnaire
 
 # %%
 connections = stats.Connections()
+questionnaire = Questionnaire()
 
 # %% [markdown]
 # # Sig connections
@@ -227,4 +229,45 @@ for csv_file in csv_files:
 plt.show()
 
 
+# %% [markdown]
+# # Correlations
+
+# %% [markdown]
+# # Path to questionnnaire
+
 # %%
+questionnaire_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
+
+# %% [markdown]
+# ## Scoring questionnaire
+
+# %%
+all_questionnaires_scoring = questionnaire.scoring_questionnaire(questionnaire_path)
+
+# %% [markdown]
+# ## Difference of SPGQ scoring for each pair
+#
+
+# %%
+all_questionnaires_scoring_diff_empathy = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "Empathy SPGQ")
+
+all_questionnaires_scoring_diff_neg_feeling = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "NegativeFeelings SPGQ")
+
+all_questionnaires_scoring_diff_behav = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "Behavioural SPGQ")
+
+all_questionnaires_scoring_diff_spg_total = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "SPGQ Total")
+
+
+
