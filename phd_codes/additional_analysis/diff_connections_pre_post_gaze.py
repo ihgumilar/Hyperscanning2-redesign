@@ -278,6 +278,7 @@ all_questionnaires_scoring_diff_spg_total = questionnaire.diff_score_questionnai
 # %%
 from phd_codes.EEG import stats
 from phd_codes.questionnaire.questionnaire import Questionnaire
+from scipy.stats import pearsonr
 
 connections = stats.Connections()
 questionnaire = Questionnaire()
@@ -320,4 +321,55 @@ diff_direct = diff_direct[:4] # The order is theta, alpha, beta, and gamma
 diff_natural = diff_natural[:4] # The order is theta, alpha, beta, and gamma
 
 
+# SPGQ
+questionnaire_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
+
+# Scoring questionnaire (SPGQ)
+all_questionnaires_scoring = questionnaire.scoring_questionnaire(questionnaire_path)
+
+# Calculate difference of SPGQ and its subscales between post and pre (SPGQ)
+all_questionnaires_scoring_diff_empathy = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "Empathy SPGQ")
+
+all_questionnaires_scoring_diff_neg_feeling = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "NegativeFeelings SPGQ")
+
+all_questionnaires_scoring_diff_behav = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "Behavioural SPGQ")
+
+all_questionnaires_scoring_diff_spg_total = questionnaire.diff_score_questionnaire_pre_post(all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+                                                                                  all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+                                                                                  all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+                                                                                  "SPGQ Total")
+
+
+
+
+
+
 # %%
+print("Averted-SPGQ-Total")
+freqs = ["theta", "alpha", "beta", "gamma"]
+
+for i in range(len(diff_averted)): # Iterate over the freq (theta, alpha, beta, and gamma)
+    print(F"{freqs[i]}, {pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_spg_total[0]))}")
+
+# %%
+print("Direct-SPGQ-Total")
+freqs = ["theta", "alpha", "beta", "gamma"]
+
+for i in range(len(diff_direct)): # Iterate over the freq (theta, alpha, beta, and gamma)
+    print(F"{freqs[i]}, {pearsonr(diff_direct[i], list(all_questionnaires_scoring_diff_spg_total[1]))}")
+
+# %%
+print("Natural-SPGQ-Total")
+freqs = ["theta", "alpha", "beta", "gamma"]
+
+for i in range(len(diff_natural)): # Iterate over the freq (theta, alpha, beta, and gamma)
+    print(F"{freqs[i]}, {pearsonr(diff_natural[i], list(all_questionnaires_scoring_diff_spg_total[2]))}")
