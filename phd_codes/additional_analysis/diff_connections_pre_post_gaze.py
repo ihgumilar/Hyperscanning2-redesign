@@ -271,3 +271,53 @@ all_questionnaires_scoring_diff_spg_total = questionnaire.diff_score_questionnai
 
 
 
+
+# %% [markdown]
+# ## Correlation between EEG connections and SPGQ
+
+# %%
+from phd_codes.EEG import stats
+from phd_codes.questionnaire.questionnaire import Questionnaire
+
+connections = stats.Connections()
+questionnaire = Questionnaire()
+
+# EEG
+# path of actual scores of EEG connections of each eye condition
+
+# Averted
+averted_pre_actual_score_connections = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_pre" 
+averted_post_actual_score_connections = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/averted_post"
+# Direct
+direct_pre_actual_score_connections = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_pre"
+direct_post_actual_score_connections = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/direct_post"
+# Natural
+natural_pre_actual_score_connections = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_pre"
+natural_post_actual_score_connections = "/hpc/igum002/codes/Hyperscanning2-redesign/data/EEG/significant_connections/natural_post"
+
+# Calculate a number of connections (EEG)
+# Averted
+averted_pre_sig_connect = connections.count_sig_connections(averted_pre_actual_score_connections)
+averted_post_sig_connect = connections.count_sig_connections(averted_post_actual_score_connections)
+
+# Direct
+direct_pre_sig_connect = connections.count_sig_connections(direct_pre_actual_score_connections)
+direct_post_sig_connect = connections.count_sig_connections(direct_post_actual_score_connections)
+
+# Natural
+natural_pre_sig_connect = connections.count_sig_connections(natural_pre_actual_score_connections)
+natural_post_sig_connect = connections.count_sig_connections(natural_post_actual_score_connections)
+
+# Calculate the difference between post and pre (EEG connections)
+diff_averted, diff_direct, diff_natural =  connections.diff_n_connections_pre_post(averted_pre_sig_connect, averted_post_sig_connect,
+                                                                                   direct_pre_sig_connect, direct_post_sig_connect,
+                                                                                   natural_pre_sig_connect, natural_post_sig_connect 
+                                                                                    )
+
+# Extract ccor algorithm only
+diff_averted = diff_averted[:4] # The order is theta, alpha, beta, and gamma
+diff_direct = diff_direct[:4] # The order is theta, alpha, beta, and gamma
+diff_natural = diff_natural[:4] # The order is theta, alpha, beta, and gamma
+
+
+# %%
