@@ -1303,4 +1303,225 @@ class Connections:
             direct_spgq_total_correlations,
             natural_spgq_total_correlations
         )
+    
+    def calculate_eeg_spgq_subscales_correlations(self, averted_pre_actual_score_connections, averted_post_actual_score_connections,
+                                                 direct_pre_actual_score_connections, direct_post_actual_score_connections,
+                                                 natural_pre_actual_score_connections, natural_post_actual_score_connections,
+                                                 questionnaire_path):
+        """
+        Calculate Pearson correlational scores between EEG connections and SPGQ subscales for different eye conditions.
+
+        Args:
+        averted_pre_actual_score_connections (str): Path to actual scores of EEG connections for Averted pre condition.
+        averted_post_actual_score_connections (str): Path to actual scores of EEG connections for Averted post condition.
+        direct_pre_actual_score_connections (str): Path to actual scores of EEG connections for Direct pre condition.
+        direct_post_actual_score_connections (str): Path to actual scores of EEG connections for Direct post condition.
+        natural_pre_actual_score_connections (str): Path to actual scores of EEG connections for Natural pre condition.
+        natural_post_actual_score_connections (str): Path to actual scores of EEG connections for Natural post condition.
+        questionnaire_path (str): Path to SPGQ questionnaire data.
+
+        Returns:
+        tuple: Tuple containing lists of correlational scores for Averted, Direct, and Natural conditions. 
+            Each list contains tuples with frequency band(theta, alpha, beta, and gamma), correlational score, and p-value marked with '*' if p-value is less than 0.05.
+        """
+        # EEG
+        
+        # Calculate the number of connections (EEG)
+        averted_pre_sig_connect = self.count_sig_connections(averted_pre_actual_score_connections)
+        averted_post_sig_connect = self.count_sig_connections(averted_post_actual_score_connections)
+        direct_pre_sig_connect = self.count_sig_connections(direct_pre_actual_score_connections)
+        direct_post_sig_connect = self.count_sig_connections(direct_post_actual_score_connections)
+        natural_pre_sig_connect = self.count_sig_connections(natural_pre_actual_score_connections)
+        natural_post_sig_connect = self.count_sig_connections(natural_post_actual_score_connections)
+
+        # Calculate the difference between post and pre (EEG connections)
+        diff_averted, diff_direct, diff_natural = self.diff_n_connections_pre_post(
+            averted_pre_sig_connect, averted_post_sig_connect,
+            direct_pre_sig_connect, direct_post_sig_connect,
+            natural_pre_sig_connect, natural_post_sig_connect
+        )
+
+        # Extract ccor algorithm only
+        diff_averted = diff_averted[:4]  # The order is theta, alpha, beta, and gamma
+        diff_direct = diff_direct[:4]  # The order is theta, alpha, beta, and gamma
+        diff_natural = diff_natural[:4]  # The order is theta, alpha, beta, and gamma
+
+        # SPGQ
+        questionnaire = Questionnaire()
+
+        # Scoring questionnaire (SPGQ)
+        all_questionnaires_scoring = questionnaire.scoring_questionnaire(questionnaire_path)
+
+        # Calculate the difference of SPGQ and its subscales between post and pre (SPGQ)
+        all_questionnaires_scoring_diff_empathy = questionnaire.diff_score_questionnaire_pre_post(
+            all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+            all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+            all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+            "Empathy SPGQ"
+        )
+
+        all_questionnaires_scoring_diff_neg_feeling = questionnaire.diff_score_questionnaire_pre_post(
+            all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+            all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+            all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+            "NegativeFeelings SPGQ"
+        )
+
+        all_questionnaires_scoring_diff_behav = questionnaire.diff_score_questionnaire_pre_post(
+            all_questionnaires_scoring[0], all_questionnaires_scoring[1],
+            all_questionnaires_scoring[2], all_questionnaires_scoring[3],
+            all_questionnaires_scoring[4], all_questionnaires_scoring[5],
+            "Behavioural SPGQ"
+        )
+
+        ################## Empathy ##################
+        # Correlational score calculation
+        print("Averted-Empathy")
+        freqs = ["theta", "alpha", "beta", "gamma"]
+        averted_empathy_correlations = []
+
+        for i in range(len(diff_averted)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_empathy[0]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            averted_empathy_correlations.append((freqs[i], correlational_score_str))
+
+        # Correlational score calculation
+        print("Direct-Empathy")
+        freqs = ["theta", "alpha", "beta", "gamma"]
+        direct_empathy_correlations = []
+
+        for i in range(len(diff_averted)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_empathy[1]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            direct_empathy_correlations.append((freqs[i], correlational_score_str))
+
+        # Correlational score calculation
+        print("Natural-Empathy")
+        freqs = ["theta", "alpha", "beta", "gamma"]
+        natural_empathy_correlations = []
+
+        for i in range(len(diff_averted)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_empathy[2]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            natural_empathy_correlations.append((freqs[i], correlational_score_str))
+
+        ################## Negative Feeling ##################
+        # Correlational score calculation
+        print("Averted-Neg_Feeling")
+        freqs = ["theta", "alpha", "beta", "gamma"]
+        averted_neg_feeling_correlations = []
+
+        for i in range(len(diff_averted)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_neg_feeling[0]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            averted_neg_feeling_correlations.append((freqs[i], correlational_score_str))
+
+        # Correlational score calculation
+        print("Direct-Neg_Feeling")
+        direct_neg_feeling_correlations = []
+
+        for i in range(len(diff_direct)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_direct[i], list(all_questionnaires_scoring_diff_neg_feeling[1]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            direct_neg_feeling_correlations.append((freqs[i], correlational_score_str))
+
+        # Correlational score calculation
+        print("Natural-Neg_Feeling")
+        natural_neg_feeling_correlations = []
+
+        for i in range(len(diff_natural)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_natural[i], list(all_questionnaires_scoring_diff_neg_feeling[2]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            natural_neg_feeling_correlations.append((freqs[i], correlational_score_str))
+
+
+        ################## Behavioural ##################
+        # Correlational score calculation
+        print("Averted-Behaviour")
+        freqs = ["theta", "alpha", "beta", "gamma"]
+        averted_behaviour_correlations = []
+
+        for i in range(len(diff_averted)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_behav[0]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            averted_behaviour_correlations.append((freqs[i], correlational_score_str))
+
+        # Correlational score calculation
+        print("Direct-Behaviour")
+        direct_behaviour_correlations = []
+
+        for i in range(len(diff_direct)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_direct[i], list(all_questionnaires_scoring_diff_behav[1]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            direct_behaviour_correlations.append((freqs[i], correlational_score_str))
+
+        # Correlational score calculation
+        print("Natural-Behaviour")
+        natural_behaviour_correlations = []
+
+        for i in range(len(diff_natural)):  # Iterate over the freq (theta, alpha, beta, and gamma)
+            correlation_result = pearsonr(diff_natural[i], list(all_questionnaires_scoring_diff_behav[2]))
+            correlational_score = correlation_result[0]
+            p_value = correlation_result[1]
+            if p_value < 0.05:
+                correlational_score_str = f"{correlational_score} * ({p_value})"
+            else:
+                correlational_score_str = f"{correlational_score} ({p_value})"
+            natural_behaviour_correlations.append((freqs[i], correlational_score_str))
+
+
+
+        # Return the three lists of correlational scores
+        return (
+            averted_empathy_correlations,
+            direct_empathy_correlations,
+            natural_empathy_correlations,
+            averted_neg_feeling_correlations,
+            direct_neg_feeling_correlations,
+            natural_neg_feeling_correlations,
+            averted_behaviour_correlations,
+            direct_behaviour_correlations,
+            natural_behaviour_correlations
+        )
+
 
