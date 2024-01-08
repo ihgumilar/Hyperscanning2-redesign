@@ -376,294 +376,82 @@ for i in range(len(diff_natural)): # Iterate over the freq (theta, alpha, beta, 
     print(F"{freqs[i]}, {pearsonr(diff_natural[i], list(all_questionnaires_scoring_diff_spg_total[2]))}")
 
 # %% [markdown]
-# ## Subscales correlation
-
-# %%
-print("Averted-Empathy-SPGQ")
-freqs = ["theta", "alpha", "beta", "gamma"]
-
-for i in range(len(diff_averted)): # Iterate over the freq (theta, alpha, beta, and gamma)
-    print(F"{freqs[i]}, {pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_empathy[0]))}")
-
-
-# %%
-from phd_codes.EEG import stats
-from phd_codes.questionnaire.questionnaire import Questionnaire
-from scipy.stats import pearsonr
-
-def calculate_eeg_spgq_total_correlations(averted_pre_actual_score_connections, averted_post_actual_score_connections,
-                                            direct_pre_actual_score_connections, direct_post_actual_score_connections,
-                                            natural_pre_actual_score_connections, natural_post_actual_score_connections,
-                                            questionnaire_path):
-    """
-    Calculate Pearson correlational scores between EEG connections and SPGQ Total scores for different eye conditions.
-
-    Args:
-    averted_pre_actual_score_connections (str): Path to actual scores of EEG connections for Averted pre condition.
-    averted_post_actual_score_connections (str): Path to actual scores of EEG connections for Averted post condition.
-    direct_pre_actual_score_connections (str): Path to actual scores of EEG connections for Direct pre condition.
-    direct_post_actual_score_connections (str): Path to actual scores of EEG connections for Direct post condition.
-    natural_pre_actual_score_connections (str): Path to actual scores of EEG connections for Natural pre condition.
-    natural_post_actual_score_connections (str): Path to actual scores of EEG connections for Natural post condition.
-    questionnaire_path (str): Path to SPGQ questionnaire data.
-
-    Returns:
-    tuple: Tuple containing lists of correlational scores for Averted, Direct, and Natural conditions.
-           Each list contains tuples with frequency band, correlational score, and p-value marked with '*' if p-value is less than 0.05.
-    """
-    # EEG
-    connections = stats.Connections()
-
-    # Calculate the number of connections (EEG)
-    averted_pre_sig_connect = connections.count_sig_connections(averted_pre_actual_score_connections)
-    averted_post_sig_connect = connections.count_sig_connections(averted_post_actual_score_connections)
-    direct_pre_sig_connect = connections.count_sig_connections(direct_pre_actual_score_connections)
-    direct_post_sig_connect = connections.count_sig_connections(direct_post_actual_score_connections)
-    natural_pre_sig_connect = connections.count_sig_connections(natural_pre_actual_score_connections)
-    natural_post_sig_connect = connections.count_sig_connections(natural_post_actual_score_connections)
-
-    # Calculate the difference between post and pre (EEG connections)
-    diff_averted, diff_direct, diff_natural = connections.diff_n_connections_pre_post(
-        averted_pre_sig_connect, averted_post_sig_connect,
-        direct_pre_sig_connect, direct_post_sig_connect,
-        natural_pre_sig_connect, natural_post_sig_connect
-    )
-
-    # Extract ccor algorithm only
-    diff_averted = diff_averted[:4]  # The order is theta, alpha, beta, and gamma
-    diff_direct = diff_direct[:4]  # The order is theta, alpha, beta, and gamma
-    diff_natural = diff_natural[:4]  # The order is theta, alpha, beta, and gamma
-
-    # SPGQ
-    questionnaire = Questionnaire()
-
-    # Scoring questionnaire (SPGQ)
-    all_questionnaires_scoring = questionnaire.scoring_questionnaire(questionnaire_path)
-
-    # Calculate the difference of SPGQ and its subscales between post and pre (SPGQ)
-    all_questionnaires_scoring_diff_empathy = questionnaire.diff_score_questionnaire_pre_post(
-        all_questionnaires_scoring[0], all_questionnaires_scoring[1],
-        all_questionnaires_scoring[2], all_questionnaires_scoring[3],
-        all_questionnaires_scoring[4], all_questionnaires_scoring[5],
-        "Empathy SPGQ"
-    )
-
-    all_questionnaires_scoring_diff_neg_feeling = questionnaire.diff_score_questionnaire_pre_post(
-        all_questionnaires_scoring[0], all_questionnaires_scoring[1],
-        all_questionnaires_scoring[2], all_questionnaires_scoring[3],
-        all_questionnaires_scoring[4], all_questionnaires_scoring[5],
-        "NegativeFeelings SPGQ"
-    )
-
-    all_questionnaires_scoring_diff_behav = questionnaire.diff_score_questionnaire_pre_post(
-        all_questionnaires_scoring[0], all_questionnaires_scoring[1],
-        all_questionnaires_scoring[2], all_questionnaires_scoring[3],
-        all_questionnaires_scoring[4], all_questionnaires_scoring[5],
-        "Behavioural SPGQ"
-    )
-
-    all_questionnaires_scoring_diff_spg_total = questionnaire.diff_score_questionnaire_pre_post(
-        all_questionnaires_scoring[0], all_questionnaires_scoring[1],
-        all_questionnaires_scoring[2], all_questionnaires_scoring[3],
-        all_questionnaires_scoring[4], all_questionnaires_scoring[5],
-        "SPGQ Total"
-    )
-
-    # Correlational score calculation
-    print("Averted-SPGQ-Total")
-    freqs = ["theta", "alpha", "beta", "gamma"]
-    averted_spgq_total_correlations = []
-
-    for i in range(len(diff_averted)):  # Iterate over the freq (theta, alpha, beta, and gamma)
-        correlation_result = pearsonr(diff_averted[i], list(all_questionnaires_scoring_diff_spg_total[0]))
-        correlational_score = correlation_result[0]
-        p_value = correlation_result[1]
-        if p_value < 0.05:
-            correlational_score_str = f"{correlational_score} * ({p_value})"
-        else:
-            correlational_score_str = f"{correlational_score} ({p_value})"
-        averted_spgq_total_correlations.append((freqs[i], correlational_score_str))
-
-    print("Direct-SPGQ-Total")
-    direct_spgq_total_correlations = []
-
-    for i in range(len(diff_direct)):  # Iterate over the freq (theta, alpha, beta, and gamma)
-        correlation_result = pearsonr(diff_direct[i], list(all_questionnaires_scoring_diff_spg_total[1]))
-        correlational_score = correlation_result[0]
-        p_value = correlation_result[1]
-        if p_value < 0.05:
-            correlational_score_str = f"{correlational_score} * ({p_value})"
-        else:
-            correlational_score_str = f"{correlational_score} ({p_value})"
-        direct_spgq_total_correlations.append((freqs[i], correlational_score_str))
-
-    print("Natural-SPGQ-Total")
-    natural_spgq_total_correlations = []
-
-    for i in range(len(diff_natural)):  # Iterate over the freq (theta, alpha, beta, and gamma)
-        correlation_result = pearsonr(diff_natural[i], list(all_questionnaires_scoring_diff_spg_total[2]))
-        correlational_score = correlation_result[0]
-        p_value = correlation_result[1]
-        if p_value < 0.05:
-            correlational_score_str = f"{correlational_score} * ({p_value})"
-        else:
-            correlational_score_str = f"{correlational_score} ({p_value})"
-        natural_spgq_total_correlations.append((freqs[i], correlational_score_str))
-
-    # Return the three lists of correlational scores
-    return (
-        averted_spgq_total_correlations,
-        direct_spgq_total_correlations,
-        natural_spgq_total_correlations
-    )
-
-
-
-# %%
-# SPGQ
-questionnaire_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
-result = connections.calculate_eeg_spgq_total_correlations(
-    averted_pre_actual_score_connections, averted_post_actual_score_connections,
-    direct_pre_actual_score_connections, direct_post_actual_score_connections,
-    natural_pre_actual_score_connections, natural_post_actual_score_connections,
-    questionnaire_path
-)
-
-
-# %%
-def calculate_eeg_spgq_subscale_correlations(self, averted_pre_actual_score_connections, averted_post_actual_score_connections,
-                                                 direct_pre_actual_score_connections, direct_post_actual_score_connections,
-                                                 natural_pre_actual_score_connections, natural_post_actual_score_connections,
-                                                 questionnaire_path):
-        """
-        Calculate Pearson correlational scores between EEG connections and SPGQ subscales for different eye conditions.
-
-        Args:
-        averted_pre_actual_score_connections (str): Path to actual scores of EEG connections for Averted pre condition.
-        averted_post_actual_score_connections (str): Path to actual scores of EEG connections for Averted post condition.
-        direct_pre_actual_score_connections (str): Path to actual scores of EEG connections for Direct pre condition.
-        direct_post_actual_score_connections (str): Path to actual scores of EEG connections for Direct post condition.
-        natural_pre_actual_score_connections (str): Path to actual scores of EEG connections for Natural pre condition.
-        natural_post_actual_score_connections (str): Path to actual scores of EEG connections for Natural post condition.
-        questionnaire_path (str): Path to SPGQ questionnaire data.
-
-        Returns:
-        tuple: Tuple containing lists of correlational scores for Averted, Direct, and Natural conditions.
-            Each list contains tuples with frequency band, correlational score, and p-value marked with '*' if p-value is less than 0.05.
-        """
-        # EEG
-        connections = stats.Connections()
-
-        # Calculate the number of connections (EEG)
-        averted_pre_sig_connect = connections.count_sig_connections(averted_pre_actual_score_connections)
-        averted_post_sig_connect = connections.count_sig_connections(averted_post_actual_score_connections)
-        direct_pre_sig_connect = connections.count_sig_connections(direct_pre_actual_score_connections)
-        direct_post_sig_connect = connections.count_sig_connections(direct_post_actual_score_connections)
-        natural_pre_sig_connect = connections.count_sig_connections(natural_pre_actual_score_connections)
-        natural_post_sig_connect = connections.count_sig_connections(natural_post_actual_score_connections)
-
-        # Calculate the difference between post and pre (EEG connections)
-        diff_averted, diff_direct, diff_natural = connections.diff_n_connections_pre_post(
-            averted_pre_sig_connect, averted_post_sig_connect,
-            direct_pre_sig_connect, direct_post_sig_connect,
-            natural_pre_sig_connect, natural_post_sig_connect
-        )
-
-        # Extract ccor algorithm only
-        diff_averted = diff_averted[:4]  # The order is theta, alpha, beta, and gamma
-        diff_direct = diff_direct[:4]  # The order is theta, alpha, beta, and gamma
-        diff_natural = diff_natural[:4]  # The order is theta, alpha, beta, and gamma
-
-        # SPGQ
-        questionnaire = Questionnaire()
-
-        # Scoring questionnaire (SPGQ)
-        all_questionnaires_scoring = questionnaire.scoring_questionnaire(questionnaire_path)
-
-        # Calculate the difference of SPGQ and its subscales between post and pre (SPGQ)
-        all_questionnaires_scoring_diff_empathy = questionnaire.diff_score_questionnaire_pre_post(
-            all_questionnaires_scoring[0], all_questionnaires_scoring[1],
-            all_questionnaires_scoring[2], all_questionnaires_scoring[3],
-            all_questionnaires_scoring[4], all_questionnaires_scoring[5],
-            "Empathy SPGQ"
-        )
-
-        all_questionnaires_scoring_diff_neg_feeling = questionnaire.diff_score_questionnaire_pre_post(
-            all_questionnaires_scoring[0], all_questionnaires_scoring[1],
-            all_questionnaires_scoring[2], all_questionnaires_scoring[3],
-            all_questionnaires_scoring[4], all_questionnaires_scoring[5],
-            "NegativeFeelings SPGQ"
-        )
-
-        all_questionnaires_scoring_diff_behav = questionnaire.diff_score_questionnaire_pre_post(
-            all_questionnaires_scoring[0], all_questionnaires_scoring[1],
-            all_questionnaires_scoring[2], all_questionnaires_scoring[3],
-            all_questionnaires_scoring[4], all_questionnaires_scoring[5],
-            "Behavioural SPGQ"
-        )
-
-        # Correlational score calculation
-        print("Averted-Empathy")
-        freqs = ["theta", "alpha", "beta", "gamma"]
-        averted_empathy_correlations = self.calculate_correlations(diff_averted, all_questionnaires_scoring_diff_empathy, freqs)
-
-        print("Direct-Empathy")
-        direct_empathy_correlations = self.calculate_correlations(diff_direct, all_questionnaires_scoring_diff_empathy, freqs)
-
-        print("Natural-Empathy")
-        natural_empathy_correlations = self.calculate_correlations(diff_natural, all_questionnaires_scoring_diff_empathy, freqs)
-
-        # ... Repeat the process for Negative Feelings and Behavioral
-
-        # Return the three lists of correlational scores
-        return (
-            averted_empathy_correlations,
-            direct_empathy_correlations,
-            natural_empathy_correlations,
-            # Add lists for Negative Feelings and Behavioral here
-        )
-
-
-# %%
-# SPGQ
-questionnaire_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
-result = connections.calculate_eeg_spgq_subscales_correlations(
-    averted_pre_actual_score_connections, averted_post_actual_score_connections,
-    direct_pre_actual_score_connections, direct_post_actual_score_connections,
-    natural_pre_actual_score_connections, natural_post_actual_score_connections,
-    questionnaire_path
-)
+# ## EEG and SPGQ correlations
 
 # %% [markdown]
-# # Get raw scores of EEG connections and SPGQ and its subscales
-# We want to use them for creating visualization
+# ### EEG and SPGQ total
 
 # %%
 # SPGQ
 questionnaire_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
-raw_eeg_spgq = connections.raw_score_eeg_spgq(averted_pre_actual_score_connections, averted_post_actual_score_connections,
+result_eeg_spgq_total = connections.calculate_eeg_spgq_total_correlations(
+    averted_pre_actual_score_connections, averted_post_actual_score_connections,
+    direct_pre_actual_score_connections, direct_post_actual_score_connections,
+    natural_pre_actual_score_connections, natural_post_actual_score_connections,
+    questionnaire_path
+)
+
+# %%
+result_eeg_spgq_total[1]
+
+# %% [markdown]
+# ### EEG and SPGQ subscales
+
+# %%
+# SPGQ
+questionnaire_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
+result_eeg_spgq_subscales = connections.calculate_eeg_spgq_subscales_correlations(
+    averted_pre_actual_score_connections, averted_post_actual_score_connections,
+    direct_pre_actual_score_connections, direct_post_actual_score_connections,
+    natural_pre_actual_score_connections, natural_post_actual_score_connections,
+    questionnaire_path
+)
+
+# %%
+result_eeg_spgq_subscales[7]
+
+# %% [markdown]
+# ## Visualization of sig correlations
+
+# %% [markdown]
+# ### Get raw scores of EEG connections and SPGQ and its subscales
+# We need the output of it as input to create visualization
+
+# %%
+# SPGQ
+questionnaire_path = "/hpc/igum002/codes/Hyperscanning2-redesign/data/Questionnaire/"
+raw_score_eeg_spgq = connections.raw_score_eeg_spgq(averted_pre_actual_score_connections, averted_post_actual_score_connections,
     direct_pre_actual_score_connections, direct_post_actual_score_connections,
     natural_pre_actual_score_connections, natural_post_actual_score_connections,
     questionnaire_path)
 
 
-# %%
-eeg_direct_theta = raw_eeg_spgq[1][0]
-print(type(eeg_direct_theta))
-spgq_total_direct = list(raw_eeg_spgq[5][1])
-print(type(spgq_total_direct))
-
 # %% [markdown]
-# ## Visualize
+# ### Visualization of (Direct-Theta) EEG connections & SPGQ Total
 
 # %%
-
-#Usage
-eeg_direct_theta = raw_eeg_spgq[1][0]
-spgq_total_direct = list(raw_eeg_spgq[6][1])
+# Extract EEG connection (Direct-Theta)
+eeg_direct_theta = raw_score_eeg_spgq[1][0]
+# Extract SPGQ Total
+spgq_total_direct = list(raw_score_eeg_spgq[6][1])
 freq_band = "Theta"
 condition = "Direct"
 subscale = "SPGQ Total"
 
 Connections.visualize_correlation(eeg_direct_theta, spgq_total_direct, freq_band, condition, subscale, save_figure=True)
+
+
+# %% [markdown]
+# ### Visualization of (Direct-Theta) EEG connections & Behaviour (SPGQ Subscale)
+
+# %%
+# Extract EEG connection (Direct-Theta)
+eeg_direct_theta = raw_score_eeg_spgq[1][0]
+# Extract Behavior (SPGQ Subscale)
+behav_direct = list(raw_score_eeg_spgq[5][1])
+freq_band = "Theta"
+condition = "Direct"
+subscale = "Behavioural"
+
+Connections.visualize_correlation(eeg_direct_theta, behav_direct, freq_band, condition, subscale, save_figure=True)
 
