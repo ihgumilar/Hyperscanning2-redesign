@@ -160,29 +160,27 @@ print(df_data_long)
 # df_data_long.to_csv("gamma_ccor.csv", index=False)
 
 # %% [markdown]
-# ## Repeated measures ANOVA
+# ## Repeated measures ANOVA with Mean, SD of each condition and its interactions
 
 # %%
+import os
+
 import pandas as pd
 from statsmodels.stats.anova import AnovaRM
-import os
 
 # Get the file names of each frequency band
 folder_path = '/hpc/igum002/codes/Hyperscanning2-redesign/data/Table_for_repeated_measure_ANOVA_hyper2_redesign'  # Replace with the path to your folder
 csv_files = [os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.endswith('.csv')]
 
-
 for csv_file in csv_files:
-        
     # Read the CSV file
-    df = pd.read_csv(csv_file)
+    df_data_long = pd.read_csv(csv_file)
 
-    # Convert 'gaze' and 'condition' columns to numerical values
-    df['gaze'] = pd.Categorical(df['gaze']).codes
-    df['condition'] = pd.Categorical(df['condition']).codes
+    # Ensure that 'inter_brain_connections' is numeric
+    df_data_long['inter_brain_connections'] = pd.to_numeric(df_data_long['inter_brain_connections'], errors='coerce')
 
     # Perform repeated measures ANOVA
-    rm_anova = AnovaRM(df, depvar='inter_brain_connections', subject='pair', within=['gaze', 'condition'])
+    rm_anova = AnovaRM(df_data_long, depvar='inter_brain_connections', subject='pair', within=['gaze', 'condition'])
     result = rm_anova.fit()
 
     # Display the ANOVA table
@@ -190,16 +188,36 @@ for csv_file in csv_files:
     print("")
     print(result)
 
+    # Calculate means and standard deviations
+    means = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].mean().reset_index()
+    std_devs = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].std().reset_index()
+
+    # Calculate means and standard deviations of interaction
+    interaction_data = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].agg(['mean', 'std']).reset_index()
+    interaction_data.columns = ['gaze', 'condition', 'interaction_mean', 'interaction_std']
+
+    # Display means, standard deviations, and means of interaction
+    print("\nMeans:")
+    print(means)
+
+    print("\nStandard Deviations:")
+    print(std_devs)
+
+    print("\nMeans and Standard Deviations of Interaction:")
+    print(interaction_data)
+    print("\n" + "="*40 + "\n")  # Separate the results for different files
+
+
 # %% [markdown]
 # ## Visualization
 
+import os
+
+import matplotlib.pyplot as plt
 # %%
 import pandas as pd
 import seaborn as sns
 from statsmodels.stats.anova import AnovaRM
-import os
-import matplotlib.pyplot as plt
-
 
 
 # Function to perform repeated measures ANOVA
@@ -276,10 +294,11 @@ all_questionnaires_scoring_diff_spg_total = questionnaire.diff_score_questionnai
 # %% [markdown]
 # ## Correlation between EEG connections and SPGQ
 
+from scipy.stats import pearsonr
+
 # %%
 from phd_codes.EEG import stats
 from phd_codes.questionnaire.questionnaire import Questionnaire
-from scipy.stats import pearsonr
 
 connections = stats.Connections()
 questionnaire = Questionnaire()
