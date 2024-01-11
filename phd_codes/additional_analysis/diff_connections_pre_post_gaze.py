@@ -163,57 +163,15 @@ print(df_data_long)
 # ## Repeated measures ANOVA with Mean, SD of each condition and its interactions
 
 # %%
-import os
-
-import pandas as pd
-from statsmodels.stats.anova import AnovaRM
-
-# Get the file names of each frequency band
-folder_path = '/hpc/igum002/codes/Hyperscanning2-redesign/data/Table_for_repeated_measure_ANOVA_hyper2_redesign'  # Replace with the path to your folder
-csv_files = [os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.endswith('.csv')]
-
-for csv_file in csv_files:
-    # Read the CSV file
-    df_data_long = pd.read_csv(csv_file)
-
-    # Ensure that 'inter_brain_connections' is numeric
-    df_data_long['inter_brain_connections'] = pd.to_numeric(df_data_long['inter_brain_connections'], errors='coerce')
-
-    # Perform repeated measures ANOVA
-    rm_anova = AnovaRM(df_data_long, depvar='inter_brain_connections', subject='pair', within=['gaze', 'condition'])
-    result = rm_anova.fit()
-
-    # Display the ANOVA table
-    print(f"****{csv_file}****")
-    print("")
-    print(result)
-
-    # Calculate means and standard deviations
-    means = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].mean().reset_index()
-    std_devs = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].std().reset_index()
-
-    # Calculate means and standard deviations of interaction
-    interaction_data = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].agg(['mean', 'std']).reset_index()
-    interaction_data.columns = ['gaze', 'condition', 'interaction_mean', 'interaction_std']
-
-    # Display means, standard deviations, and means of interaction
-    print("\nMeans:")
-    print(means)
-
-    print("\nStandard Deviations:")
-    print(std_devs)
-
-    print("\nMeans and Standard Deviations of Interaction:")
-    print(interaction_data)
-    print("\n" + "="*40 + "\n")  # Separate the results for different files
+connections.calculate_two_way_anova('/hpc/igum002/codes/Hyperscanning2-redesign/data/Table_for_repeated_measure_ANOVA_hyper2_redesign')
 
 
 # %% [markdown]
 # ## Visualization
-
-import os
-
-import matplotlib.pyplot as plt
+#
+# import os
+#
+# import matplotlib.pyplot as plt
 # %%
 import pandas as pd
 import seaborn as sns
@@ -293,8 +251,8 @@ all_questionnaires_scoring_diff_spg_total = questionnaire.diff_score_questionnai
 
 # %% [markdown]
 # ## Correlation between EEG connections and SPGQ
-
-from scipy.stats import pearsonr
+#
+# from scipy.stats import pearsonr
 
 # %%
 from phd_codes.EEG import stats

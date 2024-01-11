@@ -25,10 +25,12 @@ import heartrate
 import matplotlib.pyplot as plt
 import mne
 import numpy as np
+import pandas as pd
 import snoop
 from hypyp import analyses, prep, stats
 from pandas import read_pickle
 from scipy.stats import pearsonr
+from statsmodels.stats.anova import AnovaRM
 from tqdm import tqdm
 
 from phd_codes.EEG import stats
@@ -1063,6 +1065,67 @@ class Connections:
             )
 
         return diff_averted, diff_direct, diff_natural
+
+    
+    def calculate_two_way_anova(self, folder_path: str):
+        """
+        Perform repeated measures ANOVA and calculate means, standard deviations, and means of interaction for each CSV file
+        in the specified folder.
+        CSV file contains data that has been prepared for a specified format that can be used to calculate 2 way ANOVA.
+
+        Parameters:
+        - folder_path (str): The path to the folder containing CSV files.
+
+        Returns:
+        None
+        """
+
+        # Define the order of frequency bands
+        frequency_order = ['theta', 'alpha', 'beta', 'gamma']
+
+        for frequency in frequency_order:
+            # Construct the CSV file path based on frequency
+            csv_file = os.path.join(folder_path, f'{frequency}_ccor.csv')
+
+            # Read the CSV file
+            df_data_long = pd.read_csv(csv_file)
+
+            # Ensure that 'inter_brain_connections' is numeric
+            df_data_long['inter_brain_connections'] = pd.to_numeric(df_data_long['inter_brain_connections'], errors='coerce')
+
+            # Perform repeated measures ANOVA
+            rm_anova = AnovaRM(df_data_long, depvar='inter_brain_connections', subject='pair', within=['gaze', 'condition'])
+            result = rm_anova.fit()
+
+            # Display the ANOVA table
+            print(f"****{frequency.capitalize()}****")
+            print("")
+            print(result)
+
+            # Calculate means and standard deviations
+            means = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].mean().reset_index()
+            std_devs = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].std().reset_index()
+
+            # Calculate means and standard deviations of interaction
+            interaction_data = df_data_long.groupby(['gaze', 'condition'])['inter_brain_connections'].agg(['mean', 'std']).reset_index()
+            interaction_data.columns = ['gaze', 'condition', 'interaction_mean', 'interaction_std']
+
+            # Display means, standard deviations, and means of interaction
+            print("\nMeans:")
+            print(means)
+
+            print("\nStandard Deviations:")
+            print(std_devs)
+
+            print("\nMeans and Standard Deviations of Interaction:")
+            print(interaction_data)
+            print("\n" + "="*40 + "\n")  # Separate the results for different files
+
+        return None
+
+            
+
+
 
     def corr_eeg_connection_n_question(
         self, diff_connection: List[list], diff_scale: list, title: str
